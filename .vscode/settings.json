@@ -1,7 +1,9 @@
 {
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
-  "editor.formatOnPaste": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
 
   "cSpell.words": [],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
