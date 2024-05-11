@@ -1,5 +1,6 @@
 import {
   createApp,
+  setGlobalExceptionFilter,
   setGlobalInterceptor,
   setGlobalPipe,
   setSwagger,
@@ -10,6 +11,7 @@ async function bootstrap() {
 
   setGlobalPipe(app);
   setGlobalInterceptor(app);
+  setGlobalExceptionFilter(app);
   setSwagger(app);
 
   const PORT = process.env.PORT || 3000;

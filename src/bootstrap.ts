@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ClassSerializerInterceptor,
   INestApplication,
   ValidationPipe,
@@ -7,7 +8,11 @@ import {
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import { ValidationError } from 'class-validator';
+
 import { AppModule } from '@src/app.module';
+import { BaseHttpExceptionFilter } from '@src/common/base/base-http-exception.filter';
+import { RequestValidationError } from '@src/common/base/base.error';
 
 export const createApp = async () => {
   return await NestFactory.create(AppModule);
@@ -19,11 +24,31 @@ export const setGlobalPipe = (app: INestApplication) => {
     whitelist: true,
   };
 
-  app.useGlobalPipes(new ValidationPipe(options));
+  const exceptionFactory = (validationErrors: ValidationError[]) => {
+    const errors = validationErrors.map((validationError) => {
+      return {
+        property: validationError.property,
+        constraints: Object.values(validationError.constraints ?? {}),
+      };
+    });
+
+    throw new BadRequestException({
+      statusCode: 400,
+      message: 'request input validation error',
+      code: RequestValidationError.CODE,
+      errors,
+    });
+  };
+
+  app.useGlobalPipes(new ValidationPipe({ ...options, exceptionFactory }));
 };
 
 export const setGlobalInterceptor = (app: INestApplication) => {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+};
+
+export const setGlobalExceptionFilter = (app: INestApplication) => {
+  app.useGlobalFilters(new BaseHttpExceptionFilter());
 };
 
 export const setSwagger = (app: INestApplication) => {
