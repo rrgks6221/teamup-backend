@@ -14,6 +14,8 @@ async function bootstrap() {
   setGlobalExceptionFilter(app);
   setSwagger(app);
 
+  app.enableShutdownHooks();
+
   const PORT = process.env.PORT || 3000;
 
   await app.listen(PORT, () => {
