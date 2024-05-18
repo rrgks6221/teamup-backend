@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 
-import { RequestValidationError } from '@src/common/base/base.error';
+import { RequestValidationError } from '@common/base/base.error';
 
 @Injectable()
 export class NotEmptyObjectPipe implements PipeTransform {

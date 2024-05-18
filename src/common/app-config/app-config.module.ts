@@ -3,8 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 
 import Joi from 'joi';
 
-import { ENV_KEY } from '@src/common/app-config/app-config.constant';
-import { AppConfigService } from '@src/common/app-config/app-config.service';
+import { ENV_KEY } from '@common/app-config/app-config.constant';
+import { AppConfigService } from '@common/app-config/app-config.service';
 
 @Module({
   imports: [

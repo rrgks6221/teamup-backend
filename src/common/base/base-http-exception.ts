@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 
-import { BaseError } from '@src/common/base/base.error';
+import { BaseError } from '@common/base/base.error';
 
 export class BaseHttpException extends Error {
   constructor(

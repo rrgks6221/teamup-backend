@@ -1,4 +1,4 @@
-import { EntityId } from '@src/common/base/base.entity';
+import { EntityId } from '@common/base/base.entity';
 
 export enum SortOrder {
   Desc = 'DESC',
