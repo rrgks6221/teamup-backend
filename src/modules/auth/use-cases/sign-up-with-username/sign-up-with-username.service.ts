@@ -1,7 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import bcrypt from 'bcrypt';
-
 import { SignInType } from '@module/account/entities/account.entity';
 import {
   CREATE_ACCOUNT_SERVICE,
@@ -30,7 +28,7 @@ export class SignUpWithUsernameService implements ISignUpWithUsernameService {
   async execute(command: SignUpWithUsernameCommand): Promise<AuthToken> {
     const createAccountCommand = new CreateAccountCommand({
       username: command.username,
-      password: await bcrypt.hash(command.password, 10),
+      password: command.password,
       signInType: SignInType.Username,
     });
 
