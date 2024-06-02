@@ -1,7 +1,9 @@
 import { Account, SignInType } from '@module/account/entities/account.entity';
 import { AccountRaw } from '@module/account/repositories/account/account.repository.port';
 
-export class AccountMapper {
+import { BaseMapper } from '@common/base/base.mapper';
+
+export class AccountMapper extends BaseMapper {
   static toEntity(raw: AccountRaw): Account {
     return new Account({
       id: raw.id.toString(),

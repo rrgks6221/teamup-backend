@@ -39,7 +39,7 @@ export class AccountRepository implements AccountRepositoryPort {
 
     const raw = await this.prismaService.account.findUnique({
       where: {
-        id: BigInt(id),
+        id: AccountMapper.toPrimaryKey(id),
       },
     });
 
@@ -100,7 +100,7 @@ export class AccountRepository implements AccountRepositoryPort {
   async delete(entity: Account): Promise<void> {
     await this.prismaService.account.delete({
       where: {
-        id: BigInt(entity.id),
+        id: AccountMapper.toPrimaryKey(entity.id),
       },
     });
   }
