@@ -5,14 +5,18 @@ import {
   Inject,
   Param,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
@@ -27,9 +31,16 @@ import {
   UPDATE_ACCOUNT_SERVICE,
   UpdateAccountCommand,
 } from '@module/account/use-cases/update-account/update-account.service.interface';
+import { PermissionDeniedError } from '@module/auth/errors/permission-denied.error';
+import { UnauthorizedUserError } from '@module/auth/errors/unauthorized-user.error';
+import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
 import { RequestValidationError } from '@common/base/base.error';
+import {
+  CurrentUser,
+  ICurrentUser,
+} from '@common/decorator/current-user.decorator';
 import { NotEmptyObjectPipe } from '@common/pipes/not-empty-object.pipe';
 
 @ApiTags('account')
@@ -40,13 +51,18 @@ export class UpdateAccountController {
     private readonly updateAccountService: IUpdateAccountService,
   ) {}
 
-  /**
-   * @todo 본인만 계정 업데이트 가능하게 변경
-   */
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '계정 업데이트' })
+  @ApiBearerAuth()
   @ApiOkResponse({ type: AccountResponseDto })
   @ApiBadRequestResponse({
     schema: BaseHttpException.buildSwaggerSchema([RequestValidationError.CODE]),
+  })
+  @ApiUnauthorizedResponse({
+    schema: BaseHttpException.buildSwaggerSchema([UnauthorizedUserError.CODE]),
+  })
+  @ApiForbiddenResponse({
+    schema: BaseHttpException.buildSwaggerSchema([PermissionDeniedError.CODE]),
   })
   @ApiNotFoundResponse({
     schema: BaseHttpException.buildSwaggerSchema([AccountNotFoundError.CODE]),
@@ -61,10 +77,15 @@ export class UpdateAccountController {
   })
   @Patch('accounts/:id')
   async update(
+    @CurrentUser() currentUser: ICurrentUser,
     @Param('id') id: string,
     @Body(NotEmptyObjectPipe) body: UpdateAccountRequestDto,
   ): Promise<AccountResponseDto> {
     try {
+      if (currentUser.id !== id) {
+        throw new PermissionDeniedError();
+      }
+
       const command = new UpdateAccountCommand({
         accountId: id,
         nickname: body.nickname,
@@ -74,6 +95,9 @@ export class UpdateAccountController {
 
       return AccountDtoAssembler.convertToDto(account);
     } catch (error) {
+      if (error instanceof PermissionDeniedError) {
+        throw new BaseHttpException(HttpStatus.FORBIDDEN, error);
+      }
       if (error instanceof AccountNotFoundError) {
         throw new BaseHttpException(HttpStatus.NOT_FOUND, error);
       }
