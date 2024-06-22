@@ -3,12 +3,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AccountFactory } from '@module/account/entities/__spec__/account.factory';
 import { AccountNicknameAlreadyOccupiedError } from '@module/account/errors/account-nickname-already-occupied.error';
 import { AccountUsernameAlreadyOccupiedError } from '@module/account/errors/account-username-already-occupied.error';
+import { AccountRepositoryModule } from '@module/account/repositories/account/account.repository.module';
 import {
   ACCOUNT_REPOSITORY,
   AccountRepositoryPort,
 } from '@module/account/repositories/account/account.repository.port';
 import { CreateAccountCommandFactory } from '@module/account/use-cases/create-account/__spec__/create-account.command.factory';
-import { CreateAccountModule } from '@module/account/use-cases/create-account/create-account.module';
 import { CreateAccountService } from '@module/account/use-cases/create-account/create-account.service';
 import {
   CREATE_ACCOUNT_SERVICE,
@@ -25,7 +25,13 @@ describe(CreateAccountService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [CreateAccountModule],
+      imports: [AccountRepositoryModule],
+      providers: [
+        {
+          provide: CREATE_ACCOUNT_SERVICE,
+          useClass: CreateAccountService,
+        },
+      ],
     }).compile();
 
     service = module.get<ICreateAccountService>(CREATE_ACCOUNT_SERVICE);

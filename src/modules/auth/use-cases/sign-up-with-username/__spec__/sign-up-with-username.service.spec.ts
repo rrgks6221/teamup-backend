@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { CreateAccountModule } from '@module/account/use-cases/create-account/create-account.module';
 import {
   CREATE_ACCOUNT_SERVICE,
   ICreateAccountService,
 } from '@module/account/use-cases/create-account/create-account.service.interface';
 import { AuthToken } from '@module/auth/entities/auth-token.vo';
+import { AuthTokenModule } from '@module/auth/services/auth-token/auth-token.module';
 import { SignUpWithUsernameCommandFactory } from '@module/auth/use-cases/sign-up-with-username/__spec__/sign-up-with-username.command.factory';
-import { SignUpWithUsernameModule } from '@module/auth/use-cases/sign-up-with-username/sign-up-with-username.module';
 import { SignUpWithUsernameService } from '@module/auth/use-cases/sign-up-with-username/sign-up-with-username.service';
 import {
   ISignUpWithUsernameService,
@@ -23,7 +24,13 @@ describe(SignUpWithUsernameService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [SignUpWithUsernameModule],
+      imports: [AuthTokenModule, CreateAccountModule],
+      providers: [
+        {
+          provide: SIGN_UP_WITH_USERNAME_SERVICE,
+          useClass: SignUpWithUsernameService,
+        },
+      ],
     }).compile();
 
     service = module.get<ISignUpWithUsernameService>(
