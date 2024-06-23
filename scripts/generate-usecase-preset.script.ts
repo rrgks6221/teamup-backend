@@ -43,6 +43,9 @@ export class UseCaseNameController {
     @Inject(USE_CASE_NAME_SERVICE) private readonly useCaseNameService: IUseCaseNameService,
   ) {}
 
+  @ApiErrorResponse({
+    [HttpStatus.BAD_REQUEST]: [RequestValidationError],
+  })
   @ApiOperation({ summary: '' })
   async useCaseName() {
     try {
@@ -89,21 +92,25 @@ export class UseCaseNameService implements IUseCaseNameService {
   SERVICE_SPEC_PRESET: `import { Test, TestingModule } from '@nestjs/testing';
 
 import { UseCaseNameOperationNameFactory } from '@module/module-name/use-cases/use-case-name/__spec__/use-case-name-operation-name.factory';
-import { UseCaseNameModule } from '@module/module-name/use-cases/use-case-name/use-case-name.module';
 import { UseCaseNameService } from '@module/module-name/use-cases/use-case-name/use-case-name.service';
-import { UseCaseNameOperationName } from '@module/module-name/use-cases/use-case-name/use-case-name.service.interface';
+import { UseCaseNameOperationName, USE_CASE_NAME_SERVICE } from '@module/module-name/use-cases/use-case-name/use-case-name.service.interface';
 
-describe('UseCaseNameService', () => {
+describe(UseCaseNameService.name, () => {
   let service: UseCaseNameService;
 
   let operationName: UseCaseNameOperationName;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UseCaseNameModule],
+      providers: [
+        {
+          provide: USE_CASE_NAME_SERVICE,
+          useClass: UseCaseNameService,
+        }
+      ],
     }).compile();
 
-    service = module.get<UseCaseNameService>(UseCaseNameService);
+    service = module.get<UseCaseNameService>(USE_CASE_NAMEService);
   });
 
   beforeEach(() => {
