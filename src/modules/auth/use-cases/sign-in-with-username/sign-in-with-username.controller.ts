@@ -6,12 +6,7 @@ import {
   Inject,
   Post,
 } from '@nestjs/common';
-import {
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthTokenDtoAssembler } from '@module/auth/assemblers/auth-token-dto.assembler';
 import { AuthTokenResponseDto } from '@module/auth/dto/auth-token.response.dto';
@@ -24,6 +19,8 @@ import {
 } from '@module/auth/use-cases/sign-in-with-username/sign-in-with-username.service.interface';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
+import { RequestValidationError } from '@common/base/base.error';
+import { ApiErrorResponse } from '@common/decorator/api-fail-response.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -36,10 +33,9 @@ export class SignInWithUsernameController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'username 기반 로그인' })
   @ApiOkResponse({ type: AuthTokenResponseDto })
-  @ApiForbiddenResponse({
-    schema: BaseHttpException.buildSwaggerSchema([
-      SignInInfoNotMatchedError.CODE,
-    ]),
+  @ApiErrorResponse({
+    [HttpStatus.BAD_REQUEST]: [RequestValidationError],
+    [HttpStatus.FORBIDDEN]: [SignInInfoNotMatchedError],
   })
   @Post('sign-in/username')
   async signInWithUsername(@Body() body: SignInWithUsernameRequestDto) {

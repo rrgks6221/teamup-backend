@@ -6,12 +6,7 @@ import {
   Inject,
   Post,
 } from '@nestjs/common';
-import {
-  ApiConflictResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AccountNicknameAlreadyOccupiedError } from '@module/account/errors/account-nickname-already-occupied.error';
 import { AccountUsernameAlreadyOccupiedError } from '@module/account/errors/account-username-already-occupied.error';
@@ -25,6 +20,8 @@ import {
 } from '@module/auth/use-cases/sign-up-with-username/sign-up-with-username.service.interface';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
+import { RequestValidationError } from '@common/base/base.error';
+import { ApiErrorResponse } from '@common/decorator/api-fail-response.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -37,11 +34,12 @@ export class SignUpWithUsernameController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'username 기반 회원가입' })
   @ApiOkResponse({ type: AuthTokenResponseDto })
-  @ApiConflictResponse({
-    schema: BaseHttpException.buildSwaggerSchema([
-      AccountUsernameAlreadyOccupiedError.CODE,
-      AccountNicknameAlreadyOccupiedError.CODE,
-    ]),
+  @ApiErrorResponse({
+    [HttpStatus.BAD_REQUEST]: [RequestValidationError],
+    [HttpStatus.CONFLICT]: [
+      AccountUsernameAlreadyOccupiedError,
+      AccountNicknameAlreadyOccupiedError,
+    ],
   })
   @Post('sign-up/username')
   async signUpWithUsername(@Body() body: SignUpWithUsernameRequestDto) {
