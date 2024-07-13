@@ -10,6 +10,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AccountNicknameAlreadyOccupiedError } from '@module/account/errors/account-nickname-already-occupied.error';
 import { AccountUsernameAlreadyOccupiedError } from '@module/account/errors/account-username-already-occupied.error';
+import { AccountValidationError } from '@module/account/errors/account-validation.error';
 import { AuthTokenDtoAssembler } from '@module/auth/assemblers/auth-token-dto.assembler';
 import { AuthTokenResponseDto } from '@module/auth/dto/auth-token.response.dto';
 import { SignUpWithUsernameRequestDto } from '@module/auth/use-cases/sign-up-with-username/dto/sign-up-with-username.request-dto';
@@ -35,7 +36,7 @@ export class SignUpWithUsernameController {
   @ApiOperation({ summary: 'username 기반 회원가입' })
   @ApiOkResponse({ type: AuthTokenResponseDto })
   @ApiErrorResponse({
-    [HttpStatus.BAD_REQUEST]: [RequestValidationError],
+    [HttpStatus.BAD_REQUEST]: [RequestValidationError, AccountValidationError],
     [HttpStatus.CONFLICT]: [
       AccountUsernameAlreadyOccupiedError,
       AccountNicknameAlreadyOccupiedError,
@@ -53,6 +54,10 @@ export class SignUpWithUsernameController {
 
       return AuthTokenDtoAssembler.convertToDto(result);
     } catch (error) {
+      if (error instanceof AccountValidationError) {
+        throw new BaseHttpException(HttpStatus.BAD_REQUEST, error);
+      }
+
       if (error instanceof AccountUsernameAlreadyOccupiedError) {
         throw new BaseHttpException(HttpStatus.CONFLICT, error);
       }
