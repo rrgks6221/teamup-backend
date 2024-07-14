@@ -15,8 +15,10 @@ import { AppModule } from 'src/app.module';
 import { BaseHttpExceptionFilter } from '@common/base/base-http-exception.filter';
 import { RequestValidationError } from '@common/base/base.error';
 
+import { LOGGER } from '@shared/logger/logger.module';
+
 export const createApp = async () => {
-  return await NestFactory.create(AppModule);
+  return await NestFactory.create(AppModule, { bufferLogs: true });
 };
 
 export const setGlobalPipe = (app: INestApplication) => {
@@ -42,6 +44,10 @@ export const setGlobalPipe = (app: INestApplication) => {
   };
 
   app.useGlobalPipes(new ValidationPipe({ ...options, exceptionFactory }));
+};
+
+export const setLogger = (app: INestApplication) => {
+  app.useLogger(app.get(LOGGER));
 };
 
 export const setGlobalInterceptor = (app: INestApplication) => {

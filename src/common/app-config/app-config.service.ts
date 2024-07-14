@@ -12,4 +12,8 @@ export class AppConfigService {
   get<T extends string | number = string>(key: EnvKey): T {
     return this.configService.get<T>(key) as T;
   }
+
+  isProd(): boolean {
+    return this.configService.get<string>(ENV_KEY.NODE_ENV) === 'production';
+  }
 }
