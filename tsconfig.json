@@ -24,5 +24,6 @@
       "@shared/*": ["./src/shared/*"]
     },
     "esModuleInterop": true
-  }
+  },
+  "exclude": ["prisma"]
 }

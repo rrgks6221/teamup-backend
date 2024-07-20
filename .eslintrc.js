@@ -1,4 +1,5 @@
 module.exports = {
+  ignores: ['prisma/'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json',
