@@ -12,10 +12,16 @@ export enum SignInType {
   Username = 'Username',
 }
 
+export enum AccountRole {
+  Admin = 'Admin',
+  User = 'User',
+}
+
 export interface AccountProps {
   username?: string;
   password?: string;
   signInType: SignInType;
+  role: AccountRole;
   nickname: string;
 }
 
@@ -50,6 +56,7 @@ export class Account extends BaseEntity<AccountProps> {
         username: createAccountByUsernameProps.username,
         password: createAccountByUsernameProps.password,
         signInType: createAccountByUsernameProps.signInType,
+        role: AccountRole.User,
         nickname:
           createAccountByUsernameProps.nickname ??
           this.generateRandomNickname(),
@@ -74,6 +81,10 @@ export class Account extends BaseEntity<AccountProps> {
 
   get signInType() {
     return this.props.signInType;
+  }
+
+  get role() {
+    return this.props.role;
   }
 
   get nickname() {

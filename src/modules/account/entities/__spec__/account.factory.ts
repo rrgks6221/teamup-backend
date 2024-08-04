@@ -4,6 +4,7 @@ import { Factory } from 'rosie';
 import {
   Account,
   AccountProps,
+  AccountRole,
   SignInType,
 } from '@module/account/entities/account.entity';
 
@@ -15,6 +16,7 @@ export const AccountFactory = Factory.define<Account & AccountProps>('Account')
     signInType: () => faker.helpers.enumValue(SignInType),
     username: () => faker.string.nanoid(Account.USERNAME_MAX_LENGTH),
     password: () => faker.string.uuid(),
+    role: () => AccountRole.User,
     nickname: () => faker.string.nanoid(Account.NICKNAME_MAX_LENGTH),
     createdAt: () => new Date(),
     updatedAt: () => new Date(),

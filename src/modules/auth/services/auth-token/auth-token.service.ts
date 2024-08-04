@@ -16,7 +16,7 @@ export class AuthTokenService implements IAuthTokenService {
   ) {}
 
   async generateAuthToken(account: Account): Promise<AuthToken> {
-    const payload = { sub: account.id };
+    const payload = { sub: account.id, role: account.role.toLowerCase() };
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: this.appConfigService.get(ENV_KEY.JWT_ACCESS_TOKEN_EXPIRES_IN),
     });

@@ -1,4 +1,8 @@
-import { Account, SignInType } from '@module/account/entities/account.entity';
+import {
+  Account,
+  AccountRole,
+  SignInType,
+} from '@module/account/entities/account.entity';
 import { AccountRaw } from '@module/account/repositories/account/account.repository.port';
 
 import { BaseMapper } from '@common/base/base.mapper';
@@ -13,6 +17,7 @@ export class AccountMapper extends BaseMapper {
         username: raw.username ?? undefined,
         password: raw.password ?? undefined,
         signInType: SignInType[raw.signInType],
+        role: AccountRole[raw.role],
         nickname: raw.nickname,
       },
     });
@@ -24,6 +29,7 @@ export class AccountMapper extends BaseMapper {
       username: entity.props.username ?? null,
       password: entity.props.password ?? null,
       signInType: entity.props.signInType,
+      role: entity.props.role,
       nickname: entity.props.nickname ?? null,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
