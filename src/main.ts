@@ -4,8 +4,8 @@ import {
   setGlobalInterceptor,
   setGlobalPipe,
   setLogger,
-  setSwagger,
 } from 'src/bootstrap';
+import { SwaggerConfig } from 'src/swagger';
 
 async function bootstrap() {
   const app = await createApp();
@@ -14,8 +14,7 @@ async function bootstrap() {
   setLogger(app);
   setGlobalInterceptor(app);
   setGlobalExceptionFilter(app);
-  setSwagger(app);
-
+  SwaggerConfig.setup(app);
   app.enableShutdownHooks();
 
   const PORT = process.env.PORT || 3000;

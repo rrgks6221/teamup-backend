@@ -6,7 +6,6 @@ import {
   ValidationPipeOptions,
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { ValidationError } from 'class-validator';
 
@@ -56,36 +55,4 @@ export const setGlobalInterceptor = (app: INestApplication) => {
 
 export const setGlobalExceptionFilter = (app: INestApplication) => {
   app.useGlobalFilters(new BaseHttpExceptionFilter());
-};
-
-export const setSwagger = (app: INestApplication) => {
-  const config = new DocumentBuilder()
-    .setTitle('teamup-backend')
-    .setDescription('The teamup-backend API description')
-    .setVersion('0.1')
-    .addTag('teamup-backend')
-    .addBearerAuth()
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-
-  SwaggerModule.setup('swagger', app, document, {
-    swaggerOptions: {
-      persistAuthorization: true,
-      tagsSorter: 'alpha',
-      operationsSorter: (a: Map<string, string>, b: Map<string, string>) => {
-        const order = {
-          post: '0',
-          get: '1',
-          put: '2',
-          patch: '3',
-          delete: '4',
-        };
-
-        return order[a.get('method') as string].localeCompare(
-          order[b.get('method') as string],
-        );
-      },
-    },
-  });
 };
