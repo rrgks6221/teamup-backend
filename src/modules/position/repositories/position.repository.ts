@@ -29,6 +29,19 @@ export class PositionRepository
   ) {
     super(prismaService, PositionMapper);
   }
+  async findOneByName(name: string): Promise<Position | undefined> {
+    const raw = await this.prismaService.position.findUnique({
+      where: {
+        name,
+      },
+    });
+
+    if (raw === null) {
+      return;
+    }
+
+    return this.mapper.toEntity(raw);
+  }
 
   async findAll(): Promise<Position[]> {
     const raws = await this.prismaService.position.findMany({

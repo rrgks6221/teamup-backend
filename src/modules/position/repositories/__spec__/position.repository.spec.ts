@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { faker } from '@faker-js/faker';
+
 import { PositionFactory } from '@module/position/entities/__spec__/position.factory';
 import { Position } from '@module/position/entities/position.entity';
 import { PositionRepository } from '@module/position/repositories/position.repository';
@@ -54,6 +56,34 @@ describe(PositionRepository.name, () => {
           await expect(repository.findOneById(positionId)).resolves.toEqual(
             position,
           );
+        });
+      });
+    });
+  });
+
+  describe(PositionRepository.prototype.findOneByName.name, () => {
+    describe('이름과 일치하는 포지션이 존재하고', () => {
+      let position: Position;
+
+      beforeEach(async () => {
+        position = await repository.insert(PositionFactory.build());
+      });
+
+      describe('포지션을 조회하면', () => {
+        it('포지션이 응답돼야한다.', async () => {
+          await expect(
+            repository.findOneByName(position.name),
+          ).resolves.toEqual(position);
+        });
+      });
+    });
+
+    describe('이름과 일치하는 포지션이 존재하지 않는 경우', () => {
+      describe('포지션을 조회하면', () => {
+        it('undefined가 응답돼야한다.', async () => {
+          await expect(
+            repository.findOneByName(faker.string.nanoid()),
+          ).resolves.toBeUndefined();
         });
       });
     });
