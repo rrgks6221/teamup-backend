@@ -43,3 +43,12 @@ model Position {
   createdAt DateTime @default(now()) @db.Timestamp(3)
   updatedAt DateTime @updatedAt @db.Timestamp(3)
 }
+
+model TechStack {
+  id BigInt @id
+
+  name String @unique @db.VarChar(50)
+
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @updatedAt @db.Timestamp(3)
+}
