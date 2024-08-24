@@ -1,10 +1,12 @@
 import { positionSeeding } from './position.seed';
+import { techStackSeeding } from './tech-stack.seed';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
   await positionSeeding(prisma);
+  await techStackSeeding(prisma);
 }
 
 main()
