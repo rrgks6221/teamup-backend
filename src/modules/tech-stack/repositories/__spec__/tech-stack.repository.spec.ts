@@ -1,0 +1,81 @@
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { TechStackFactory } from '@module/tech-stack/entities/__spec__/tech-stack.factory';
+import { TechStack } from '@module/tech-stack/entities/tech-stack.entity';
+import { TechStackRepository } from '@module/tech-stack/repositories/tech-stack.repository';
+import {
+  TECH_STACK_REPOSITORY,
+  TechStackRepositoryPort,
+} from '@module/tech-stack/repositories/tech-stack.repository.port';
+
+import { generateEntityId } from '@common/base/base.entity';
+
+import { PRISMA_SERVICE } from '@shared/prisma/prisma.di-token';
+import { PrismaService } from '@shared/prisma/prisma.service';
+
+describe(TechStackRepository.name, () => {
+  let repository: TechStackRepositoryPort;
+
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        {
+          provide: PRISMA_SERVICE,
+          useClass: PrismaService,
+        },
+        {
+          provide: TECH_STACK_REPOSITORY,
+          useClass: TechStackRepository,
+        },
+      ],
+    }).compile();
+
+    repository = module.get<TechStackRepositoryPort>(TECH_STACK_REPOSITORY);
+  });
+
+  describe(TechStackRepository.prototype.findOneById.name, () => {
+    let techStackId: string;
+
+    beforeEach(() => {
+      techStackId = generateEntityId();
+    });
+
+    describe('식별자와 일치하는 리소스가 존재하는 경우', () => {
+      let techStack: TechStack;
+
+      beforeEach(async () => {
+        techStack = await repository.insert(
+          TechStackFactory.build({ id: techStackId }),
+        );
+      });
+
+      describe('리소스를 조회하면', () => {
+        it('리소스가 반환돼야한다.', async () => {
+          await expect(repository.findOneById(techStackId)).resolves.toEqual(
+            techStack,
+          );
+        });
+      });
+    });
+  });
+
+  describe(TechStackRepository.prototype.findAll.name, () => {
+    describe('기술스택 전체를 조회하면', () => {
+      let techStacks: TechStack[];
+
+      beforeEach(async () => {
+        techStacks = TechStackFactory.buildList(5);
+
+        await Promise.all(
+          techStacks.map((techStack) => repository.insert(techStack)),
+        );
+      });
+
+      it('모든 기술스택을 조회해야한다.', async () => {
+        await expect(repository.findAll()).resolves.toEqual(
+          expect.arrayContaining(techStacks),
+        );
+      });
+    });
+  });
+});
