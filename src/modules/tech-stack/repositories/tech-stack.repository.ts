@@ -30,6 +30,20 @@ export class TechStackRepository
     super(prismaService, TechStackMapper);
   }
 
+  async findOneByName(name: string): Promise<TechStack | undefined> {
+    const raw = await this.prismaService.techStack.findUnique({
+      where: {
+        name,
+      },
+    });
+
+    if (raw === null) {
+      return;
+    }
+
+    return this.mapper.toEntity(raw);
+  }
+
   async findAll(): Promise<TechStack[]> {
     const raws = await this.prismaService.techStack.findMany({
       orderBy: {

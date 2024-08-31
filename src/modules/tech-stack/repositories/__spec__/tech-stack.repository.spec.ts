@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { faker } from '@faker-js/faker';
+
 import { TechStackFactory } from '@module/tech-stack/entities/__spec__/tech-stack.factory';
 import { TechStack } from '@module/tech-stack/entities/tech-stack.entity';
 import { TechStackRepository } from '@module/tech-stack/repositories/tech-stack.repository';
@@ -54,6 +56,34 @@ describe(TechStackRepository.name, () => {
           await expect(repository.findOneById(techStackId)).resolves.toEqual(
             techStack,
           );
+        });
+      });
+    });
+  });
+
+  describe(TechStackRepository.prototype.findOneByName.name, () => {
+    describe('이름과 일치하는 기술 스택이 존재하고', () => {
+      let techStack: TechStack;
+
+      beforeEach(async () => {
+        techStack = await repository.insert(TechStackFactory.build());
+      });
+
+      describe('기술 스택을 조회하면', () => {
+        it('기술 스택이 응답돼야한다.', async () => {
+          await expect(
+            repository.findOneByName(techStack.name),
+          ).resolves.toEqual(techStack);
+        });
+      });
+    });
+
+    describe('이름과 일치하는 기술 스택이 존재하지 않는 경우', () => {
+      describe('기술 스택을 조회하면', () => {
+        it('undefined가 응답돼야한다.', async () => {
+          await expect(
+            repository.findOneByName(faker.string.nanoid()),
+          ).resolves.toBeUndefined();
         });
       });
     });
