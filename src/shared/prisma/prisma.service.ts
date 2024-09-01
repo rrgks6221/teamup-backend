@@ -10,26 +10,31 @@ export class PrismaService
   private readonly logger = new Logger(PrismaService.name);
 
   constructor() {
-    super({
-      log: [
-        {
-          emit: 'event',
-          level: 'query',
-        },
-        {
-          emit: 'event',
-          level: 'error',
-        },
-        {
-          emit: 'stdout',
-          level: 'info',
-        },
-        {
-          emit: 'stdout',
-          level: 'warn',
-        },
-      ],
-    });
+    const options: any =
+      process.env.NODE_ENV === 'test'
+        ? undefined
+        : {
+            log: [
+              {
+                emit: 'event',
+                level: 'query',
+              },
+              {
+                emit: 'event',
+                level: 'error',
+              },
+              {
+                emit: 'stdout',
+                level: 'info',
+              },
+              {
+                emit: 'stdout',
+                level: 'warn',
+              },
+            ],
+          };
+
+    super(options);
 
     this.$on<any>('query', (event: Prisma.QueryEvent) => {
       this.logger.debug('Query: ' + event.query);
