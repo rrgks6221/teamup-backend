@@ -1,5 +1,5 @@
-import { generateEntityId } from './functions';
 import { PrismaClient } from '@prisma/client';
+import { generateEntityId } from 'prisma/seed/functions';
 
 // 주석으로 적힌 직군은 구분을 위함이고 큰 의미 없음
 const TECH_STACKS = [

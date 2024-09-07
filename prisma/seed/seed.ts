@@ -1,6 +1,6 @@
-import { positionSeeding } from './position.seed';
-import { techStackSeeding } from './tech-stack.seed';
 import { PrismaClient } from '@prisma/client';
+import { positionSeeding } from 'prisma/seed/position.seed';
+import { techStackSeeding } from 'prisma/seed/tech-stack.seed';
 
 const prisma = new PrismaClient();
 

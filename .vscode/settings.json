@@ -8,5 +8,8 @@
   "cSpell.words": ["teamup"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "notebook.defaultFormatter": "esbenp.prettier-vscode",
-  "typescript.preferences.importModuleSpecifier": "non-relative"
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "node_modules/@prisma/client"
+  ]
 }

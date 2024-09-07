@@ -1,5 +1,5 @@
-import { generateEntityId } from './functions';
 import { PrismaClient } from '@prisma/client';
+import { generateEntityId } from 'prisma/seed/functions';
 
 const POSITIONS = [
   // 개발자 직군
