@@ -3,7 +3,6 @@ import {
   Controller,
   HttpStatus,
   Inject,
-  Param,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -47,7 +46,7 @@ export class UpdateAccountController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: '계정 업데이트' })
+  @ApiOperation({ summary: '본인 계정 업데이트' })
   @ApiBearerAuth()
   @ApiOkResponse({ type: AccountResponseDto })
   @ApiErrorResponse({
@@ -58,19 +57,14 @@ export class UpdateAccountController {
     [HttpStatus.CONFLICT]: [AccountNicknameAlreadyOccupiedError],
     [HttpStatus.UNPROCESSABLE_ENTITY]: [AccountValidationError],
   })
-  @Patch('accounts/:id')
+  @Patch('accounts/me')
   async update(
     @CurrentUser() currentUser: ICurrentUser,
-    @Param('id') id: string,
     @Body(NotEmptyObjectPipe) body: UpdateAccountRequestDto,
   ): Promise<AccountResponseDto> {
     try {
-      if (currentUser.id !== id) {
-        throw new PermissionDeniedError();
-      }
-
       const command = new UpdateAccountCommand({
-        accountId: id,
+        accountId: currentUser.id,
         nickname: body.nickname,
       });
 
