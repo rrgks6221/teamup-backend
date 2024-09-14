@@ -6,5 +6,5 @@ export class UpdateAccountRequestDto {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  nickname?: string;
+  name?: string;
 }

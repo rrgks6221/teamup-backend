@@ -9,7 +9,7 @@ export class AccountDtoAssembler {
       updatedAt: account.updatedAt,
     });
 
-    dto.nickname = account.nickname;
+    dto.name = account.name;
 
     return dto;
   }

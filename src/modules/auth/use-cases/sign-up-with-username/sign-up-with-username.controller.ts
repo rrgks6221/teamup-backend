@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { AccountNicknameAlreadyOccupiedError } from '@module/account/errors/account-nickname-already-occupied.error';
 import { AccountUsernameAlreadyOccupiedError } from '@module/account/errors/account-username-already-occupied.error';
 import { AccountValidationError } from '@module/account/errors/account-validation.error';
 import { AuthTokenDtoAssembler } from '@module/auth/assemblers/auth-token-dto.assembler';
@@ -37,10 +36,7 @@ export class SignUpWithUsernameController {
   @ApiOkResponse({ type: AuthTokenResponseDto })
   @ApiErrorResponse({
     [HttpStatus.BAD_REQUEST]: [RequestValidationError, AccountValidationError],
-    [HttpStatus.CONFLICT]: [
-      AccountUsernameAlreadyOccupiedError,
-      AccountNicknameAlreadyOccupiedError,
-    ],
+    [HttpStatus.CONFLICT]: [AccountUsernameAlreadyOccupiedError],
   })
   @Post('sign-up/username')
   async signUpWithUsername(@Body() body: SignUpWithUsernameRequestDto) {
@@ -59,10 +55,6 @@ export class SignUpWithUsernameController {
       }
 
       if (error instanceof AccountUsernameAlreadyOccupiedError) {
-        throw new BaseHttpException(HttpStatus.CONFLICT, error);
-      }
-
-      if (error instanceof AccountNicknameAlreadyOccupiedError) {
         throw new BaseHttpException(HttpStatus.CONFLICT, error);
       }
 

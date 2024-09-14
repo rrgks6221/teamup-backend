@@ -3,7 +3,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 
 import { Account } from '@module/account/entities/account.entity';
-import { AccountNicknameAlreadyOccupiedError } from '@module/account/errors/account-nickname-already-occupied.error';
 import { AccountUsernameAlreadyOccupiedError } from '@module/account/errors/account-username-already-occupied.error';
 import {
   ACCOUNT_REPOSITORY,
@@ -26,24 +25,15 @@ export class CreateAccountService implements ICreateAccountService {
       username: command.username,
       password: await bcrypt.hash(command.password, 10),
       signInType: command.signInType,
-      nickname: command.nickname,
+      name: command.name,
     });
 
-    const sameNicknameAccount = await this.accountRepository.findOneByNickname(
-      newAccount.nickname,
-    );
     const sameUsernameAccount = await this.accountRepository.findOneByUsername(
       newAccount.username as string,
     );
 
     if (sameUsernameAccount !== undefined) {
       throw new AccountUsernameAlreadyOccupiedError();
-    }
-
-    if (sameNicknameAccount !== undefined) {
-      if (newAccount.isSameNicknameAccount(sameNicknameAccount)) {
-        throw new AccountNicknameAlreadyOccupiedError();
-      }
     }
 
     await this.accountRepository.insert(newAccount);

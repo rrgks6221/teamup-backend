@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { Account } from '@module/account/entities/account.entity';
-import { AccountNicknameAlreadyOccupiedError } from '@module/account/errors/account-nickname-already-occupied.error';
 import { AccountNotFoundError } from '@module/account/errors/account-not-found.error';
 import {
   ACCOUNT_REPOSITORY,
@@ -26,18 +25,7 @@ export class UpdateAccountService implements IUpdateAccountService {
       throw new AccountNotFoundError();
     }
 
-    account.update({ nickname: command.nickname });
-
-    if (command.nickname !== undefined) {
-      const sameNicknameAccount =
-        await this.accountRepository.findOneByNickname(account.nickname);
-
-      if (sameNicknameAccount !== undefined) {
-        if (account.isSameNicknameAccount(sameNicknameAccount)) {
-          throw new AccountNicknameAlreadyOccupiedError();
-        }
-      }
-    }
+    account.update({ name: command.name });
 
     await this.accountRepository.update(account);
 

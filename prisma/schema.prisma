@@ -23,9 +23,9 @@ enum AccountRole {
 }
 
 model Account {
-  id       BigInt      @id
-  role     AccountRole @default(User)
-  nickname String      @unique @db.VarChar(20)
+  id   BigInt      @id
+  role AccountRole @default(User)
+  name String      @unique @db.VarChar(20)
 
   signInType SignInType
   username   String?    @unique @db.VarChar(20)

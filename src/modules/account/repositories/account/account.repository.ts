@@ -30,20 +30,6 @@ export class AccountRepository
     super(prismaService, AccountMapper);
   }
 
-  async findOneByNickname(nickname: string): Promise<Account | undefined> {
-    const raw = await this.prismaService.account.findUnique({
-      where: {
-        nickname,
-      },
-    });
-
-    if (raw === null) {
-      return;
-    }
-
-    return AccountMapper.toEntity(raw);
-  }
-
   async findOneByUsername(username: string): Promise<Account | undefined> {
     const raw = await this.prismaService.account.findUnique({
       where: {

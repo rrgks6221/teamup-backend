@@ -15,7 +15,6 @@ import {
 
 import { AccountDtoAssembler } from '@module/account/assemblers/account-dto.assembler';
 import { AccountResponseDto } from '@module/account/dto/account.response-dto';
-import { AccountNicknameAlreadyOccupiedError } from '@module/account/errors/account-nickname-already-occupied.error';
 import { AccountNotFoundError } from '@module/account/errors/account-not-found.error';
 import { AccountValidationError } from '@module/account/errors/account-validation.error';
 import { UpdateAccountRequestDto } from '@module/account/use-cases/update-account/dto/update-account.request-dto';
@@ -54,7 +53,6 @@ export class UpdateAccountController {
     [HttpStatus.UNAUTHORIZED]: [UnauthorizedUserError],
     [HttpStatus.FORBIDDEN]: [PermissionDeniedError],
     [HttpStatus.NOT_FOUND]: [AccountNotFoundError],
-    [HttpStatus.CONFLICT]: [AccountNicknameAlreadyOccupiedError],
     [HttpStatus.UNPROCESSABLE_ENTITY]: [AccountValidationError],
   })
   @Patch('accounts/me')
@@ -65,7 +63,7 @@ export class UpdateAccountController {
     try {
       const command = new UpdateAccountCommand({
         accountId: currentUser.id,
-        nickname: body.nickname,
+        name: body.name,
       });
 
       const account = await this.updateAccountService.execute(command);
@@ -77,9 +75,6 @@ export class UpdateAccountController {
       }
       if (error instanceof AccountNotFoundError) {
         throw new BaseHttpException(HttpStatus.NOT_FOUND, error);
-      }
-      if (error instanceof AccountNicknameAlreadyOccupiedError) {
-        throw new BaseHttpException(HttpStatus.CONFLICT, error);
       }
 
       if (error instanceof AccountValidationError) {

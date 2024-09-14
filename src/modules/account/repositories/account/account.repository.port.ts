@@ -12,6 +12,5 @@ export interface AccountFilter {}
 
 export interface AccountRepositoryPort
   extends RepositoryPort<Account, AccountFilter> {
-  findOneByNickname(nickname: string): Promise<Account | undefined>;
   findOneByUsername(username: string): Promise<Account | undefined>;
 }

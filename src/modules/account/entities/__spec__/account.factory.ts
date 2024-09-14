@@ -17,7 +17,7 @@ export const AccountFactory = Factory.define<Account & AccountProps>('Account')
     username: () => faker.string.nanoid(Account.USERNAME_MAX_LENGTH),
     password: () => faker.string.uuid(),
     role: () => AccountRole.User,
-    nickname: () => faker.string.nanoid(Account.NICKNAME_MAX_LENGTH),
+    name: () => faker.string.nanoid(Account.NAME_MAX_LENGTH),
     createdAt: () => new Date(),
     updatedAt: () => new Date(),
   })

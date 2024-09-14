@@ -4,5 +4,5 @@ import { BaseResponseDto } from '@common/base/base.dto';
 
 export class AccountResponseDto extends BaseResponseDto {
   @ApiPropertyOptional()
-  nickname?: string;
+  name?: string;
 }

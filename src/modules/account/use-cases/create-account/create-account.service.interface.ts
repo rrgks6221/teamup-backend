@@ -8,20 +8,20 @@ export interface ICreateAccountCommandProps {
   username: string;
   password: string;
   signInType: SignInType;
-  nickname?: string;
+  name?: string;
 }
 
 export class CreateAccountCommand {
   readonly username: string;
   readonly password: string;
   readonly signInType: SignInType;
-  readonly nickname?: string;
+  readonly name?: string;
 
   constructor(props: ICreateAccountCommandProps) {
     this.username = props.username;
     this.password = props.password;
     this.signInType = props.signInType;
-    this.nickname = props.nickname;
+    this.name = props.name;
   }
 }
 

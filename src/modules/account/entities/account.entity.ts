@@ -22,23 +22,23 @@ export interface AccountProps {
   password?: string;
   signInType: SignInType;
   role: AccountRole;
-  nickname: string;
+  name: string;
 }
 
 interface CreateAccountByUsernameProps {
   username: string;
   password: string;
   signInType: SignInType.Username;
-  nickname?: string;
+  name?: string;
 }
 
 interface UpdateAccountProps {
-  nickname?: string;
+  name?: string;
 }
 
 export class Account extends BaseEntity<AccountProps> {
   static USERNAME_MAX_LENGTH = 20;
-  static NICKNAME_MAX_LENGTH = 10;
+  static NAME_MAX_LENGTH = 10;
 
   constructor(props: CreateEntityProps<AccountProps>) {
     super(props);
@@ -57,9 +57,7 @@ export class Account extends BaseEntity<AccountProps> {
         password: createAccountByUsernameProps.password,
         signInType: createAccountByUsernameProps.signInType,
         role: AccountRole.User,
-        nickname:
-          createAccountByUsernameProps.nickname ??
-          this.generateRandomNickname(),
+        name: createAccountByUsernameProps.name ?? this.generateRandomName(),
       },
       createdAt: date,
       updatedAt: date,
@@ -67,8 +65,8 @@ export class Account extends BaseEntity<AccountProps> {
   }
 
   // @todo 의미있는 닉네임을 생성
-  private static generateRandomNickname() {
-    return faker.string.nanoid(Account.NICKNAME_MAX_LENGTH);
+  private static generateRandomName() {
+    return faker.string.nanoid(Account.NAME_MAX_LENGTH);
   }
 
   get username() {
@@ -87,39 +85,31 @@ export class Account extends BaseEntity<AccountProps> {
     return this.props.role;
   }
 
-  get nickname() {
-    return this.props.nickname;
-  }
-
-  isSameNicknameAccount(compareAccount: Account) {
-    if (this.id === compareAccount.id) {
-      return false;
-    }
-
-    return this.props.nickname === compareAccount.nickname;
+  get name() {
+    return this.props.name;
   }
 
   update(updateAccountProps: UpdateAccountProps) {
-    if (updateAccountProps.nickname !== undefined) {
-      this.props.nickname = updateAccountProps.nickname;
-      this.nicknameValidate();
+    if (updateAccountProps.name !== undefined) {
+      this.props.name = updateAccountProps.name;
+      this.nameValidate();
     }
 
     return this;
   }
 
   public validate(): void {
-    this.nicknameValidate();
+    this.nameValidate();
     this.usernameValidate();
   }
 
-  private nicknameValidate() {
+  private nameValidate() {
     if (
-      this.props.nickname !== undefined &&
-      this.props.nickname.length > Account.NICKNAME_MAX_LENGTH
+      this.props.name !== undefined &&
+      this.props.name.length > Account.NAME_MAX_LENGTH
     ) {
       throw new AccountValidationError(
-        'Account nickname can not be longer than 10 characters',
+        'Account name can not be longer than 10 characters',
       );
     }
   }

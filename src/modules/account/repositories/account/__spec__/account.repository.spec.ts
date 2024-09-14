@@ -96,39 +96,6 @@ describe(AccountRepository.name, () => {
     });
   });
 
-  describe(AccountRepository.prototype.findOneByNickname.name, () => {
-    let nickname: string;
-
-    beforeEach(() => {
-      nickname = faker.string.nanoid(Account.NICKNAME_MAX_LENGTH);
-    });
-
-    describe('닉네임과 일치하는 계정이 존재하는 경우', () => {
-      let account: Account;
-
-      beforeEach(async () => {
-        account = await repository.insert(AccountFactory.build({ nickname }));
-      });
-      describe('계정을 조회하면', () => {
-        it('계정이 반환돼야한다.', async () => {
-          await expect(repository.findOneByNickname(nickname)).resolves.toEqual(
-            account,
-          );
-        });
-      });
-    });
-
-    describe('닉네임과 일치하는 계정이 존재하는 경우', () => {
-      describe('계정을 조회하면', () => {
-        it('undefined가 반환돼야한다.', async () => {
-          await expect(
-            repository.findOneByNickname(nickname),
-          ).resolves.toBeUndefined();
-        });
-      });
-    });
-  });
-
   describe(AccountRepository.prototype.findOneByUsername.name, () => {
     let username: string;
 

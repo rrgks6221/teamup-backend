@@ -11,5 +11,5 @@ export const CreateAccountCommandFactory = Factory.define<CreateAccountCommand>(
   username: () => faker.string.nanoid(Account.USERNAME_MAX_LENGTH),
   password: () => faker.string.uuid(),
   signInType: () => faker.helpers.enumValue(SignInType),
-  nickname: () => faker.string.nanoid(Account.NICKNAME_MAX_LENGTH),
+  name: () => faker.string.nanoid(Account.NAME_MAX_LENGTH),
 });
