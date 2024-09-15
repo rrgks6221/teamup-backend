@@ -12,4 +12,5 @@ export const UpdateAccountCommandFactory = Factory.define<UpdateAccountCommand>(
 ).attrs({
   accountId: () => generateEntityId(),
   name: () => faker.string.nanoid(Account.NAME_MAX_LENGTH),
+  positionIds: () => [],
 });

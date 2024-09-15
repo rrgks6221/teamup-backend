@@ -19,6 +19,7 @@ export class AccountMapper extends BaseMapper {
         signInType: SignInType[raw.signInType],
         role: AccountRole[raw.role],
         name: raw.name,
+        positionNames: [...(raw.positionNames as string[])],
       },
     });
   }
@@ -31,6 +32,7 @@ export class AccountMapper extends BaseMapper {
       signInType: entity.props.signInType,
       role: entity.props.role,
       name: entity.props.name ?? null,
+      positionNames: entity.props.positionNames,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

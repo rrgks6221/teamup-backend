@@ -43,6 +43,21 @@ export class PositionRepository
     return this.mapper.toEntity(raw);
   }
 
+  async findByIds(ids: string[]): Promise<Position[]> {
+    const raws = await this.prismaService.position.findMany({
+      where: {
+        id: {
+          in: ids.map((id) => this.mapper.toPrimaryKey(id)),
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+
+    return raws.map((raw) => this.mapper.toEntity(raw));
+  }
+
   async findAll(): Promise<Position[]> {
     const raws = await this.prismaService.position.findMany({
       orderBy: {

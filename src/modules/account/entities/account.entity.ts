@@ -23,6 +23,7 @@ export interface AccountProps {
   signInType: SignInType;
   role: AccountRole;
   name: string;
+  positionNames: string[];
 }
 
 interface CreateAccountByUsernameProps {
@@ -34,6 +35,7 @@ interface CreateAccountByUsernameProps {
 
 interface UpdateAccountProps {
   name?: string;
+  positionNames?: string[];
 }
 
 export class Account extends BaseEntity<AccountProps> {
@@ -58,6 +60,7 @@ export class Account extends BaseEntity<AccountProps> {
         signInType: createAccountByUsernameProps.signInType,
         role: AccountRole.User,
         name: createAccountByUsernameProps.name ?? this.generateRandomName(),
+        positionNames: [],
       },
       createdAt: date,
       updatedAt: date,
@@ -89,10 +92,17 @@ export class Account extends BaseEntity<AccountProps> {
     return this.props.name;
   }
 
+  get positionNames() {
+    return this.props.positionNames;
+  }
+
   update(updateAccountProps: UpdateAccountProps) {
     if (updateAccountProps.name !== undefined) {
       this.props.name = updateAccountProps.name;
       this.nameValidate();
+    }
+    if (updateAccountProps.positionNames !== undefined) {
+      this.props.positionNames = updateAccountProps.positionNames;
     }
 
     return this;

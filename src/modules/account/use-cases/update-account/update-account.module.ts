@@ -4,9 +4,10 @@ import { AccountRepositoryModule } from '@module/account/repositories/account/ac
 import { UpdateAccountController } from '@module/account/use-cases/update-account/update-account.controller';
 import { UpdateAccountService } from '@module/account/use-cases/update-account/update-account.service';
 import { UPDATE_ACCOUNT_SERVICE } from '@module/account/use-cases/update-account/update-account.service.interface';
+import { PositionServiceModule } from '@module/position/services/position-service/position-service.module';
 
 @Module({
-  imports: [AccountRepositoryModule],
+  imports: [AccountRepositoryModule, PositionServiceModule],
   controllers: [UpdateAccountController],
   providers: [
     {

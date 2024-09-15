@@ -26,6 +26,7 @@ import {
 import { PermissionDeniedError } from '@module/auth/errors/permission-denied.error';
 import { UnauthorizedUserError } from '@module/auth/errors/unauthorized-user.error';
 import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
+import { PositionNotFoundError } from '@module/position/errors/position-not-found.error';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
 import { RequestValidationError } from '@common/base/base.error';
@@ -49,7 +50,7 @@ export class UpdateAccountController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: AccountResponseDto })
   @ApiErrorResponse({
-    [HttpStatus.BAD_REQUEST]: [RequestValidationError],
+    [HttpStatus.BAD_REQUEST]: [RequestValidationError, PositionNotFoundError],
     [HttpStatus.UNAUTHORIZED]: [UnauthorizedUserError],
     [HttpStatus.FORBIDDEN]: [PermissionDeniedError],
     [HttpStatus.NOT_FOUND]: [AccountNotFoundError],
@@ -64,6 +65,7 @@ export class UpdateAccountController {
       const command = new UpdateAccountCommand({
         accountId: currentUser.id,
         name: body.name,
+        positionIds: body.positionIds,
       });
 
       const account = await this.updateAccountService.execute(command);
@@ -79,6 +81,10 @@ export class UpdateAccountController {
 
       if (error instanceof AccountValidationError) {
         throw new BaseHttpException(HttpStatus.UNPROCESSABLE_ENTITY, error);
+      }
+
+      if (error instanceof PositionNotFoundError) {
+        throw new BaseHttpException(HttpStatus.BAD_REQUEST, error);
       }
 
       throw error;

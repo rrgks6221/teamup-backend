@@ -10,6 +10,7 @@ export class AccountDtoAssembler {
     });
 
     dto.name = account.name;
+    dto.positionNames = account.positionNames;
 
     return dto;
   }

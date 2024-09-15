@@ -89,6 +89,36 @@ describe(PositionRepository.name, () => {
     });
   });
 
+  describe(PositionRepository.prototype.findByIds.name, () => {
+    let positionIds: string[];
+
+    beforeEach(() => {
+      positionIds = [generateEntityId(), generateEntityId()];
+    });
+
+    describe('포지션 식별자리스트와 일치하는 포지션이 존재하는 경우', () => {
+      beforeEach(async () => {
+        await Promise.all([
+          repository.insert(PositionFactory.build()),
+          ...positionIds.map((id) =>
+            repository.insert(PositionFactory.build({ id })),
+          ),
+        ]);
+      });
+
+      describe('포지션을 조회하면', () => {
+        it('식별자와 일치하는 포지션 리스트가 조회된다.', async () => {
+          await expect(repository.findByIds(positionIds)).resolves.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({ id: positionIds[0] }),
+              expect.objectContaining({ id: positionIds[1] }),
+            ]),
+          );
+        });
+      });
+    });
+  });
+
   describe(PositionRepository.prototype.findAll.name, () => {
     describe('포지션 전체를 조회하면', () => {
       let positions: Position[];

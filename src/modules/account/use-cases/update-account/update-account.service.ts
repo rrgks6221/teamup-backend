@@ -10,12 +10,18 @@ import {
   IUpdateAccountService,
   UpdateAccountCommand,
 } from '@module/account/use-cases/update-account/update-account.service.interface';
+import {
+  IPositionService,
+  POSITION_SERVICE,
+} from '@module/position/services/position-service/position.service.interface';
 
 @Injectable()
 export class UpdateAccountService implements IUpdateAccountService {
   constructor(
     @Inject(ACCOUNT_REPOSITORY)
     private readonly accountRepository: AccountRepositoryPort,
+    @Inject(POSITION_SERVICE)
+    private readonly positionService: IPositionService,
   ) {}
 
   async execute(command: UpdateAccountCommand): Promise<Account> {
@@ -25,7 +31,17 @@ export class UpdateAccountService implements IUpdateAccountService {
       throw new AccountNotFoundError();
     }
 
-    account.update({ name: command.name });
+    let positionNames: string[] | undefined;
+
+    if (command.positionIds !== undefined) {
+      const positions = await this.positionService.findByIdsOrFail(
+        command.positionIds,
+      );
+
+      positionNames = positions.map((position) => position.name);
+    }
+
+    account.update({ name: command.name, positionNames });
 
     await this.accountRepository.update(account);
 

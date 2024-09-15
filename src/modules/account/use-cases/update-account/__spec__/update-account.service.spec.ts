@@ -14,6 +14,7 @@ import {
   UPDATE_ACCOUNT_SERVICE,
   UpdateAccountCommand,
 } from '@module/account/use-cases/update-account/update-account.service.interface';
+import { PositionServiceModule } from '@module/position/services/position-service/position-service.module';
 
 describe(UpdateAccountService.name, () => {
   let service: IUpdateAccountService;
@@ -24,7 +25,7 @@ describe(UpdateAccountService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AccountRepositoryModule],
+      imports: [AccountRepositoryModule, PositionServiceModule],
       providers: [
         {
           provide: UPDATE_ACCOUNT_SERVICE,
@@ -55,6 +56,7 @@ describe(UpdateAccountService.name, () => {
           expect.objectContaining({
             id: command.accountId,
             name: command.name,
+            positionNames: [],
           }),
         );
       });
