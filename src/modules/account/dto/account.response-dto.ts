@@ -1,10 +1,10 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseResponseDto } from '@common/base/base.dto';
 
 export class AccountResponseDto extends BaseResponseDto {
-  @ApiPropertyOptional()
-  name?: string;
+  @ApiProperty()
+  name: string;
 
   @ApiProperty()
   positionNames: string[];
