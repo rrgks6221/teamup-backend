@@ -23,10 +23,11 @@ enum AccountRole {
 }
 
 model Account {
-  id            BigInt      @id
-  role          AccountRole @default(User)
-  name          String      @unique @db.VarChar(20)
-  positionNames Json        @default("[]")
+  id             BigInt      @id
+  role           AccountRole @default(User)
+  name           String      @unique @db.VarChar(20)
+  positionNames  Json        @default("[]")
+  techStackNames Json        @default("[]")
 
   signInType SignInType
   username   String?    @unique @db.VarChar(20)

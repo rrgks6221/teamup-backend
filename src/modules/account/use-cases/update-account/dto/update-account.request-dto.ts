@@ -16,4 +16,13 @@ export class UpdateAccountRequestDto {
   @IsArray()
   @IsOptional()
   positionIds?: string[];
+
+  @ApiPropertyOptional({
+    uniqueItems: true,
+  })
+  @IsString({ each: true })
+  @ArrayUnique()
+  @IsArray()
+  @IsOptional()
+  techStackIds?: string[];
 }

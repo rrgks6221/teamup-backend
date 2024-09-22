@@ -24,6 +24,7 @@ export interface AccountProps {
   role: AccountRole;
   name: string;
   positionNames: string[];
+  techStackNames: string[];
 }
 
 interface CreateAccountByUsernameProps {
@@ -36,6 +37,7 @@ interface CreateAccountByUsernameProps {
 interface UpdateAccountProps {
   name?: string;
   positionNames?: string[];
+  techStackNames?: string[];
 }
 
 export class Account extends BaseEntity<AccountProps> {
@@ -61,6 +63,7 @@ export class Account extends BaseEntity<AccountProps> {
         role: AccountRole.User,
         name: createAccountByUsernameProps.name ?? this.generateRandomName(),
         positionNames: [],
+        techStackNames: [],
       },
       createdAt: date,
       updatedAt: date,
@@ -96,6 +99,10 @@ export class Account extends BaseEntity<AccountProps> {
     return this.props.positionNames;
   }
 
+  get techStackNames() {
+    return this.props.techStackNames;
+  }
+
   update(updateAccountProps: UpdateAccountProps) {
     if (updateAccountProps.name !== undefined) {
       this.props.name = updateAccountProps.name;
@@ -103,6 +110,9 @@ export class Account extends BaseEntity<AccountProps> {
     }
     if (updateAccountProps.positionNames !== undefined) {
       this.props.positionNames = updateAccountProps.positionNames;
+    }
+    if (updateAccountProps.techStackNames !== undefined) {
+      this.props.techStackNames = updateAccountProps.techStackNames;
     }
 
     return this;

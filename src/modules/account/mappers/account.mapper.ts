@@ -20,6 +20,7 @@ export class AccountMapper extends BaseMapper {
         role: AccountRole[raw.role],
         name: raw.name,
         positionNames: [...(raw.positionNames as string[])],
+        techStackNames: [...(raw.techStackNames as string[])],
       },
     });
   }
@@ -33,6 +34,7 @@ export class AccountMapper extends BaseMapper {
       role: entity.props.role,
       name: entity.props.name ?? null,
       positionNames: entity.props.positionNames,
+      techStackNames: entity.props.techStackNames,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

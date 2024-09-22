@@ -11,6 +11,7 @@ export class AccountDtoAssembler {
 
     dto.name = account.name;
     dto.positionNames = account.positionNames;
+    dto.techStackNames = account.techStackNames;
 
     return dto;
   }

@@ -15,6 +15,7 @@ import {
   UpdateAccountCommand,
 } from '@module/account/use-cases/update-account/update-account.service.interface';
 import { PositionServiceModule } from '@module/position/services/position-service/position-service.module';
+import { TechStackServiceModule } from '@module/tech-stack/services/tech-stack-service/tech-stack-service.module';
 
 describe(UpdateAccountService.name, () => {
   let service: IUpdateAccountService;
@@ -25,7 +26,11 @@ describe(UpdateAccountService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AccountRepositoryModule, PositionServiceModule],
+      imports: [
+        AccountRepositoryModule,
+        PositionServiceModule,
+        TechStackServiceModule,
+      ],
       providers: [
         {
           provide: UPDATE_ACCOUNT_SERVICE,
@@ -57,6 +62,7 @@ describe(UpdateAccountService.name, () => {
             id: command.accountId,
             name: command.name,
             positionNames: [],
+            techStackNames: [],
           }),
         );
       });

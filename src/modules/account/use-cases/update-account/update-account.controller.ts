@@ -27,6 +27,7 @@ import { PermissionDeniedError } from '@module/auth/errors/permission-denied.err
 import { UnauthorizedUserError } from '@module/auth/errors/unauthorized-user.error';
 import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
 import { PositionNotFoundError } from '@module/position/errors/position-not-found.error';
+import { TechStackNotFoundError } from '@module/tech-stack/errors/tech-stack-not-found.error';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
 import { RequestValidationError } from '@common/base/base.error';
@@ -50,7 +51,11 @@ export class UpdateAccountController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: AccountResponseDto })
   @ApiErrorResponse({
-    [HttpStatus.BAD_REQUEST]: [RequestValidationError, PositionNotFoundError],
+    [HttpStatus.BAD_REQUEST]: [
+      RequestValidationError,
+      PositionNotFoundError,
+      TechStackNotFoundError,
+    ],
     [HttpStatus.UNAUTHORIZED]: [UnauthorizedUserError],
     [HttpStatus.FORBIDDEN]: [PermissionDeniedError],
     [HttpStatus.NOT_FOUND]: [AccountNotFoundError],
@@ -66,6 +71,7 @@ export class UpdateAccountController {
         accountId: currentUser.id,
         name: body.name,
         positionIds: body.positionIds,
+        techStackIds: body.techStackIds,
       });
 
       const account = await this.updateAccountService.execute(command);
@@ -84,6 +90,9 @@ export class UpdateAccountController {
       }
 
       if (error instanceof PositionNotFoundError) {
+        throw new BaseHttpException(HttpStatus.BAD_REQUEST, error);
+      }
+      if (error instanceof TechStackNotFoundError) {
         throw new BaseHttpException(HttpStatus.BAD_REQUEST, error);
       }
 

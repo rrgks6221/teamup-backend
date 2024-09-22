@@ -8,4 +8,7 @@ export class AccountResponseDto extends BaseResponseDto {
 
   @ApiProperty()
   positionNames: string[];
+
+  @ApiProperty()
+  techStackNames: string[];
 }

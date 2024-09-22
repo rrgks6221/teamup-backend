@@ -14,6 +14,10 @@ import {
   IPositionService,
   POSITION_SERVICE,
 } from '@module/position/services/position-service/position.service.interface';
+import {
+  ITechStackService,
+  TECH_STACK_SERVICE,
+} from '@module/tech-stack/services/tech-stack-service/tech-stack.service.interface';
 
 @Injectable()
 export class UpdateAccountService implements IUpdateAccountService {
@@ -22,6 +26,8 @@ export class UpdateAccountService implements IUpdateAccountService {
     private readonly accountRepository: AccountRepositoryPort,
     @Inject(POSITION_SERVICE)
     private readonly positionService: IPositionService,
+    @Inject(TECH_STACK_SERVICE)
+    private readonly techStackService: ITechStackService,
   ) {}
 
   async execute(command: UpdateAccountCommand): Promise<Account> {
@@ -41,7 +47,17 @@ export class UpdateAccountService implements IUpdateAccountService {
       positionNames = positions.map((position) => position.name);
     }
 
-    account.update({ name: command.name, positionNames });
+    let techStackNames: string[] | undefined;
+
+    if (command.techStackIds !== undefined) {
+      const techStacks = await this.techStackService.findByIdsOrFail(
+        command.techStackIds,
+      );
+
+      techStackNames = techStacks.map((techStack) => techStack.name);
+    }
+
+    account.update({ name: command.name, positionNames, techStackNames });
 
     await this.accountRepository.update(account);
 

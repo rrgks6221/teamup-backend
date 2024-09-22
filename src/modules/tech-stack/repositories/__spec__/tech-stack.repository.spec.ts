@@ -89,6 +89,36 @@ describe(TechStackRepository.name, () => {
     });
   });
 
+  describe(TechStackRepository.prototype.findByIds.name, () => {
+    let techStackIds: string[];
+
+    beforeEach(() => {
+      techStackIds = [generateEntityId(), generateEntityId()];
+    });
+
+    describe('기술 스택 식별자리스트와 일치하는 기술 스택이 존재하는 경우', () => {
+      beforeEach(async () => {
+        await Promise.all([
+          repository.insert(TechStackFactory.build()),
+          ...techStackIds.map((id) =>
+            repository.insert(TechStackFactory.build({ id })),
+          ),
+        ]);
+      });
+
+      describe('기술 스택을 조회하면', () => {
+        it('식별자와 일치하는 기술 스택 리스트가 조회된다.', async () => {
+          await expect(repository.findByIds(techStackIds)).resolves.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({ id: techStackIds[0] }),
+              expect.objectContaining({ id: techStackIds[1] }),
+            ]),
+          );
+        });
+      });
+    });
+  });
+
   describe(TechStackRepository.prototype.findAll.name, () => {
     describe('기술스택 전체를 조회하면', () => {
       let techStacks: TechStack[];

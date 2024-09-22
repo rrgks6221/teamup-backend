@@ -13,5 +13,6 @@ export interface TechStackFilter {}
 export interface TechStackRepositoryPort
   extends RepositoryPort<TechStack, TechStackFilter> {
   findOneByName(name: string): Promise<TechStack | undefined>;
+  findByIds(ids: string[]): Promise<TechStack[]>;
   findAll(): Promise<TechStack[]>;
 }
