@@ -10,6 +10,7 @@ export class AccountDtoAssembler {
     });
 
     dto.name = account.name;
+    dto.introduce = account.introduce ?? null;
     dto.positionNames = account.positionNames;
     dto.techStackNames = account.techStackNames;
 

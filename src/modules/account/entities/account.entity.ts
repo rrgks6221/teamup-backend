@@ -23,6 +23,7 @@ export interface AccountProps {
   signInType: SignInType;
   role: AccountRole;
   name: string;
+  introduce?: string;
   positionNames: string[];
   techStackNames: string[];
 }
@@ -36,6 +37,7 @@ interface CreateAccountByUsernameProps {
 
 interface UpdateAccountProps {
   name?: string;
+  introduce?: string;
   positionNames?: string[];
   techStackNames?: string[];
 }
@@ -95,6 +97,10 @@ export class Account extends BaseEntity<AccountProps> {
     return this.props.name;
   }
 
+  get introduce() {
+    return this.props.introduce;
+  }
+
   get positionNames() {
     return this.props.positionNames;
   }
@@ -107,6 +113,9 @@ export class Account extends BaseEntity<AccountProps> {
     if (updateAccountProps.name !== undefined) {
       this.props.name = updateAccountProps.name;
       this.nameValidate();
+    }
+    if (updateAccountProps.introduce !== undefined) {
+      this.props.introduce = updateAccountProps.introduce;
     }
     if (updateAccountProps.positionNames !== undefined) {
       this.props.positionNames = updateAccountProps.positionNames;

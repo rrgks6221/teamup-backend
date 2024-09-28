@@ -26,6 +26,7 @@ model Account {
   id             BigInt      @id
   role           AccountRole @default(User)
   name           String      @unique @db.VarChar(20)
+  introduce      String?
   positionNames  Json        @default("[]")
   techStackNames Json        @default("[]")
 

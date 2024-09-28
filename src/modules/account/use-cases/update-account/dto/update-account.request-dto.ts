@@ -8,6 +8,11 @@ export class UpdateAccountRequestDto {
   @IsOptional()
   name?: string;
 
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  introduce?: string;
+
   @ApiPropertyOptional({
     uniqueItems: true,
   })

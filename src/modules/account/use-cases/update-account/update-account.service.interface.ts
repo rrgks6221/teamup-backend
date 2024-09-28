@@ -8,6 +8,7 @@ export const UPDATE_ACCOUNT_SERVICE = Symbol('IUpdateAccountService');
 export interface IUpdateAccountCommandProps {
   accountId: EntityId;
   name?: string;
+  introduce?: string;
   positionIds?: string[];
   techStackIds?: string[];
 }
@@ -15,12 +16,14 @@ export interface IUpdateAccountCommandProps {
 export class UpdateAccountCommand {
   readonly accountId: EntityId;
   readonly name?: string;
+  readonly introduce?: string;
   readonly positionIds?: string[];
   readonly techStackIds?: string[];
 
   constructor(props: IUpdateAccountCommandProps) {
     this.accountId = props.accountId;
     this.name = props.name;
+    this.introduce = props.introduce;
     this.positionIds = props.positionIds;
     this.techStackIds = props.techStackIds;
   }

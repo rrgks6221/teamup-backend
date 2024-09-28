@@ -57,7 +57,12 @@ export class UpdateAccountService implements IUpdateAccountService {
       techStackNames = techStacks.map((techStack) => techStack.name);
     }
 
-    account.update({ name: command.name, positionNames, techStackNames });
+    account.update({
+      name: command.name,
+      introduce: command.introduce,
+      positionNames,
+      techStackNames,
+    });
 
     await this.accountRepository.update(account);
 

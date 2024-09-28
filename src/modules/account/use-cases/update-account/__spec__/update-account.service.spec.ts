@@ -61,6 +61,7 @@ describe(UpdateAccountService.name, () => {
           expect.objectContaining({
             id: command.accountId,
             name: command.name,
+            introduce: command.introduce,
             positionNames: [],
             techStackNames: [],
           }),

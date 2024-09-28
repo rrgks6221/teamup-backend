@@ -70,6 +70,7 @@ export class UpdateAccountController {
       const command = new UpdateAccountCommand({
         accountId: currentUser.id,
         name: body.name,
+        introduce: body.introduce,
         positionIds: body.positionIds,
         techStackIds: body.techStackIds,
       });

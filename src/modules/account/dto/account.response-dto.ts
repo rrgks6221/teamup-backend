@@ -6,6 +6,11 @@ export class AccountResponseDto extends BaseResponseDto {
   @ApiProperty()
   name: string;
 
+  @ApiProperty({
+    nullable: true,
+  })
+  introduce: string | null;
+
   @ApiProperty()
   positionNames: string[];
 
