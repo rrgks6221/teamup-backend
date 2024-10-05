@@ -30,6 +30,7 @@ import {
   CurrentUser,
   ICurrentUser,
 } from '@common/decorator/current-user.decorator';
+import { ParsePositiveIntStringPipe } from '@common/pipes/positive-int-string.pipe';
 
 @ApiTags('account')
 @ApiOkResponse({ type: AccountResponseDto })
@@ -71,7 +72,9 @@ export class GetAccountController {
   })
   @ApiOperation({ summary: '특정 계정 조회' })
   @Get('accounts/:id')
-  async getAccount(@Param('id') id: string): Promise<AccountResponseDto> {
+  async getAccount(
+    @Param('id', ParsePositiveIntStringPipe) id: string,
+  ): Promise<AccountResponseDto> {
     try {
       const query = new GetAccountQuery({ id });
 
