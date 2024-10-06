@@ -36,7 +36,7 @@ import {
   CurrentUser,
   ICurrentUser,
 } from '@common/decorator/current-user.decorator';
-import { NotEmptyObjectPipe } from '@common/pipes/not-empty-object.pipe';
+import { ParseNotEmptyObjectPipe } from '@common/pipes/parse-not-empty-object.pipe';
 
 @ApiTags('account')
 @Controller()
@@ -64,7 +64,7 @@ export class UpdateAccountController {
   @Patch('accounts/me')
   async update(
     @CurrentUser() currentUser: ICurrentUser,
-    @Body(NotEmptyObjectPipe) body: UpdateAccountRequestDto,
+    @Body(ParseNotEmptyObjectPipe) body: UpdateAccountRequestDto,
   ): Promise<AccountResponseDto> {
     try {
       const command = new UpdateAccountCommand({
