@@ -20,8 +20,8 @@ export class AccountMapper extends BaseMapper {
         role: AccountRole[raw.role],
         name: raw.name,
         introduce: raw.introduce ?? undefined,
-        positionNames: [...(raw.positionNames as string[])],
-        techStackNames: [...(raw.techStackNames as string[])],
+        positionNames: [...raw.positionNames],
+        techStackNames: [...raw.techStackNames],
       },
     });
   }

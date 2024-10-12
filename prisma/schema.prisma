@@ -8,6 +8,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -27,7 +31,9 @@ model Account {
   role           AccountRole @default(User)
   name           String      @unique @db.VarChar(20)
   introduce      String?
+  /// [AccountPositionNames]
   positionNames  Json        @default("[]")
+  /// [AccountTechStackNames]
   techStackNames Json        @default("[]")
 
   signInType SignInType
