@@ -27,18 +27,36 @@ export const setGlobalPipe = (app: INestApplication) => {
   };
 
   const exceptionFactory = (validationErrors: ValidationError[]) => {
-    const errors = validationErrors.map((validationError) => {
-      return {
-        property: validationError.property,
-        constraints: Object.values(validationError.constraints ?? {}),
-      };
-    });
+    function flattenValidationErrors(
+      errors: ValidationError[],
+      parentPath: string = '',
+    ): any[] {
+      return errors.flatMap(({ property, constraints, children }) => {
+        const path = parentPath ? `${parentPath}.${property}` : property;
+        const result: any[] = [];
+
+        if (constraints) {
+          result.push({
+            property: path,
+            constraints: Object.values(constraints).map((message) =>
+              message.replace(property, path),
+            ),
+          });
+        }
+
+        if (children?.length) {
+          result.push(...flattenValidationErrors(children, path));
+        }
+
+        return result;
+      });
+    }
 
     throw new BadRequestException({
       statusCode: 400,
       message: 'request input validation error',
       code: RequestValidationError.CODE,
-      errors,
+      errors: flattenValidationErrors(validationErrors),
     });
   };
 
@@ -56,3 +74,26 @@ export const setGlobalInterceptor = (app: INestApplication) => {
 export const setGlobalExceptionFilter = (app: INestApplication) => {
   app.useGlobalFilters(new BaseHttpExceptionFilter());
 };
+
+[
+  {
+    property: 'name',
+    constraints: ['name must be a string'],
+  },
+  {
+    property: 'snsLinks.0.name',
+    constraints: ['snsLinks.0.name must be a string'],
+  },
+  {
+    property: 'snsLinks.0.url',
+    constraints: ['snsLinks.0.url must be a https protocol URL address'],
+  },
+  {
+    property: 'snsLink.name',
+    constraints: ['snsLink.name must be a string'],
+  },
+  {
+    property: 'snsLink.url',
+    constraints: ['snsLink.url must be a https protocol URL address'],
+  },
+];
