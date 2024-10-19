@@ -64,6 +64,7 @@ describe(UpdateAccountService.name, () => {
             introduce: command.introduce,
             positionNames: [],
             techStackNames: [],
+            snsLinks: [],
           }),
         );
       });

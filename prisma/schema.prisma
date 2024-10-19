@@ -35,6 +35,8 @@ model Account {
   positionNames  Json        @default("[]")
   /// [AccountTechStackNames]
   techStackNames Json        @default("[]")
+  /// [AccountSnsLinks]
+  snsLinks       Json        @default("[]")
 
   signInType SignInType
   username   String?    @unique @db.VarChar(20)

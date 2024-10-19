@@ -21,6 +21,7 @@ export const AccountFactory = Factory.define<Account & AccountProps>('Account')
     introduce: () => faker.string.alpha(),
     positionNames: () => [],
     techStackNames: () => [],
+    snsLinks: () => [],
     createdAt: () => new Date(),
     updatedAt: () => new Date(),
   })

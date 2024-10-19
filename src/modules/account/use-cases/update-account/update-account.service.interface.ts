@@ -1,3 +1,4 @@
+import { AccountSnsLinkVisibilityScope } from '@module/account/entities/account-sns-link.vo';
 import { Account } from '@module/account/entities/account.entity';
 
 import { IBaseService } from '@common/base/base-service';
@@ -11,6 +12,7 @@ export interface IUpdateAccountCommandProps {
   introduce?: string;
   positionIds?: string[];
   techStackIds?: string[];
+  snsLinks?: { url: string; platform: string }[];
 }
 
 export class UpdateAccountCommand {
@@ -19,6 +21,11 @@ export class UpdateAccountCommand {
   readonly introduce?: string;
   readonly positionIds?: string[];
   readonly techStackIds?: string[];
+  readonly snsLinks?: {
+    url: string;
+    platform: string;
+    visibilityScope: AccountSnsLinkVisibilityScope;
+  }[];
 
   constructor(props: IUpdateAccountCommandProps) {
     this.accountId = props.accountId;
@@ -26,6 +33,11 @@ export class UpdateAccountCommand {
     this.introduce = props.introduce;
     this.positionIds = props.positionIds;
     this.techStackIds = props.techStackIds;
+    this.snsLinks = props.snsLinks?.map((snsLink) => ({
+      url: snsLink.url,
+      platform: snsLink.platform,
+      visibilityScope: AccountSnsLinkVisibilityScope.public,
+    }));
   }
 }
 

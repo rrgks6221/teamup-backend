@@ -62,6 +62,7 @@ export class UpdateAccountService implements IUpdateAccountService {
       introduce: command.introduce,
       positionNames,
       techStackNames,
+      snsLinks: command.snsLinks,
     });
 
     await this.accountRepository.update(account);

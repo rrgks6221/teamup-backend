@@ -1,4 +1,8 @@
 import {
+  AccountSnsLink,
+  AccountSnsLinkVisibilityScope,
+} from '@module/account/entities/account-sns-link.vo';
+import {
   Account,
   AccountRole,
   SignInType,
@@ -22,6 +26,15 @@ export class AccountMapper extends BaseMapper {
         introduce: raw.introduce ?? undefined,
         positionNames: [...raw.positionNames],
         techStackNames: [...raw.techStackNames],
+        snsLinks: raw.snsLinks.map(
+          (snsLink) =>
+            new AccountSnsLink({
+              url: snsLink.url,
+              platform: snsLink.platform,
+              visibilityScope:
+                AccountSnsLinkVisibilityScope[snsLink.visibilityScope],
+            }),
+        ),
       },
     });
   }
@@ -37,6 +50,11 @@ export class AccountMapper extends BaseMapper {
       introduce: entity.props.introduce ?? null,
       positionNames: entity.props.positionNames,
       techStackNames: entity.props.techStackNames,
+      snsLinks: entity.props.snsLinks.map((snsLink) => ({
+        url: snsLink.url,
+        platform: snsLink.platform,
+        visibilityScope: snsLink.visibilityScope,
+      })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

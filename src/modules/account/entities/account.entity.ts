@@ -1,5 +1,9 @@
 import { faker } from '@faker-js/faker';
 
+import {
+  AccountSnsLink,
+  AccountSnsLinkProps,
+} from '@module/account/entities/account-sns-link.vo';
 import { AccountValidationError } from '@module/account/errors/account-validation.error';
 
 import {
@@ -26,6 +30,7 @@ export interface AccountProps {
   introduce?: string;
   positionNames: string[];
   techStackNames: string[];
+  snsLinks: AccountSnsLink[];
 }
 
 interface CreateAccountByUsernameProps {
@@ -40,6 +45,7 @@ interface UpdateAccountProps {
   introduce?: string;
   positionNames?: string[];
   techStackNames?: string[];
+  snsLinks?: AccountSnsLinkProps[];
 }
 
 export class Account extends BaseEntity<AccountProps> {
@@ -66,6 +72,7 @@ export class Account extends BaseEntity<AccountProps> {
         name: createAccountByUsernameProps.name ?? this.generateRandomName(),
         positionNames: [],
         techStackNames: [],
+        snsLinks: [],
       },
       createdAt: date,
       updatedAt: date,
@@ -109,6 +116,10 @@ export class Account extends BaseEntity<AccountProps> {
     return this.props.techStackNames;
   }
 
+  get snsLinks() {
+    return this.props.snsLinks;
+  }
+
   update(updateAccountProps: UpdateAccountProps) {
     if (updateAccountProps.name !== undefined) {
       this.props.name = updateAccountProps.name;
@@ -122,6 +133,16 @@ export class Account extends BaseEntity<AccountProps> {
     }
     if (updateAccountProps.techStackNames !== undefined) {
       this.props.techStackNames = updateAccountProps.techStackNames;
+    }
+    if (updateAccountProps.snsLinks !== undefined) {
+      this.props.snsLinks = updateAccountProps.snsLinks.map(
+        (snsLink) =>
+          new AccountSnsLink({
+            url: snsLink.url,
+            platform: snsLink.platform,
+            visibilityScope: snsLink.visibilityScope,
+          }),
+      );
     }
 
     return this;

@@ -13,6 +13,11 @@ export class AccountDtoAssembler {
     dto.introduce = account.introduce ?? null;
     dto.positionNames = account.positionNames;
     dto.techStackNames = account.techStackNames;
+    dto.snsLinks = account.snsLinks.map((snsLink) => ({
+      url: snsLink.url,
+      platform: snsLink.platform,
+      visibilityScope: snsLink.visibilityScope,
+    }));
 
     return dto;
   }

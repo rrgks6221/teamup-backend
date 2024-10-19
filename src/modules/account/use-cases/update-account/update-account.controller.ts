@@ -73,6 +73,7 @@ export class UpdateAccountController {
         introduce: body.introduce,
         positionIds: body.positionIds,
         techStackIds: body.techStackIds,
+        snsLinks: body.snsLinks,
       });
 
       const account = await this.updateAccountService.execute(command);
