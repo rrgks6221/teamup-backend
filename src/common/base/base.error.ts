@@ -44,3 +44,11 @@ export class RequestValidationError extends BaseError {
     super('request input validation error', RequestValidationError.CODE);
   }
 }
+
+export class InternalServerError extends BaseError {
+  static CODE = 'COMMON.INTERNAL_SERVER_ERROR';
+
+  constructor() {
+    super('Internal server error', InternalServerError.CODE);
+  }
+}

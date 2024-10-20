@@ -28,6 +28,14 @@ import { AppConfigService } from '@common/app-config/app-config.service';
         [ENV_KEY.JWT_AUDIENCES]: Joi.string().required(),
         [ENV_KEY.JWT_ACCESS_TOKEN_EXPIRES_IN]: Joi.string().required(),
         [ENV_KEY.JWT_REFRESH_TOKEN_EXPIRES_IN]: Joi.string().required(),
+
+        [ENV_KEY.AWS_S3_BUCKET_NAME]: Joi.string().required(),
+        [ENV_KEY.AWS_S3_REGION]: Joi.string().required(),
+        [ENV_KEY.AWS_S3_URL]: Joi.string().required(),
+        [ENV_KEY.AWS_S3_ACCESS_KEY]: Joi.string().required(),
+        [ENV_KEY.AWS_S3_SECRET_KEY]: Joi.string().required(),
+        [ENV_KEY.AWS_S3_PRE_SIGNED_URL_EXPIRES_IN_SECOND]:
+          Joi.number().required(),
       }),
     }),
   ],

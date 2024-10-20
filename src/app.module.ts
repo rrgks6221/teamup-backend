@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { AccountModule } from '@module/account/account.module';
 import { AuthModule } from '@module/auth/auth.module';
+import { ImageModule } from '@module/image/image.module';
 import { PositionModule } from '@module/position/position.module';
 import { TechStackModule } from '@module/tech-stack/tech-stack.module';
 
@@ -9,17 +10,20 @@ import { AppConfigModule } from '@common/app-config/app-config.module';
 
 import { LoggerModule } from '@shared/logger/logger.module';
 import { PrismaModule } from '@shared/prisma/prisma.module';
+import { AwsS3Module } from '@shared/services/aws-s3/aws-s3.module';
 
 @Module({
   imports: [
     AppConfigModule,
     PrismaModule,
     LoggerModule,
+    AwsS3Module,
 
     AccountModule,
     AuthModule,
     PositionModule,
     TechStackModule,
+    ImageModule,
   ],
 })
 export class AppModule {}
