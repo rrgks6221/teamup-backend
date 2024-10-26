@@ -62,6 +62,9 @@ describe(UpdateAccountService.name, () => {
             id: command.accountId,
             name: command.name,
             introduce: command.introduce,
+            profileImageUrl: expect.stringContaining(
+              command.profileImagePath as string,
+            ),
             positionNames: [],
             techStackNames: [],
             snsLinks: [],

@@ -57,9 +57,13 @@ export class UpdateAccountService implements IUpdateAccountService {
       techStackNames = techStacks.map((techStack) => techStack.name);
     }
 
+    /**
+     * @todo 계정 업데이트 이벤트에 의한 계정의 temp 프로필 이미지를 복제
+     */
     account.update({
       name: command.name,
       introduce: command.introduce,
+      profileImagePath: command.profileImagePath,
       positionNames,
       techStackNames,
       snsLinks: command.snsLinks,

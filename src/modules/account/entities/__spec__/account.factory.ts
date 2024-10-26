@@ -19,6 +19,7 @@ export const AccountFactory = Factory.define<Account & AccountProps>('Account')
     role: () => AccountRole.User,
     name: () => faker.string.nanoid(Account.NAME_MAX_LENGTH),
     introduce: () => faker.string.alpha(),
+    profileImagePath: () => faker.string.nanoid(),
     positionNames: () => [],
     techStackNames: () => [],
     snsLinks: () => [],

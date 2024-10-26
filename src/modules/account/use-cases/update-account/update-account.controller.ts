@@ -71,6 +71,10 @@ export class UpdateAccountController {
         accountId: currentUser.id,
         name: body.name,
         introduce: body.introduce,
+        profileImagePath: body.profileImageUrl?.replace(
+          `${process.env.AWS_S3_URL as string}/`,
+          '',
+        ),
         positionIds: body.positionIds,
         techStackIds: body.techStackIds,
         snsLinks: body.snsLinks,

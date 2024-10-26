@@ -11,6 +11,7 @@ export class AccountDtoAssembler {
 
     dto.name = account.name;
     dto.introduce = account.introduce ?? null;
+    dto.profileImageUrl = account.profileImageUrl ?? null;
     dto.positionNames = account.positionNames;
     dto.techStackNames = account.techStackNames;
     dto.snsLinks = account.snsLinks.map((snsLink) => ({

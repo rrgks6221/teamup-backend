@@ -28,6 +28,7 @@ export interface AccountProps {
   role: AccountRole;
   name: string;
   introduce?: string;
+  profileImagePath?: string;
   positionNames: string[];
   techStackNames: string[];
   snsLinks: AccountSnsLink[];
@@ -43,6 +44,7 @@ interface CreateAccountByUsernameProps {
 interface UpdateAccountProps {
   name?: string;
   introduce?: string;
+  profileImagePath?: string;
   positionNames?: string[];
   techStackNames?: string[];
   snsLinks?: AccountSnsLinkProps[];
@@ -108,6 +110,14 @@ export class Account extends BaseEntity<AccountProps> {
     return this.props.introduce;
   }
 
+  get profileImageUrl() {
+    if (this.props.profileImagePath === undefined) {
+      return undefined;
+    }
+
+    return `${process.env.AWS_S3_URL}/${this.props.profileImagePath}`;
+  }
+
   get positionNames() {
     return this.props.positionNames;
   }
@@ -127,6 +137,9 @@ export class Account extends BaseEntity<AccountProps> {
     }
     if (updateAccountProps.introduce !== undefined) {
       this.props.introduce = updateAccountProps.introduce;
+    }
+    if (updateAccountProps.profileImagePath !== undefined) {
+      this.props.profileImagePath = updateAccountProps.profileImagePath;
     }
     if (updateAccountProps.positionNames !== undefined) {
       this.props.positionNames = updateAccountProps.positionNames;

@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  Matches,
   ValidateNested,
 } from 'class-validator';
 
@@ -36,6 +37,15 @@ export class UpdateAccountRequestDto {
   @IsString()
   @IsOptional()
   introduce?: string;
+
+  @ApiPropertyOptional()
+  @Matches(new RegExp(('^' + process.env.AWS_S3_URL) as string))
+  @IsUrl(
+    { protocols: ['https'], require_protocol: true },
+    { message: 'url must be a https protocol URL address' },
+  )
+  @IsOptional()
+  profileImageUrl?: string;
 
   @ApiPropertyOptional({
     uniqueItems: true,

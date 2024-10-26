@@ -24,6 +24,7 @@ export class AccountMapper extends BaseMapper {
         role: AccountRole[raw.role],
         name: raw.name,
         introduce: raw.introduce ?? undefined,
+        profileImagePath: raw.profileImagePath ?? undefined,
         positionNames: [...raw.positionNames],
         techStackNames: [...raw.techStackNames],
         snsLinks: raw.snsLinks.map(
@@ -48,6 +49,7 @@ export class AccountMapper extends BaseMapper {
       role: entity.props.role,
       name: entity.props.name ?? null,
       introduce: entity.props.introduce ?? null,
+      profileImagePath: entity.props.profileImagePath ?? null,
       positionNames: entity.props.positionNames,
       techStackNames: entity.props.techStackNames,
       snsLinks: entity.props.snsLinks.map((snsLink) => ({

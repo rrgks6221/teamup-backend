@@ -26,6 +26,11 @@ export class AccountResponseDto extends BaseResponseDto {
   })
   introduce: string | null;
 
+  @ApiProperty({
+    nullable: true,
+  })
+  profileImageUrl: string | null;
+
   @ApiProperty()
   positionNames: string[];
 

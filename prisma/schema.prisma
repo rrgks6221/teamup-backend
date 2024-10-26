@@ -27,16 +27,17 @@ enum AccountRole {
 }
 
 model Account {
-  id             BigInt      @id
-  role           AccountRole @default(User)
-  name           String      @unique @db.VarChar(20)
-  introduce      String?
+  id               BigInt      @id
+  role             AccountRole @default(User)
+  name             String      @unique @db.VarChar(20)
+  introduce        String?
+  profileImagePath String?     @unique
   /// [AccountPositionNames]
-  positionNames  Json        @default("[]")
+  positionNames    Json        @default("[]")
   /// [AccountTechStackNames]
-  techStackNames Json        @default("[]")
+  techStackNames   Json        @default("[]")
   /// [AccountSnsLinks]
-  snsLinks       Json        @default("[]")
+  snsLinks         Json        @default("[]")
 
   signInType SignInType
   username   String?    @unique @db.VarChar(20)
