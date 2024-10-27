@@ -133,7 +133,7 @@ export class Account extends BaseEntity<AccountProps> {
   update(updateAccountProps: UpdateAccountProps) {
     if (updateAccountProps.name !== undefined) {
       this.props.name = updateAccountProps.name;
-      this.nameValidate();
+      this.validateName();
     }
     if (updateAccountProps.introduce !== undefined) {
       this.props.introduce = updateAccountProps.introduce;
@@ -162,11 +162,11 @@ export class Account extends BaseEntity<AccountProps> {
   }
 
   public validate(): void {
-    this.nameValidate();
-    this.usernameValidate();
+    this.validateName();
+    this.validateUsername();
   }
 
-  private nameValidate() {
+  private validateName() {
     if (
       this.props.name !== undefined &&
       this.props.name.length > Account.NAME_MAX_LENGTH
@@ -177,7 +177,7 @@ export class Account extends BaseEntity<AccountProps> {
     }
   }
 
-  private usernameValidate() {
+  private validateUsername() {
     if (
       this.props.username !== undefined &&
       this.props.username.length > Account.USERNAME_MAX_LENGTH
