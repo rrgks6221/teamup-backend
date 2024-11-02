@@ -16,7 +16,7 @@ export class PositionService implements IPositionService {
   ) {}
 
   async findByIdsOrFail(ids: string[]): Promise<Position[]> {
-    const positions = await this.positionRepository.findByIds(ids);
+    const positions = await this.positionRepository.findByIds(new Set(ids));
 
     if (positions.length !== ids.length) {
       throw new PositionNotFoundError(

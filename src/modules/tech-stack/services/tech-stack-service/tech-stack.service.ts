@@ -16,7 +16,7 @@ export class TechStackService implements ITechStackService {
   ) {}
 
   async findByIdsOrFail(ids: string[]): Promise<TechStack[]> {
-    const techStacks = await this.techStackRepository.findByIds(ids);
+    const techStacks = await this.techStackRepository.findByIds(new Set(ids));
 
     if (techStacks.length !== ids.length) {
       throw new TechStackNotFoundError(

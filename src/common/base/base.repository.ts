@@ -44,7 +44,7 @@ export interface IBaseMapper<
 
   toPersistence(entity: Entity): Raw;
 
-  toPrimaryKey(entityId: EntityId): bigint;
+  toPrimaryKey(id: EntityId): bigint;
 
   toEntityId(rawId: bigint): EntityId;
 }

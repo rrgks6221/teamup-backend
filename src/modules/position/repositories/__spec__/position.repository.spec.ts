@@ -108,7 +108,9 @@ describe(PositionRepository.name, () => {
 
       describe('포지션을 조회하면', () => {
         it('식별자와 일치하는 포지션 리스트가 조회된다.', async () => {
-          await expect(repository.findByIds(positionIds)).resolves.toEqual(
+          await expect(
+            repository.findByIds(new Set(positionIds)),
+          ).resolves.toEqual(
             expect.arrayContaining([
               expect.objectContaining({ id: positionIds[0] }),
               expect.objectContaining({ id: positionIds[1] }),

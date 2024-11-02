@@ -44,11 +44,11 @@ export class TechStackRepository
     return this.mapper.toEntity(raw);
   }
 
-  async findByIds(ids: string[]): Promise<TechStack[]> {
+  async findByIds(ids: Set<string>): Promise<TechStack[]> {
     const raws = await this.prismaService.techStack.findMany({
       where: {
         id: {
-          in: ids.map((id) => this.mapper.toPrimaryKey(id)),
+          in: Array.from(ids).map(this.mapper.toPrimaryKey),
         },
       },
       orderBy: {
