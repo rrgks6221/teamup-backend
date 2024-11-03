@@ -1,5 +1,5 @@
 import { BaseEntity, EntityId } from '@common/base/base.entity';
-import { BaseMapper } from '@common/base/base.mapper';
+import { IBaseMapper } from '@common/base/base.mapper';
 
 import { PrismaService } from '@shared/prisma/prisma.service';
 
@@ -34,19 +34,6 @@ export interface RepositoryPort<E, ListFilter = Record<keyof E, unknown>> {
   update(entity: E): Promise<E>;
 
   delete(entity: E): Promise<void>;
-}
-
-export interface IBaseMapper<
-  Entity extends BaseEntity<unknown>,
-  Raw extends { id: bigint },
-> extends BaseMapper {
-  toEntity(record: Raw): Entity;
-
-  toPersistence(entity: Entity): Raw;
-
-  toPrimaryKey(id: EntityId): bigint;
-
-  toEntityId(rawId: bigint): EntityId;
 }
 
 export abstract class BaseRepository<
