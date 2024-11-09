@@ -1,26 +1,27 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { PositionDtoAssembler } from '@module/position/assemblers/position-dto.assembler';
 import { PositionResponseDto } from '@module/position/dto/position.response-dto';
-import {
-  IListPositionsService,
-  LIST_POSITIONS_SERVICE,
-} from '@module/position/use-cases/list-positions/list-positions.service.interface';
+import { Position } from '@module/position/entities/position.entity';
+import { ListPositionsQuery } from '@module/position/use-cases/list-positions/list-positions.query';
 
 @ApiTags('position')
 @Controller()
 export class ListPositionsController {
-  constructor(
-    @Inject(LIST_POSITIONS_SERVICE)
-    private readonly listPositionsService: IListPositionsService,
-  ) {}
+  constructor(private readonly queryBus: QueryBus) {}
 
   @ApiOperation({ summary: '포지션 리스트 조회' })
   @ApiOkResponse({ type: [PositionResponseDto] })
   @Get('positions')
   async listPositions(): Promise<PositionResponseDto[]> {
-    const positions = await this.listPositionsService.execute();
+    const query = new ListPositionsQuery();
+
+    const positions = await this.queryBus.execute<
+      ListPositionsQuery,
+      Position[]
+    >(query);
 
     return positions.map((position) =>
       PositionDtoAssembler.convertToDto(position),

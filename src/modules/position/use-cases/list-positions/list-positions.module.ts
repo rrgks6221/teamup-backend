@@ -2,17 +2,11 @@ import { Module } from '@nestjs/common';
 
 import { PositionRepositoryModule } from '@module/position/repositories/position.repository.module';
 import { ListPositionsController } from '@module/position/use-cases/list-positions/list-positions.controller';
-import { ListPositionsService } from '@module/position/use-cases/list-positions/list-positions.service';
-import { LIST_POSITIONS_SERVICE } from '@module/position/use-cases/list-positions/list-positions.service.interface';
+import { ListPositionsHandler } from '@module/position/use-cases/list-positions/list-positions.handler';
 
 @Module({
   imports: [PositionRepositoryModule],
   controllers: [ListPositionsController],
-  providers: [
-    {
-      provide: LIST_POSITIONS_SERVICE,
-      useClass: ListPositionsService,
-    },
-  ],
+  providers: [ListPositionsHandler],
 })
 export class ListPositionsModule {}

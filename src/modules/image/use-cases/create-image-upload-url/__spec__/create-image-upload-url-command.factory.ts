@@ -2,11 +2,11 @@ import { faker } from '@faker-js/faker';
 import { Factory } from 'rosie';
 
 import { Image, ImageExtension } from '@module/image/entities/image.entity';
-import { CreateImageUploadUrlCommand } from '@module/image/use-cases/create-image-upload-url/create-image-upload-url.service.interface';
+import { CreateImageUploadUrlCommand } from '@module/image/use-cases/create-image-upload-url/create-image-upload-url.command';
 
 export const CreateImageUploadUrlCommandFactory =
   Factory.define<CreateImageUploadUrlCommand>(
-    'CreateImageUploadUrlCommand',
+    CreateImageUploadUrlCommand.name,
     CreateImageUploadUrlCommand,
   ).attrs({
     extension: faker.helpers.enumValue(ImageExtension),

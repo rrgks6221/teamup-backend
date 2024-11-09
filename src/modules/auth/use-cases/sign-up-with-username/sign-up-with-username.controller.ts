@@ -1,23 +1,14 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Inject,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AccountUsernameAlreadyOccupiedError } from '@module/account/errors/account-username-already-occupied.error';
 import { AccountValidationError } from '@module/account/errors/account-validation.error';
 import { AuthTokenDtoAssembler } from '@module/auth/assemblers/auth-token-dto.assembler';
 import { AuthTokenResponseDto } from '@module/auth/dto/auth-token.response.dto';
+import { AuthToken } from '@module/auth/entities/auth-token.vo';
 import { SignUpWithUsernameRequestDto } from '@module/auth/use-cases/sign-up-with-username/dto/sign-up-with-username.request-dto';
-import {
-  ISignUpWithUsernameService,
-  SIGN_UP_WITH_USERNAME_SERVICE,
-  SignUpWithUsernameCommand,
-} from '@module/auth/use-cases/sign-up-with-username/sign-up-with-username.service.interface';
+import { SignUpWithUsernameCommand } from '@module/auth/use-cases/sign-up-with-username/sign-up-with-username.command';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
 import { RequestValidationError } from '@common/base/base.error';
@@ -26,10 +17,7 @@ import { ApiErrorResponse } from '@common/decorator/api-fail-response.decorator'
 @ApiTags('auth')
 @Controller('auth')
 export class SignUpWithUsernameController {
-  constructor(
-    @Inject(SIGN_UP_WITH_USERNAME_SERVICE)
-    private readonly signUpWithUsernameService: ISignUpWithUsernameService,
-  ) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'username 기반 회원가입' })
@@ -46,7 +34,10 @@ export class SignUpWithUsernameController {
         password: body.password,
       });
 
-      const result = await this.signUpWithUsernameService.execute(command);
+      const result = await this.commandBus.execute<
+        SignUpWithUsernameCommand,
+        AuthToken
+      >(command);
 
       return AuthTokenDtoAssembler.convertToDto(result);
     } catch (error) {

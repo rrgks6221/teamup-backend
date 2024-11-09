@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CqrsModule } from '@nestjs/cqrs';
 
 import { AccountModule } from '@module/account/account.module';
 import { AuthModule } from '@module/auth/auth.module';
@@ -14,6 +15,7 @@ import { AwsS3Module } from '@shared/services/aws-s3/aws-s3.module';
 
 @Module({
   imports: [
+    CqrsModule.forRoot(),
     AppConfigModule,
     PrismaModule,
     LoggerModule,

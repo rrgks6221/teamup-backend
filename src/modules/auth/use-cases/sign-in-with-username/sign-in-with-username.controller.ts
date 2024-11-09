@@ -1,22 +1,13 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Inject,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthTokenDtoAssembler } from '@module/auth/assemblers/auth-token-dto.assembler';
 import { AuthTokenResponseDto } from '@module/auth/dto/auth-token.response.dto';
+import { AuthToken } from '@module/auth/entities/auth-token.vo';
 import { SignInInfoNotMatchedError } from '@module/auth/errors/sign-in-info-not-matched.error';
 import { SignInWithUsernameRequestDto } from '@module/auth/use-cases/sign-in-with-username/dto/sign-in-with-username.request-dto';
-import {
-  ISignInWithUsernameService,
-  SIGN_IN_WITH_USERNAME_SERVICE,
-  SignInWithUsernameCommand,
-} from '@module/auth/use-cases/sign-in-with-username/sign-in-with-username.service.interface';
+import { SignInWithUsernameCommand } from '@module/auth/use-cases/sign-in-with-username/sign-in-with-username.command';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
 import { RequestValidationError } from '@common/base/base.error';
@@ -25,10 +16,7 @@ import { ApiErrorResponse } from '@common/decorator/api-fail-response.decorator'
 @ApiTags('auth')
 @Controller('auth')
 export class SignInWithUsernameController {
-  constructor(
-    @Inject(SIGN_IN_WITH_USERNAME_SERVICE)
-    private readonly signInWithUsernameService: ISignInWithUsernameService,
-  ) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'username 기반 로그인' })
@@ -45,7 +33,10 @@ export class SignInWithUsernameController {
         password: body.password,
       });
 
-      const result = await this.signInWithUsernameService.execute(command);
+      const result = await this.commandBus.execute<
+        SignInWithUsernameCommand,
+        AuthToken
+      >(command);
 
       return AuthTokenDtoAssembler.convertToDto(result);
     } catch (error) {

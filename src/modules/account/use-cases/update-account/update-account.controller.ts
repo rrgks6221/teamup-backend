@@ -1,11 +1,5 @@
-import {
-  Body,
-  Controller,
-  HttpStatus,
-  Inject,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, HttpStatus, Patch, UseGuards } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -15,14 +9,11 @@ import {
 
 import { AccountDtoAssembler } from '@module/account/assemblers/account-dto.assembler';
 import { AccountResponseDto } from '@module/account/dto/account.response-dto';
+import { Account } from '@module/account/entities/account.entity';
 import { AccountNotFoundError } from '@module/account/errors/account-not-found.error';
 import { AccountValidationError } from '@module/account/errors/account-validation.error';
 import { UpdateAccountRequestDto } from '@module/account/use-cases/update-account/dto/update-account.request-dto';
-import {
-  IUpdateAccountService,
-  UPDATE_ACCOUNT_SERVICE,
-  UpdateAccountCommand,
-} from '@module/account/use-cases/update-account/update-account.service.interface';
+import { UpdateAccountCommand } from '@module/account/use-cases/update-account/update-account.command';
 import { PermissionDeniedError } from '@module/auth/errors/permission-denied.error';
 import { UnauthorizedUserError } from '@module/auth/errors/unauthorized-user.error';
 import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
@@ -41,10 +32,7 @@ import { ParseNotEmptyObjectPipe } from '@common/pipes/parse-not-empty-object.pi
 @ApiTags('account')
 @Controller()
 export class UpdateAccountController {
-  constructor(
-    @Inject(UPDATE_ACCOUNT_SERVICE)
-    private readonly updateAccountService: IUpdateAccountService,
-  ) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '본인 계정 업데이트' })
@@ -80,7 +68,10 @@ export class UpdateAccountController {
         snsLinks: body.snsLinks,
       });
 
-      const account = await this.updateAccountService.execute(command);
+      const account = await this.commandBus.execute<
+        UpdateAccountCommand,
+        Account
+      >(command);
 
       return AccountDtoAssembler.convertToDto(account);
     } catch (error) {

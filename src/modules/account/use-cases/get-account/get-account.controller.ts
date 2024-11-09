@@ -1,11 +1,5 @@
-import {
-  Controller,
-  Get,
-  HttpStatus,
-  Inject,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, UseGuards } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -15,12 +9,9 @@ import {
 
 import { AccountDtoAssembler } from '@module/account/assemblers/account-dto.assembler';
 import { AccountResponseDto } from '@module/account/dto/account.response-dto';
+import { Account } from '@module/account/entities/account.entity';
 import { AccountNotFoundError } from '@module/account/errors/account-not-found.error';
-import {
-  GET_ACCOUNT_SERVICE,
-  GetAccountQuery,
-  IGetAccountService,
-} from '@module/account/use-cases/get-account/get-account.service.interface';
+import { GetAccountQuery } from '@module/account/use-cases/get-account/get-account.query';
 import { UnauthorizedUserError } from '@module/auth/errors/unauthorized-user.error';
 import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
 
@@ -36,10 +27,7 @@ import { ParsePositiveIntStringPipe } from '@common/pipes/positive-int-string.pi
 @ApiOkResponse({ type: AccountResponseDto })
 @Controller()
 export class GetAccountController {
-  constructor(
-    @Inject(GET_ACCOUNT_SERVICE)
-    private readonly getAccountService: IGetAccountService,
-  ) {}
+  constructor(private readonly queryBus: QueryBus) {}
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '내 계정 조회' })
@@ -55,7 +43,9 @@ export class GetAccountController {
     try {
       const query = new GetAccountQuery({ id: currentUser.id });
 
-      const account = await this.getAccountService.execute(query);
+      const account = await this.queryBus.execute<GetAccountQuery, Account>(
+        query,
+      );
 
       return AccountDtoAssembler.convertToDto(account);
     } catch (error) {
@@ -78,7 +68,9 @@ export class GetAccountController {
     try {
       const query = new GetAccountQuery({ id });
 
-      const account = await this.getAccountService.execute(query);
+      const account = await this.queryBus.execute<GetAccountQuery, Account>(
+        query,
+      );
 
       return AccountDtoAssembler.convertToDto(account);
     } catch (error) {

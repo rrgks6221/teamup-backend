@@ -1,11 +1,5 @@
-import {
-  Body,
-  Controller,
-  HttpStatus,
-  Inject,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -18,11 +12,8 @@ import { UnauthorizedUserError } from '@module/auth/errors/unauthorized-user.err
 import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
 import { ImageDtoAssembler } from '@module/image/assemblers/image-dto.assembler';
 import { PreUploadImageResponseDto } from '@module/image/dto/pre-upload-image.response-dto';
-import {
-  CREATE_IMAGE_UPLOAD_URL_SERVICE,
-  CreateImageUploadUrlCommand,
-  ICreateImageUploadUrlService,
-} from '@module/image/use-cases/create-image-upload-url/create-image-upload-url.service.interface';
+import { Image } from '@module/image/entities/image.entity';
+import { CreateImageUploadUrlCommand } from '@module/image/use-cases/create-image-upload-url/create-image-upload-url.command';
 import { CreateImageUploadUrlRequestDto } from '@module/image/use-cases/create-image-upload-url/dto/create-image-upload-url.request-dto';
 
 import { RequestValidationError } from '@common/base/base.error';
@@ -31,10 +22,7 @@ import { ApiErrorResponse } from '@common/decorator/api-fail-response.decorator'
 @ApiTags('image')
 @Controller()
 export class CreateImageUploadUrlController {
-  constructor(
-    @Inject(CREATE_IMAGE_UPLOAD_URL_SERVICE)
-    private readonly createImageUploadUrlService: ICreateImageUploadUrlService,
-  ) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -55,7 +43,10 @@ export class CreateImageUploadUrlController {
       md5Hash: body.md5Hash,
     });
 
-    const image = await this.createImageUploadUrlService.execute(command);
+    const image = await this.commandBus.execute<
+      CreateImageUploadUrlCommand,
+      Image
+    >(command);
 
     return ImageDtoAssembler.convertToPreUploadDto(image);
   }

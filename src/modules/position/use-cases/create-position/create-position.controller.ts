@@ -1,11 +1,5 @@
-import {
-  Body,
-  Controller,
-  HttpStatus,
-  Inject,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { PermissionDeniedError } from '@module/auth/errors/permission-denied.error';
@@ -13,12 +7,9 @@ import { UnauthorizedUserError } from '@module/auth/errors/unauthorized-user.err
 import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
 import { PositionDtoAssembler } from '@module/position/assemblers/position-dto.assembler';
 import { PositionResponseDto } from '@module/position/dto/position.response-dto';
+import { Position } from '@module/position/entities/position.entity';
 import { PositionAlreadyExistsError } from '@module/position/errors/position-already-exists.error';
-import {
-  CREATE_POSITION_SERVICE,
-  CreatePositionCommand,
-  ICreatePositionService,
-} from '@module/position/use-cases/create-position/create-position.service.interface';
+import { CreatePositionCommand } from '@module/position/use-cases/create-position/create-position.command';
 import { CreatePositionRequestDto } from '@module/position/use-cases/create-position/dto/create-position.request-dto';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
@@ -29,10 +20,7 @@ import { AdminGuard } from '@common/guards/admin.guard';
 @ApiTags('position')
 @Controller()
 export class CreatePositionController {
-  constructor(
-    @Inject(CREATE_POSITION_SERVICE)
-    private readonly createPositionService: ICreatePositionService,
-  ) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @ApiOperation({ summary: '포지션 생성 어드민 API' })
   @ApiBearerAuth()
@@ -52,7 +40,10 @@ export class CreatePositionController {
         name: createPositionRequestDto.name,
       });
 
-      const position = await this.createPositionService.execute(command);
+      const position = await this.commandBus.execute<
+        CreatePositionCommand,
+        Position
+      >(command);
 
       return PositionDtoAssembler.convertToDto(position);
     } catch (error) {
