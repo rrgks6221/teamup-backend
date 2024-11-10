@@ -7,7 +7,7 @@ import {
 import { AccountValidationError } from '@module/account/errors/account-validation.error';
 
 import {
-  BaseEntity,
+  AggregateRoot,
   CreateEntityProps,
   generateEntityId,
 } from '@common/base/base.entity';
@@ -50,7 +50,7 @@ interface UpdateAccountProps {
   snsLinks?: AccountSnsLinkProps[];
 }
 
-export class Account extends BaseEntity<AccountProps> {
+export class Account extends AggregateRoot<AccountProps> {
   static USERNAME_MAX_LENGTH = 20;
   static NAME_MAX_LENGTH = 10;
 

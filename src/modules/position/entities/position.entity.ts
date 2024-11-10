@@ -1,5 +1,5 @@
 import {
-  BaseEntity,
+  AggregateRoot,
   CreateEntityProps,
   generateEntityId,
 } from '@common/base/base.entity';
@@ -12,7 +12,7 @@ interface CreatePositionProps {
   name: string;
 }
 
-export class Position extends BaseEntity<PositionProps> {
+export class Position extends AggregateRoot<PositionProps> {
   constructor(props: CreateEntityProps<PositionProps>) {
     super(props);
   }

@@ -1,5 +1,5 @@
 import {
-  BaseEntity,
+  AggregateRoot,
   CreateEntityProps,
   generateEntityId,
 } from '@common/base/base.entity';
@@ -12,7 +12,7 @@ interface CreateTechStackProps {
   name: string;
 }
 
-export class TechStack extends BaseEntity<TechStackProps> {
+export class TechStack extends AggregateRoot<TechStackProps> {
   constructor(props: CreateEntityProps<TechStackProps>) {
     super(props);
   }

@@ -1,7 +1,7 @@
 import { ImageValidationError } from '@module/image/errors/image-validation.error';
 
 import {
-  BaseEntity,
+  AggregateRoot,
   CreateEntityProps,
   generateEntityId,
 } from '@common/base/base.entity';
@@ -32,7 +32,7 @@ interface CreateImageProps {
   md5Hash: string;
 }
 
-export class Image extends BaseEntity<ImageProps> {
+export class Image extends AggregateRoot<ImageProps> {
   static readonly PRE_UPLOAD_PREFIX = 'pre-upload';
   static readonly MAX_SIZE_IN_BYTE = 20 * 1024 * 1024; // 20MB
 
