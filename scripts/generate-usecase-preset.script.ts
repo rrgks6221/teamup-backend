@@ -12,35 +12,29 @@ const PRESETS = {
   MODULE_PRESET: `import { Module } from '@nestjs/common';
 
 import { UseCaseNameController } from '@module/module-name/use-cases/use-case-name/use-case-name.controller';
-import { UseCaseNameService } from '@module/module-name/use-cases/use-case-name/use-case-name.service';
-import { USE_CASE_NAME_SERVICE } from '@module/module-name/use-cases/use-case-name/use-case-name.service.interface';
+import { UseCaseNameHandler } from '@module/module-name/use-cases/use-case-name/use-case-name.handler';
 
 @Module({
   controllers: [UseCaseNameController],
-  providers: [
-    {
-      provide: USE_CASE_NAME_SERVICE,
-      useClass: UseCaseNameService,
-    },
-  ],
+  providers: [UseCaseNameHandler],
 })
 export class UseCaseNameModule {}
 `,
 
-  CONTROLLER_PRESET: `import { Controller, Inject } from '@nestjs/common';
+  CONTROLLER_PRESET: `import { Controller, HttpStatus } from '@nestjs/common';
+import { OperationNameBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import {
-  USE_CASE_NAME_SERVICE,
-  UseCaseNameOperationName,
-  IUseCaseNameService,
-} from '@module/module-name/use-cases/use-case-name/use-case-name.service.interface';
+import { UseCaseNameOperationName } from '@module/module-name/use-cases/use-case-name/use-case-name.operation-name';
+
+import { RequestValidationError } from '@common/base/base.error';
+import { ApiErrorResponse } from '@common/decorator/api-fail-response.decorator';
 
 @ApiTags('module-name')
 @Controller()
 export class UseCaseNameController {
   constructor(
-    @Inject(USE_CASE_NAME_SERVICE) private readonly useCaseNameService: IUseCaseNameService,
+    private readonly operationNameBus: OperationNameBus,
   ) {}
 
   @ApiErrorResponse({
@@ -51,7 +45,7 @@ export class UseCaseNameController {
     try {
       const operationName = new UseCaseNameOperationName({});
     
-      const result = await this.useCaseNameService.execute(operationName);
+      const result = await this.operationNameBus.execute<UseCaseNameOperationName, unknown>(operationName);
     } catch (error) {
       throw error 
     }
@@ -59,28 +53,12 @@ export class UseCaseNameController {
 }
 `,
 
-  SERVICE_INTERFACE_PRESET: `import { IBaseService } from '@common/base/base-service';
+  HANDLER_PRESET: `import { OperationNameHandler, IOperationNameHandler } from '@nestjs/cqrs';
 
-export const USE_CASE_NAME_SERVICE = Symbol('IUseCaseNameService');
+import { UseCaseNameOperationName } from '@module/module-name/use-cases/use-case-name/use-case-name.operation-name';
 
-export interface IUseCaseNameOperationNameProps {}
-
-export class UseCaseNameOperationName {
-  constructor(props: IUseCaseNameOperationNameProps) {}
-}
-
-export interface IUseCaseNameService extends IBaseService<UseCaseNameOperationName, unknown> {}
-`,
-
-  SERVICE_PRESET: `import { Injectable } from '@nestjs/common';
-
-import {
-  UseCaseNameOperationName,
-  IUseCaseNameService,
-} from '@module/module-name/use-cases/use-case-name/use-case-name.service.interface';
-
-@Injectable()
-export class UseCaseNameService implements IUseCaseNameService {
+@OperationNameHandler(UseCaseNameOperationName)
+export class UseCaseNameHandler implements IOperationNameHandler<UseCaseNameOperationName, unknown> {
   constructor() {}
 
   async execute(operationName: UseCaseNameOperationName): Promise<unknown> {
@@ -89,28 +67,23 @@ export class UseCaseNameService implements IUseCaseNameService {
 }
 `,
 
-  SERVICE_SPEC_PRESET: `import { Test, TestingModule } from '@nestjs/testing';
+  HANDLER_SPEC_PRESET: `import { Test, TestingModule } from '@nestjs/testing';
 
 import { UseCaseNameOperationNameFactory } from '@module/module-name/use-cases/use-case-name/__spec__/use-case-name-operation-name.factory';
-import { UseCaseNameService } from '@module/module-name/use-cases/use-case-name/use-case-name.service';
-import { UseCaseNameOperationName, USE_CASE_NAME_SERVICE } from '@module/module-name/use-cases/use-case-name/use-case-name.service.interface';
+import { UseCaseNameOperationName } from '@module/module-name/use-cases/use-case-name/use-case-name.operation-name';
+import { UseCaseNameHandler } from '@module/module-name/use-cases/use-case-name/use-case-name.handler';
 
-describe(UseCaseNameService.name, () => {
-  let service: UseCaseNameService;
+describe(UseCaseNameHandler.name, () => {
+  let handler: UseCaseNameHandler;
 
   let operationName: UseCaseNameOperationName;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        {
-          provide: USE_CASE_NAME_SERVICE,
-          useClass: UseCaseNameService,
-        }
-      ],
+      providers: [UseCaseNameHandler],
     }).compile();
 
-    service = module.get<UseCaseNameService>(USE_CASE_NAMEService);
+    handler = module.get<UseCaseNameHandler>(UseCaseNameHandler);
   });
 
   beforeEach(() => {
@@ -119,12 +92,21 @@ describe(UseCaseNameService.name, () => {
 });
 `,
 
+  OPERATION_PRESET: `import { IOperationName } from '@nestjs/cqrs';
+
+export interface IUseCaseNameOperationNameProps {}
+
+export class UseCaseNameOperationName implements IOperationName {
+  constructor(props: IUseCaseNameOperationNameProps) {}
+}
+`,
+
   FACTORY_OPERATION_PRESET: `import { Factory } from 'rosie';
 
-import { UseCaseNameOperationName } from '@module/module-name/use-cases/use-case-name/use-case-name.service.interface';
+import { UseCaseNameOperationName } from '@module/module-name/use-cases/use-case-name/use-case-name.operation-name';
 
 export const UseCaseNameOperationNameFactory = Factory.define<UseCaseNameOperationName>(
-  'UseCaseNameOperationName',
+  UseCaseNameOperationName.name,
   UseCaseNameOperationName,
 ).attrs({});
 `,
@@ -152,7 +134,7 @@ const runCommand = (command: string): Promise<void> => {
 // CLI 명령어 정의
 program
   .name('generate-usecase')
-  .description('Generate a new use case with module, controller, and service.')
+  .description('Generate a new use case with module, controller, and handler.')
   .version('1.0.0')
   .argument('<module>', 'Name of the target module')
   .argument('<name>', 'Name of the use case')
@@ -189,17 +171,18 @@ program
       await runCommand(
         `nest g service ${useCaseName} modules/${moduleName}/use-cases`,
       );
-      await runCommand(
-        `nest g interface ${useCaseName}.service modules/${moduleName}/use-cases/${useCaseName} --flat`,
-      );
 
+      await runCommand(
+        `mv ${useCaseDir}/${useCaseName}.service.ts ${useCaseDir}/${useCaseName}.handler.ts`,
+      );
       await runCommand(`mkdir ${useCaseDir}/__spec__`);
       await runCommand(
-        `mv ${useCaseDir}/${useCaseName}.service.spec.ts ${useCaseDir}/__spec__/${useCaseName}.service.spec.ts`,
+        `mv ${useCaseDir}/${useCaseName}.service.spec.ts ${useCaseDir}/__spec__/${useCaseName}.handler.spec.ts`,
       );
       await runCommand(
         `touch ${useCaseDir}/__spec__/${useCaseName}-${operation}.factory.ts`,
       );
+      await runCommand(`touch ${useCaseDir}/${useCaseName}.${operation}.ts`);
 
       const REGEXP_MAP = [
         ['module-name', moduleName],
@@ -223,21 +206,18 @@ program
 
       const modulePath = `${useCaseDir}/${useCaseName}.module.ts`;
       const controllerPath = `${useCaseDir}/${useCaseName}.controller.ts`;
-      const serviceInterfacePath = `${useCaseDir}/${useCaseName}.service.interface.ts`;
-      const servicePath = `${useCaseDir}/${useCaseName}.service.ts`;
-      const serviceSpecPath = `${useCaseDir}/__spec__/${useCaseName}.service.spec.ts`;
+      const operationPath = `${useCaseDir}/${useCaseName}.${operation}.ts`;
+      const handlerPath = `${useCaseDir}/${useCaseName}.handler.ts`;
+      const handlerSpecPath = `${useCaseDir}/__spec__/${useCaseName}.handler.spec.ts`;
       const factoryPath = `${useCaseDir}/__spec__/${useCaseName}-${operation}.factory.ts`;
       const dtoPath = `${useCaseDir}/dto/${useCaseName}.request-dto.ts`;
       writeFileSync(modulePath, reconfigureFile(PRESETS.MODULE_PRESET));
       writeFileSync(controllerPath, reconfigureFile(PRESETS.CONTROLLER_PRESET));
+      writeFileSync(handlerPath, reconfigureFile(PRESETS.HANDLER_PRESET));
+      writeFileSync(operationPath, reconfigureFile(PRESETS.OPERATION_PRESET));
       writeFileSync(
-        serviceInterfacePath,
-        reconfigureFile(PRESETS.SERVICE_INTERFACE_PRESET),
-      );
-      writeFileSync(servicePath, reconfigureFile(PRESETS.SERVICE_PRESET));
-      writeFileSync(
-        serviceSpecPath,
-        reconfigureFile(PRESETS.SERVICE_SPEC_PRESET),
+        handlerSpecPath,
+        reconfigureFile(PRESETS.HANDLER_SPEC_PRESET),
       );
       writeFileSync(
         factoryPath,
@@ -254,7 +234,7 @@ program
       }
 
       await runCommand(
-        `npx prettier --write ${modulePath} ${controllerPath} ${serviceInterfacePath} ${servicePath} ${serviceSpecPath} ${factoryPath}`,
+        `npx prettier --write ${modulePath} ${controllerPath} ${operationPath} ${handlerPath} ${handlerSpecPath} ${factoryPath}`,
       );
 
       console.log(`Use case '${useCaseName}' generated successfully.`);

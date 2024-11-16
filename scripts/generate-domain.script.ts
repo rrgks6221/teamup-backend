@@ -167,7 +167,7 @@ import {
 import { generateEntityId } from '@common/base/base.entity';
 
 export const DomainNameFactory = Factory.define<DomainName & DomainNameProps>(
-  'DomainName',
+  DomainName.name,
 )
   .attrs({
     id: () => generateEntityId(),
