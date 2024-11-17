@@ -1,11 +1,13 @@
 import { RequestContext } from 'nestjs-request-context';
 import { TSID } from 'tsid-ts';
 
-export abstract class DomainEvent<Payload = Record<string, unknown>> {
+type Aggregate = 'Account';
+
+export abstract class DomainEvent<Payload = Record<string, any>> {
   id: string;
   actorId: string;
   aggregateId: string;
-  abstract aggregate: string;
+  abstract readonly aggregate: Aggregate;
   eventName: string;
   eventPayload: Payload;
   storedAt: Date;

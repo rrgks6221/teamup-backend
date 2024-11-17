@@ -22,7 +22,8 @@
     "^src/(.*)$",
     "^@module/(.*)$",
     "^@common/(.*)$",
-    "^@shared/(.*)$"
+    "^@shared/(.*)$",
+    "^@core/(.*)$"
   ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true

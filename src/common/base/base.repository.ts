@@ -1,4 +1,4 @@
-import { BaseEntity, EntityId } from '@common/base/base.entity';
+import { EntityId, TBaseEntity } from '@common/base/base.entity';
 import { IBaseMapper } from '@common/base/base.mapper';
 
 import { PrismaService } from '@shared/prisma/prisma.service';
@@ -37,7 +37,7 @@ export interface RepositoryPort<E, ListFilter = Record<keyof E, unknown>> {
 }
 
 export abstract class BaseRepository<
-  Entity extends BaseEntity<unknown>,
+  Entity extends TBaseEntity<unknown>,
   Raw extends { id: bigint },
 > implements Omit<RepositoryPort<Entity>, 'findAllCursorPaginated'>
 {

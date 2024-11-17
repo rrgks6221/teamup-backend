@@ -9,6 +9,7 @@ export default {
     '^@module/(.*)$': '<rootDir>/modules/$1',
     '^@common/(.*)$': '<rootDir>/common/$1',
     '^@shared/(.*)$': '<rootDir>/shared/$1',
+    '^@core/(.*)$': '<rootDir>/core/$1',
   },
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
@@ -19,6 +20,7 @@ export default {
       { tsconfig: '<rootDir>/../tsconfig.spec.json' },
     ],
   },
+  setupFilesAfterEnv: ['<rootDir>/../test/after-env-setup.ts'],
   globalSetup: '<rootDir>/../test/global-setup.ts',
   globalTeardown: '<rootDir>/../test/global-teardown.ts',
 };

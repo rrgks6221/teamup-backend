@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
+import { RequestContextModule } from 'nestjs-request-context';
+
 import { AccountModule } from '@module/account/account.module';
 import { AuthModule } from '@module/auth/auth.module';
 import { ImageModule } from '@module/image/image.module';
@@ -13,9 +15,13 @@ import { LoggerModule } from '@shared/logger/logger.module';
 import { PrismaModule } from '@shared/prisma/prisma.module';
 import { AwsS3Module } from '@shared/services/aws-s3/aws-s3.module';
 
+import { EventStoreModule } from '@core/event-sourcing/event-store.module';
+
 @Module({
   imports: [
     CqrsModule.forRoot(),
+    EventStoreModule,
+    RequestContextModule,
     AppConfigModule,
     PrismaModule,
     LoggerModule,

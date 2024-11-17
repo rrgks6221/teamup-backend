@@ -17,6 +17,11 @@ import {
   TECH_STACK_SERVICE,
 } from '@module/tech-stack/services/tech-stack-service/tech-stack.service.interface';
 
+import {
+  EVENT_STORE,
+  IEventStore,
+} from '@core/event-sourcing/event-store.interface';
+
 @CommandHandler(UpdateAccountCommand)
 export class UpdateAccountHandler
   implements ICommandHandler<UpdateAccountCommand, Account>
@@ -28,6 +33,8 @@ export class UpdateAccountHandler
     private readonly positionService: IPositionService,
     @Inject(TECH_STACK_SERVICE)
     private readonly techStackService: ITechStackService,
+    @Inject(EVENT_STORE)
+    private readonly eventStore: IEventStore,
   ) {}
 
   async execute(command: UpdateAccountCommand): Promise<Account> {
@@ -70,6 +77,8 @@ export class UpdateAccountHandler
     });
 
     await this.accountRepository.update(account);
+
+    await this.eventStore.storeAggregateEvents(account);
 
     return account;
   }

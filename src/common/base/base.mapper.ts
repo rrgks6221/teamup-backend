@@ -1,4 +1,4 @@
-import { BaseEntity, EntityId } from '@common/base/base.entity';
+import { EntityId, TBaseEntity } from '@common/base/base.entity';
 
 export abstract class BaseMapper {
   static toPrimaryKey(id: string): bigint {
@@ -11,7 +11,7 @@ export abstract class BaseMapper {
 }
 
 export interface IBaseMapper<
-  Entity extends BaseEntity<unknown>,
+  Entity extends TBaseEntity<unknown>,
   Raw extends { id: bigint },
 > extends BaseMapper {
   toEntity(record: Raw): Entity;

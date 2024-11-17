@@ -47,6 +47,18 @@ model Account {
   updatedAt DateTime @updatedAt @db.Timestamp(3)
 }
 
+model AccountDomainEvent {
+  id           BigInt   @id
+  actorId      BigInt
+  aggregateId  BigInt
+  eventName    String
+  eventPayload Json
+  version      Int
+  storedAt     DateTime @default(now()) @db.Timestamp(3)
+
+  @@unique([aggregateId, version])
+}
+
 model Position {
   id BigInt @id
 

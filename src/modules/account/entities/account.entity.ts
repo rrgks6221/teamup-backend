@@ -5,6 +5,7 @@ import {
   AccountSnsLinkProps,
 } from '@module/account/entities/account-sns-link.vo';
 import { AccountValidationError } from '@module/account/errors/account-validation.error';
+import { AccountUpdatedEvent } from '@module/account/events/account-updated.event';
 
 import {
   AggregateRoot,
@@ -117,6 +118,9 @@ export class Account extends AggregateRoot<AccountProps> {
 
     return `${process.env.AWS_S3_URL}/${this.props.profileImagePath}`;
   }
+  set profileImagePath(value: string) {
+    this.props.profileImagePath = value;
+  }
 
   get positionNames() {
     return this.props.positionNames;
@@ -157,6 +161,17 @@ export class Account extends AggregateRoot<AccountProps> {
           }),
       );
     }
+
+    this.apply(
+      new AccountUpdatedEvent(this.id, {
+        name: updateAccountProps.name,
+        introduce: updateAccountProps.introduce,
+        profileImagePath: updateAccountProps.profileImagePath,
+        positionNames: updateAccountProps.positionNames,
+        techStackNames: updateAccountProps.techStackNames,
+        snsLinks: updateAccountProps.snsLinks,
+      }),
+    );
 
     return this;
   }

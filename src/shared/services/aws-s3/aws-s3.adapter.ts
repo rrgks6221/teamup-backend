@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 
 import {
+  CopyObjectCommand,
   ObjectCannedACL,
   PutObjectCommand,
   S3Client,
@@ -15,6 +16,7 @@ import {
   AWS_S3_CLIENT,
   AwsS3Port,
   AwsS3UploadInfoDto,
+  CopyObjectDto,
   GetUploadInfoDto,
 } from '@shared/services/aws-s3/aws-s3.port';
 
@@ -65,5 +67,16 @@ export class AwsS3Adapter implements AwsS3Port {
       uploadMethod: this.PRE_UPLOAD_METHOD,
       uploadedUrl: path.join(this.S3_URL, getUploadUrlDto.key),
     };
+  }
+
+  async copyObject(copyObjectDto: CopyObjectDto) {
+    const command = new CopyObjectCommand({
+      ACL: ObjectCannedACL.public_read,
+      Bucket: this.BUCKET_NAME,
+      CopySource: this.BUCKET_NAME + '/' + copyObjectDto.copySource,
+      Key: copyObjectDto.key,
+    });
+
+    await this.s3Client.send(command);
   }
 }

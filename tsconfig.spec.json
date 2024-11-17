@@ -8,7 +8,8 @@
       "@src/*": ["./src/!(shared|common|modules)/*"],
       "@module/*": ["./src/modules/*"],
       "@common/*": ["./src/common/*"],
-      "@shared/*": ["./src/shared/*"]
+      "@shared/*": ["./src/shared/*"],
+      "@core/*": ["./src/core/*"]
     }
   },
   "include": [

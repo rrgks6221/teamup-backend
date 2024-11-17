@@ -9,6 +9,11 @@ export interface GetUploadInfoDto {
   md5Hash: string;
 }
 
+export interface CopyObjectDto {
+  copySource: string;
+  key: string;
+}
+
 export interface AwsS3UploadInfoDto {
   extension: string;
   contentType: string;
@@ -24,4 +29,6 @@ export interface AwsS3Port {
   getUploadUrlInfo(
     getUploadInfoDto: GetUploadInfoDto,
   ): Promise<AwsS3UploadInfoDto>;
+
+  copyObject(copyObjectDto: CopyObjectDto): Promise<void>;
 }

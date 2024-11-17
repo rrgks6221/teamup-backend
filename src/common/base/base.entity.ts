@@ -21,6 +21,8 @@ export type CreateEntityProps<T> = {
   updatedAt?: Date;
 };
 
+export type TBaseEntity<T> = BaseEntity<T> | AggregateRoot<T>;
+
 export abstract class BaseEntity<T> {
   private readonly _id: EntityId;
 

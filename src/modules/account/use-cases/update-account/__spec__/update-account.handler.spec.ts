@@ -13,6 +13,8 @@ import { UpdateAccountHandler } from '@module/account/use-cases/update-account/u
 import { PositionServiceModule } from '@module/position/services/position-service/position-service.module';
 import { TechStackServiceModule } from '@module/tech-stack/services/tech-stack-service/tech-stack-service.module';
 
+import { EventStoreModule } from '@core/event-sourcing/event-store.module';
+
 describe(UpdateAccountHandler.name, () => {
   let handler: UpdateAccountHandler;
 
@@ -23,6 +25,7 @@ describe(UpdateAccountHandler.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        EventStoreModule,
         AccountRepositoryModule,
         PositionServiceModule,
         TechStackServiceModule,
