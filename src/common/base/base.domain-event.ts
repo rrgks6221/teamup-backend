@@ -15,7 +15,7 @@ export abstract class DomainEvent<Payload = Record<string, any>> {
 
   constructor(aggregateId: string, eventPayload: Payload) {
     this.id = TSID.create().number.toString();
-    this.actorId = RequestContext.currentContext.req.user.id;
+    this.actorId = RequestContext.currentContext.req.user?.id || undefined;
     this.aggregateId = aggregateId;
     this.eventName = this.constructor.name;
     this.eventPayload = eventPayload;

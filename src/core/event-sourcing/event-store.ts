@@ -50,7 +50,8 @@ export class EventStore implements IEventStore {
       data: events.map((event, idx) => {
         return {
           id: BigInt(generateEntityId()),
-          actorId: BigInt(event.actorId),
+          actorId:
+            event.actorId === undefined ? undefined : BigInt(event.actorId),
           aggregateId: BigInt(event.aggregateId),
           eventName: event.eventName,
           eventPayload: event.eventPayload,

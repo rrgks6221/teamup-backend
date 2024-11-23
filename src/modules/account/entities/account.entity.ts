@@ -5,6 +5,7 @@ import {
   AccountSnsLinkProps,
 } from '@module/account/entities/account-sns-link.vo';
 import { AccountValidationError } from '@module/account/errors/account-validation.error';
+import { AccountCreatedEvent } from '@module/account/events/account-created.event';
 import { AccountUpdatedEvent } from '@module/account/events/account-updated.event';
 
 import {
@@ -61,11 +62,11 @@ export class Account extends AggregateRoot<AccountProps> {
 
   static createByUsername(
     createAccountByUsernameProps: CreateAccountByUsernameProps,
-  ) {
+  ): Account {
     const id = generateEntityId();
     const date = new Date();
 
-    return new Account({
+    const account = new Account({
       id,
       props: {
         username: createAccountByUsernameProps.username,
@@ -80,6 +81,21 @@ export class Account extends AggregateRoot<AccountProps> {
       createdAt: date,
       updatedAt: date,
     });
+
+    account.apply(
+      new AccountCreatedEvent(id, {
+        username: createAccountByUsernameProps.username,
+        password: createAccountByUsernameProps.password,
+        signInType: SignInType.Username,
+        role: AccountRole.User,
+        name: createAccountByUsernameProps.name ?? this.generateRandomName(),
+        positionNames: [],
+        techStackNames: [],
+        snsLinks: [],
+      }),
+    );
+
+    return account;
   }
 
   // @todo 의미있는 닉네임을 생성
