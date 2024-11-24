@@ -11,6 +11,8 @@ import { DeleteAccountCommandFactory } from '@module/account/use-cases/delete-ac
 import { DeleteAccountCommand } from '@module/account/use-cases/delete-account/delete-account.command';
 import { DeleteAccountHandler } from '@module/account/use-cases/delete-account/delete-account.handler';
 
+import { EventStoreModule } from '@core/event-sourcing/event-store.module';
+
 describe(DeleteAccountHandler.name, () => {
   let handler: DeleteAccountHandler;
 
@@ -20,7 +22,7 @@ describe(DeleteAccountHandler.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AccountRepositoryModule],
+      imports: [AccountRepositoryModule, EventStoreModule],
       providers: [DeleteAccountHandler],
     }).compile();
 

@@ -8,6 +8,11 @@ import {
 } from '@module/account/repositories/account/account.repository.port';
 import { DeleteAccountCommand } from '@module/account/use-cases/delete-account/delete-account.command';
 
+import {
+  EVENT_STORE,
+  IEventStore,
+} from '@core/event-sourcing/event-store.interface';
+
 @CommandHandler(DeleteAccountCommand)
 export class DeleteAccountHandler
   implements ICommandHandler<DeleteAccountCommand, void>
@@ -15,6 +20,7 @@ export class DeleteAccountHandler
   constructor(
     @Inject(ACCOUNT_REPOSITORY)
     private readonly accountRepository: AccountRepositoryPort,
+    @Inject(EVENT_STORE) private readonly eventStore: IEventStore,
   ) {}
 
   async execute(command: DeleteAccountCommand): Promise<void> {
@@ -25,5 +31,7 @@ export class DeleteAccountHandler
     }
 
     await this.accountRepository.delete(account);
+
+    await this.eventStore.storeAggregateEvents(account);
   }
 }

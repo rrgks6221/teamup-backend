@@ -6,6 +6,7 @@ import {
 } from '@module/account/entities/account-sns-link.vo';
 import { AccountValidationError } from '@module/account/errors/account-validation.error';
 import { AccountCreatedEvent } from '@module/account/events/account-created.event';
+import { AccountDeletedEvent } from '@module/account/events/account-deleted.event';
 import { AccountUpdatedEvent } from '@module/account/events/account-updated.event';
 
 import {
@@ -190,6 +191,14 @@ export class Account extends AggregateRoot<AccountProps> {
     );
 
     return this;
+  }
+
+  delete(): void {
+    this.apply(
+      new AccountDeletedEvent(this.id, {
+        ...this.props,
+      }),
+    );
   }
 
   public validate(): void {
