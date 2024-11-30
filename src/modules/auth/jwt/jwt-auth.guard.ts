@@ -43,6 +43,7 @@ export class JwtAuthGuard implements CanActivate {
 
       request['user'] = {
         id: payload.sub,
+        role: payload.role,
       };
     } catch {
       throw new BaseHttpException(
