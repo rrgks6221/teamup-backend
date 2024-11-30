@@ -19,6 +19,8 @@ import { AppConfigService } from '@src/common/app-config/app-config.service';
         [ENV_KEY.PORT]: Joi.number(),
         [ENV_KEY.NODE_ENV]: Joi.string().required(),
         [ENV_KEY.APP_STAGE]: Joi.string().required(),
+
+        [ENV_KEY.DATABASE_URL]: Joi.string().required(),
       }),
     }),
   ],
