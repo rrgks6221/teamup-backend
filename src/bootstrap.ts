@@ -10,9 +10,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { ValidationError } from 'class-validator';
 
-import { AppModule } from '@src/app.module';
-import { BaseHttpExceptionFilter } from '@src/common/base/base-http-exception.filter';
-import { RequestValidationError } from '@src/common/base/base.error';
+import { AppModule } from 'src/app.module';
+
+import { BaseHttpExceptionFilter } from '@common/base/base-http-exception.filter';
+import { RequestValidationError } from '@common/base/base.error';
 
 export const createApp = async () => {
   return await NestFactory.create(AppModule);

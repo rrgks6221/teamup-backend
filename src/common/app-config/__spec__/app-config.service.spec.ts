@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AppConfigModule } from '@src/common/app-config/app-config.module';
-import { AppConfigService } from '@src/common/app-config/app-config.service';
+import { AppConfigModule } from '@common/app-config/app-config.module';
+import { AppConfigService } from '@common/app-config/app-config.service';
 
 describe(AppConfigService.name, () => {
   let service: AppConfigService;

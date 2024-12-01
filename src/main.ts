@@ -4,7 +4,7 @@ import {
   setGlobalInterceptor,
   setGlobalPipe,
   setSwagger,
-} from '@src/bootstrap';
+} from 'src/bootstrap';
 
 async function bootstrap() {
   const app = await createApp();

@@ -18,7 +18,10 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@src/*": ["./src/*"]
+      "@src/*": ["./src/!(shared|common|modules)/*"],
+      "@module/*": ["./src/modules/*"],
+      "@common/*": ["./src/common/*"],
+      "@shared/*": ["./src/shared/*"]
     },
     "esModuleInterop": true
   }

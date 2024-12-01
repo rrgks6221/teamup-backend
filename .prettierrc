@@ -19,7 +19,10 @@
     "^@nestjs/(.*)$",
     "<THIRD_PARTY_MODULES>",
     "^@src/(.*)$",
-    "^[./]"
+    "^src/(.*)$",
+    "^@module/(.*)$",
+    "^@common/(.*)$",
+    "^@shared/(.*)$"
   ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true

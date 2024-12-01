@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { PRISMA_SERVICE } from '@src/shared/prisma/prisma.di-token';
-import { PrismaService } from '@src/shared/prisma/prisma.service';
+import { PRISMA_SERVICE } from '@shared/prisma/prisma.di-token';
+import { PrismaService } from '@shared/prisma/prisma.service';
 
 @Module({
   providers: [
