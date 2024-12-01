@@ -9,6 +9,11 @@ import {
 } from '@module/position/repositories/position.repository.port';
 import { CreatePositionCommand } from '@module/position/use-cases/create-position/create-position.command';
 
+import {
+  EVENT_STORE,
+  IEventStore,
+} from '@core/event-sourcing/event-store.interface';
+
 @CommandHandler(CreatePositionCommand)
 export class CreatePositionHandler
   implements ICommandHandler<CreatePositionCommand, Position>
@@ -16,6 +21,7 @@ export class CreatePositionHandler
   constructor(
     @Inject(POSITION_REPOSITORY)
     private readonly positionRepository: PositionRepositoryPort,
+    @Inject(EVENT_STORE) private readonly eventStore: IEventStore,
   ) {}
 
   async execute(command: CreatePositionCommand): Promise<Position> {
@@ -32,6 +38,8 @@ export class CreatePositionHandler
     });
 
     await this.positionRepository.insert(newPosition);
+
+    await this.eventStore.storeAggregateEvents(newPosition);
 
     return newPosition;
   }

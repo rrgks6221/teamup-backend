@@ -32,7 +32,7 @@ export class EventStore implements IEventStore {
       return events;
     }
 
-    const result = await repository.findFirst({
+    const result = await (repository as any).findFirst({
       select: {
         version: true,
       },
@@ -69,6 +69,9 @@ export class EventStore implements IEventStore {
   private getRepository(aggregate: DomainEvent['aggregate']) {
     if (aggregate === 'Account') {
       return this.prismaService.accountDomainEvent;
+    }
+    if (aggregate === 'Position') {
+      return this.prismaService.positionDomainEvent;
     }
   }
 }

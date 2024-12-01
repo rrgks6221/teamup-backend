@@ -4,8 +4,10 @@ import { PositionRepositoryModule } from '@module/position/repositories/position
 import { CreatePositionController } from '@module/position/use-cases/create-position/create-position.controller';
 import { CreatePositionHandler } from '@module/position/use-cases/create-position/create-position.handler';
 
+import { EventStoreModule } from '@core/event-sourcing/event-store.module';
+
 @Module({
-  imports: [PositionRepositoryModule],
+  imports: [PositionRepositoryModule, EventStoreModule],
   controllers: [CreatePositionController],
   providers: [CreatePositionHandler],
 })

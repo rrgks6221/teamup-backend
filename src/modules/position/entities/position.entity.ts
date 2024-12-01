@@ -1,3 +1,5 @@
+import { PositionCreatedEvent } from '@module/position/events/position-created.event';
+
 import {
   AggregateRoot,
   CreateEntityProps,
@@ -17,11 +19,11 @@ export class Position extends AggregateRoot<PositionProps> {
     super(props);
   }
 
-  static create(createPositionProps: CreatePositionProps) {
+  static create(createPositionProps: CreatePositionProps): Position {
     const id = generateEntityId();
     const date = new Date();
 
-    return new Position({
+    const position = new Position({
       id,
       props: {
         name: createPositionProps.name,
@@ -29,6 +31,14 @@ export class Position extends AggregateRoot<PositionProps> {
       createdAt: date,
       updatedAt: date,
     });
+
+    position.apply(
+      new PositionCreatedEvent(position.id, {
+        name: position.props.name,
+      }),
+    );
+
+    return position;
   }
 
   get name() {

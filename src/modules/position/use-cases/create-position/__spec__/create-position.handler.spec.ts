@@ -11,6 +11,8 @@ import { CreatePositionCommandFactory } from '@module/position/use-cases/create-
 import { CreatePositionCommand } from '@module/position/use-cases/create-position/create-position.command';
 import { CreatePositionHandler } from '@module/position/use-cases/create-position/create-position.handler';
 
+import { EventStoreModule } from '@core/event-sourcing/event-store.module';
+
 describe(CreatePositionHandler.name, () => {
   let handler: CreatePositionHandler;
 
@@ -20,7 +22,7 @@ describe(CreatePositionHandler.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PositionRepositoryModule],
+      imports: [PositionRepositoryModule, EventStoreModule],
       providers: [CreatePositionHandler],
     }).compile();
 
