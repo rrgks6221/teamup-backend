@@ -73,5 +73,8 @@ export class EventStore implements IEventStore {
     if (aggregate === 'Position') {
       return this.prismaService.positionDomainEvent;
     }
+    if (aggregate === 'TechStack') {
+      return this.prismaService.techStackDomainEvent;
+    }
   }
 }

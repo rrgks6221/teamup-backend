@@ -4,8 +4,10 @@ import { TechStackRepositoryModule } from '@module/tech-stack/repositories/tech-
 import { CreateTechStackController } from '@module/tech-stack/use-cases/create-tech-stack/create-tech-stack.controller';
 import { CreateTechStackHandler } from '@module/tech-stack/use-cases/create-tech-stack/create-tech-stack.handler';
 
+import { EventStoreModule } from '@core/event-sourcing/event-store.module';
+
 @Module({
-  imports: [TechStackRepositoryModule],
+  imports: [TechStackRepositoryModule, EventStoreModule],
   controllers: [CreateTechStackController],
   providers: [CreateTechStackHandler],
 })

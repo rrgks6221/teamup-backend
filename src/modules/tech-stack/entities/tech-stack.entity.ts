@@ -1,3 +1,5 @@
+import { TechStackCreatedEvent } from '@module/tech-stack/events/tech-stack-created.event';
+
 import {
   AggregateRoot,
   CreateEntityProps,
@@ -17,11 +19,11 @@ export class TechStack extends AggregateRoot<TechStackProps> {
     super(props);
   }
 
-  static create(createTechStackProps: CreateTechStackProps) {
+  static create(createTechStackProps: CreateTechStackProps): TechStack {
     const id = generateEntityId();
     const date = new Date();
 
-    return new TechStack({
+    const techStack = new TechStack({
       id,
       props: {
         name: createTechStackProps.name,
@@ -29,6 +31,14 @@ export class TechStack extends AggregateRoot<TechStackProps> {
       createdAt: date,
       updatedAt: date,
     });
+
+    techStack.apply(
+      new TechStackCreatedEvent(techStack.id, {
+        name: techStack.props.name,
+      }),
+    );
+
+    return techStack;
   }
 
   get name() {

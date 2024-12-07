@@ -11,6 +11,8 @@ import { CreateTechStackCommandFactory } from '@module/tech-stack/use-cases/crea
 import { CreateTechStackCommand } from '@module/tech-stack/use-cases/create-tech-stack/create-tech-stack.command';
 import { CreateTechStackHandler } from '@module/tech-stack/use-cases/create-tech-stack/create-tech-stack.handler';
 
+import { EventStoreModule } from '@core/event-sourcing/event-store.module';
+
 describe(CreateTechStackHandler.name, () => {
   let handler: CreateTechStackHandler;
 
@@ -20,7 +22,7 @@ describe(CreateTechStackHandler.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TechStackRepositoryModule],
+      imports: [TechStackRepositoryModule, EventStoreModule],
       providers: [CreateTechStackHandler],
     }).compile();
 
