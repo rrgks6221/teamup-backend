@@ -13,6 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SignInType {
+  Username
+}
+
 model Account {
-  id        Int      @default(autoincrement()) @id
+  id       BigInt @id
+  nickname String @unique @db.VarChar(20)
+
+  signInType SignInType
+  username   String?    @unique @db.VarChar(20)
+  password   String?
+
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @updatedAt @db.Timestamp(3)
 }
