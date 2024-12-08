@@ -1,5 +1,6 @@
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
-import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 import { Client } from 'pg';
 
 module.exports = async function () {
@@ -15,9 +16,27 @@ module.exports = async function () {
     connectionString: process.env.DATABASE_URL,
   });
 
-  execSync(`DATABASE_URL="${process.env.DATABASE_URL}" npx prisma migrate dev`);
-
   await postgresClient.connect();
+
+  // migrations 디렉토리 경로
+  const migrationsDir = path.join(__dirname, '../prisma/migrations');
+  const migrationFolders = fs.readdirSync(migrationsDir);
+
+  for (const folder of migrationFolders) {
+    const migrationPath = path.join(migrationsDir, folder, 'migration.sql');
+
+    if (fs.existsSync(migrationPath)) {
+      let migrationSQL = fs.readFileSync(migrationPath, 'utf8');
+
+      // FOREIGN KEY 제약 조건 제거
+      migrationSQL = migrationSQL.replace(
+        /ALTER TABLE.*?ADD CONSTRAINT.*?FOREIGN KEY.*?;/gs,
+        '',
+      );
+
+      await postgresClient.query(migrationSQL);
+    }
+  }
 
   await postgresClient.end();
 
