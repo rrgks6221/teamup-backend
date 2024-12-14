@@ -7,6 +7,7 @@ import { AccountModule } from '@module/account/account.module';
 import { AuthModule } from '@module/auth/auth.module';
 import { ImageModule } from '@module/image/image.module';
 import { PositionModule } from '@module/position/position.module';
+import { ProjectModule } from '@module/project/project.module';
 import { TechStackModule } from '@module/tech-stack/tech-stack.module';
 
 import { AppConfigModule } from '@common/app-config/app-config.module';
@@ -32,6 +33,7 @@ import { EventStoreModule } from '@core/event-sourcing/event-store.module';
     PositionModule,
     TechStackModule,
     ImageModule,
+    ProjectModule,
   ],
 })
 export class AppModule {}

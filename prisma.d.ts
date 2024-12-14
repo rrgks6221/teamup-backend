@@ -8,4 +8,7 @@ namespace PrismaJson {
     platform: string;
     visibilityScope: 'public' | 'private';
   }[];
+
+  // Project
+  type ProjectTags = string[];
 }

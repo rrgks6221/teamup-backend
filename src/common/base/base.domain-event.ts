@@ -1,7 +1,7 @@
 import { RequestContext } from 'nestjs-request-context';
 import { TSID } from 'tsid-ts';
 
-type Aggregate = 'Account' | 'Position' | 'TechStack';
+type Aggregate = 'Account' | 'Position' | 'TechStack' | 'Project';
 
 export abstract class DomainEvent<Payload = Record<string, any>> {
   id: string;

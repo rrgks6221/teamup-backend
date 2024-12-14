@@ -45,6 +45,8 @@ model Account {
 
   createdAt DateTime @default(now()) @db.Timestamp(3)
   updatedAt DateTime @updatedAt @db.Timestamp(3)
+
+  projects Project[]
 }
 
 model AccountDomainEvent {
@@ -90,6 +92,43 @@ model TechStack {
 }
 
 model TechStackDomainEvent {
+  id           BigInt   @id
+  actorId      BigInt?
+  aggregateId  BigInt
+  eventName    String
+  eventPayload Json
+  version      Int
+  storedAt     DateTime @default(now()) @db.Timestamp(3)
+
+  @@unique([aggregateId, version])
+}
+
+enum ProjectStatus {
+  recruiting
+  inProgress
+  completed
+}
+
+model Project {
+  id BigInt @id
+
+  owner   Account @relation(fields: [ownerId], references: [id])
+  ownerId BigInt
+
+  name               String
+  description        String
+  status             ProjectStatus
+  category           String
+  maxMemberCount     Int
+  currentMemberCount Int
+  /// [ProjectTags]
+  tags               Json          @default("[]")
+
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @updatedAt @db.Timestamp(3)
+}
+
+model ProjectDomainEvent {
   id           BigInt   @id
   actorId      BigInt?
   aggregateId  BigInt
