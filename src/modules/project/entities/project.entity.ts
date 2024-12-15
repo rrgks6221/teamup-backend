@@ -1,4 +1,9 @@
+import {
+  ProjectMember,
+  ProjectMemberRole,
+} from '@module/project/entities/project-member.entity';
 import { ProjectCreatedEvent } from '@module/project/events/project-created.event';
+import { ProjectMemberCreatedEvent } from '@module/project/events/project-member-created.event';
 
 import {
   AggregateRoot,
@@ -35,6 +40,15 @@ interface CreateProjectProps {
   tags?: string[];
 }
 
+interface CreateMemberProps {
+  accountId: string;
+  position?: string;
+  role: ProjectMemberRole;
+  name: string;
+  profileImagePath?: string;
+  techStackNames?: string[];
+}
+
 export class Project extends AggregateRoot<ProjectProps> {
   constructor(props: CreateEntityProps<ProjectProps>) {
     super(props);
@@ -53,7 +67,7 @@ export class Project extends AggregateRoot<ProjectProps> {
         status: ProjectStatus.recruiting,
         category: createProjectProps.category,
         maxMemberCount: createProjectProps.maxMemberCount ?? 0,
-        currentMemberCount: 1,
+        currentMemberCount: 0,
         tags: createProjectProps.tags ?? [],
       },
       createdAt: date,
@@ -106,6 +120,31 @@ export class Project extends AggregateRoot<ProjectProps> {
 
   get tags(): string[] {
     return this.props.tags;
+  }
+
+  createMember(props: CreateMemberProps): ProjectMember {
+    const member = ProjectMember.create({
+      accountId: props.accountId,
+      projectId: this.id,
+      role: props.role,
+      name: props.name,
+      profileImagePath: props.profileImagePath,
+      techStackNames: props.techStackNames,
+    });
+
+    this.apply(
+      new ProjectMemberCreatedEvent(this.id, {
+        accountId: member.accountId,
+        projectId: member.projectId,
+        position: member.position,
+        role: member.role,
+        name: member.name,
+        profileImagePath: member.profileImagePath,
+        techStackNames: member.techStackNames,
+      }),
+    );
+
+    return member;
   }
 
   public validate(): void {}

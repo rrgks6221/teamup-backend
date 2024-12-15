@@ -135,7 +135,10 @@ export class Account extends AggregateRoot<AccountProps> {
 
     return `${process.env.AWS_S3_URL}/${this.props.profileImagePath}`;
   }
-  set profileImagePath(value: string) {
+  get profileImagePath() {
+    return this.props.profileImagePath;
+  }
+  set profileImagePath(value: string | undefined) {
     this.props.profileImagePath = value;
   }
 

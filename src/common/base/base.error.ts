@@ -52,3 +52,11 @@ export class InternalServerError extends BaseError {
     super('Internal server error', InternalServerError.CODE);
   }
 }
+
+export class RecordNotFoundError extends BaseError {
+  static CODE = 'COMMON.ENTITY_NOT_FOUND';
+
+  constructor() {
+    super('Entity not found', RecordNotFoundError.CODE);
+  }
+}

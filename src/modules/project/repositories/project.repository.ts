@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { Prisma } from '@prisma/client';
+
 import { Project } from '@module/project/entities/project.entity';
 import { ProjectMapper } from '@module/project/mappers/project.mapper';
 import {
@@ -8,6 +10,8 @@ import {
   ProjectRepositoryPort,
 } from '@module/project/repositories/project.repository.port';
 
+import { EntityId } from '@common/base/base.entity';
+import { RecordNotFoundError } from '@common/base/base.error';
 import {
   BaseRepository,
   ICursorPaginated,
@@ -28,6 +32,31 @@ export class ProjectRepository
     @Inject(PRISMA_SERVICE) protected readonly prismaService: PrismaService,
   ) {
     super(prismaService, ProjectMapper);
+  }
+
+  async incrementMemberCount(projectId: EntityId): Promise<number> {
+    try {
+      const updatedProject = await this.prismaService.project.update({
+        where: {
+          id: this.mapper.toPrimaryKey(projectId),
+        },
+        data: {
+          currentMemberCount: {
+            increment: 1,
+          },
+        },
+      });
+
+      return updatedProject.currentMemberCount;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new RecordNotFoundError();
+        }
+      }
+
+      throw error;
+    }
   }
 
   findAllCursorPaginated(
