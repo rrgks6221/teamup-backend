@@ -5,7 +5,6 @@ export interface ICreateProjectCommandProps {
   name: string;
   description: string;
   category: string;
-  maxMemberCount?: number;
   tags?: string[];
 }
 
@@ -14,7 +13,6 @@ export class CreateProjectCommand implements ICommand {
   readonly name: string;
   readonly description: string;
   readonly category: string;
-  readonly maxMemberCount?: number;
   readonly tags?: string[];
 
   constructor(props: ICreateProjectCommandProps) {
@@ -22,7 +20,6 @@ export class CreateProjectCommand implements ICommand {
     this.name = props.name;
     this.description = props.description;
     this.category = props.category;
-    this.maxMemberCount = props.maxMemberCount;
     this.tags = props.tags;
   }
 }

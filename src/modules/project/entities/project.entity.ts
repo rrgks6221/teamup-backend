@@ -26,7 +26,6 @@ export interface ProjectProps {
    * enum 또는 별도의 테이블로 관리
    */
   category: string;
-  maxMemberCount: number;
   currentMemberCount: number;
   tags: string[];
 }
@@ -36,7 +35,6 @@ interface CreateProjectProps {
   name: string;
   description: string;
   category: string;
-  maxMemberCount?: number;
   tags?: string[];
 }
 
@@ -66,7 +64,6 @@ export class Project extends AggregateRoot<ProjectProps> {
         description: createProjectProps.description,
         status: ProjectStatus.recruiting,
         category: createProjectProps.category,
-        maxMemberCount: createProjectProps.maxMemberCount ?? 0,
         currentMemberCount: 0,
         tags: createProjectProps.tags ?? [],
       },
@@ -81,8 +78,7 @@ export class Project extends AggregateRoot<ProjectProps> {
         description: createProjectProps.description,
         status: ProjectStatus.recruiting,
         category: createProjectProps.category,
-        maxMemberCount: createProjectProps.maxMemberCount ?? 0,
-        currentMemberCount: 1,
+        currentMemberCount: 0,
         tags: createProjectProps.tags ?? [],
       }),
     );
@@ -108,10 +104,6 @@ export class Project extends AggregateRoot<ProjectProps> {
 
   get category(): string {
     return this.props.category;
-  }
-
-  get maxMemberCount(): number {
-    return this.props.maxMemberCount;
   }
 
   get currentMemberCount(): number {

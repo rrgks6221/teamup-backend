@@ -13,6 +13,5 @@ export const CreateProjectCommandFactory = Factory.define<CreateProjectCommand>(
   name: () => faker.string.alpha(),
   description: () => faker.string.alpha(),
   category: () => faker.string.alpha(),
-  maxMemberCount: () => 0,
   tags: () => [],
 });

@@ -30,7 +30,6 @@ export class CreateProjectHandler
       name: command.name,
       description: command.description,
       category: command.category,
-      maxMemberCount: command.maxMemberCount,
       tags: command.tags,
     });
 

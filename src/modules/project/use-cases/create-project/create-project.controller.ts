@@ -37,7 +37,6 @@ export class CreateProjectController {
       name: body.name,
       description: body.description,
       category: body.category,
-      maxMemberCount: body.maxMemberCount,
       tags: body.tags,
     });
 

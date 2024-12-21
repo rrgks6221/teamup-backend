@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { IsInt, IsOptional, IsString, Max } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateProjectRequestDto {
   @ApiProperty()
@@ -14,12 +14,6 @@ export class CreateProjectRequestDto {
   @ApiProperty()
   @IsString()
   category: string;
-
-  @ApiPropertyOptional()
-  @Max(99)
-  @IsInt()
-  @IsOptional()
-  maxMemberCount?: number;
 
   @ApiPropertyOptional()
   @IsString({ each: true })

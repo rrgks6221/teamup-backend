@@ -18,7 +18,6 @@ export class ProjectMapper extends BaseMapper {
         description: raw.description,
         status: ProjectStatus[raw.status],
         category: raw.category,
-        maxMemberCount: raw.maxMemberCount,
         currentMemberCount: raw.currentMemberCount,
         tags: raw.tags,
       },
@@ -35,7 +34,6 @@ export class ProjectMapper extends BaseMapper {
       description: entity.props.description,
       status: entity.props.status,
       category: entity.props.category,
-      maxMemberCount: entity.props.maxMemberCount,
       currentMemberCount: entity.props.currentMemberCount,
       tags: entity.props.tags,
     };

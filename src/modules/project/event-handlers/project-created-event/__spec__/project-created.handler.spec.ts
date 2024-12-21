@@ -74,7 +74,6 @@ describe(ProjectCreatedHandler.name, () => {
       description: faker.string.alpha(),
       status: faker.helpers.enumValue(ProjectStatus),
       category: faker.string.alpha(),
-      maxMemberCount: 0,
       currentMemberCount: 0,
       tags: [],
     });

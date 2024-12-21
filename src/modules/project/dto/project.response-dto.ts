@@ -21,9 +21,6 @@ export class ProjectResponseDto extends BaseResponseDto {
   category: string;
 
   @ApiProperty()
-  maxMemberCount: number;
-
-  @ApiProperty()
   currentMemberCount: number;
 
   @ApiProperty()

@@ -125,7 +125,6 @@ model Project {
   description        String
   status             ProjectStatus
   category           String
-  maxMemberCount     Int
   currentMemberCount Int
   /// [ProjectTags]
   tags               Json          @default("[]")

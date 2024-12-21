@@ -8,7 +8,6 @@ interface ProjectCreatedEventPayload {
   description: string;
   status: ProjectStatus;
   category: string;
-  maxMemberCount?: number;
   currentMemberCount: number;
   tags?: string[];
 }

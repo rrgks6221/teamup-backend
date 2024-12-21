@@ -14,7 +14,6 @@ export class ProjectDtoAssembler {
     dto.description = project.description;
     dto.status = project.status;
     dto.category = project.category;
-    dto.maxMemberCount = project.maxMemberCount;
     dto.currentMemberCount = project.currentMemberCount;
     dto.tags = project.tags;
 
