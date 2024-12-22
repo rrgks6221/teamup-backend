@@ -79,7 +79,7 @@ export abstract class BaseRepository<
   async update(entity: Entity): Promise<Entity> {
     const raw = this.mapper.toPersistence(entity);
 
-    await this.prismaService.account.update({
+    await this.prismaService[this.TABLE_NAME].update({
       where: {
         id: raw.id,
       },
@@ -90,7 +90,7 @@ export abstract class BaseRepository<
   }
 
   async delete(entity: Entity): Promise<void> {
-    await this.prismaService.account.delete({
+    await this.prismaService[this.TABLE_NAME].delete({
       where: {
         id: this.mapper.toPrimaryKey(entity.id),
       },
