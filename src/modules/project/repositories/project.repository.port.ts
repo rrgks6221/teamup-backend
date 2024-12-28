@@ -14,4 +14,5 @@ export interface ProjectFilter {}
 export interface ProjectRepositoryPort
   extends RepositoryPort<Project, ProjectFilter> {
   incrementMemberCount(projectId: EntityId): Promise<number>;
+  decrementMemberCount(projectId: EntityId): Promise<number>;
 }

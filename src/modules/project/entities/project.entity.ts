@@ -2,8 +2,10 @@ import {
   ProjectMember,
   ProjectMemberRole,
 } from '@module/project/entities/project-member.entity';
+import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
 import { ProjectCreatedEvent } from '@module/project/events/project-created.event';
 import { ProjectMemberCreatedEvent } from '@module/project/events/project-member-created.event';
+import { ProjectMemberRemovedEvent } from '@module/project/events/project-member-removed.event';
 
 import {
   AggregateRoot,
@@ -137,6 +139,22 @@ export class Project extends AggregateRoot<ProjectProps> {
     );
 
     return member;
+  }
+
+  removeMember(member: ProjectMember) {
+    if (member.role === ProjectMemberRole.owner) {
+      throw new ProjectMemberDeletionRestrictedError(
+        'Cannot leave project owner',
+      );
+    }
+
+    this.apply(
+      new ProjectMemberRemovedEvent(this.id, {
+        accountId: member.accountId,
+        projectId: this.id,
+        memberId: member.id,
+      }),
+    );
   }
 
   public validate(): void {}

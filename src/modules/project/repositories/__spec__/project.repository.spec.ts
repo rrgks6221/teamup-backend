@@ -95,4 +95,40 @@ describe(ProjectRepository.name, () => {
       });
     });
   });
+
+  describe(ProjectRepository.prototype.decrementMemberCount.name, () => {
+    let projectId: string;
+
+    beforeEach(() => {
+      projectId = generateEntityId();
+    });
+
+    describe('식별자와 일치하는 프로젝트가 존재하는 경우', () => {
+      let project: Project;
+
+      beforeEach(async () => {
+        project = await repository.insert(
+          ProjectFactory.build({ id: projectId, currentMemberCount: 1 }),
+        );
+      });
+
+      describe('프로젝트의 현재 사용자 수를 증가시키면', () => {
+        it('현재 사용자 수를 1 감소시켜야한다.', async () => {
+          await expect(
+            repository.decrementMemberCount(projectId),
+          ).resolves.toEqual(project.currentMemberCount - 1);
+        });
+      });
+    });
+
+    describe('식별자와 일치하는 프로젝트가 존재하지 않는 경우', () => {
+      describe('프로젝트의 현재 사용자 수를 감소시키면', () => {
+        it('프로젝트가 존재하지 않는다는 에러가 발생해야한다.', async () => {
+          await expect(
+            repository.decrementMemberCount(projectId),
+          ).rejects.toThrow(RecordNotFoundError);
+        });
+      });
+    });
+  });
 });

@@ -59,6 +59,31 @@ export class ProjectRepository
     }
   }
 
+  async decrementMemberCount(projectId: EntityId): Promise<number> {
+    try {
+      const updatedProject = await this.prismaService.project.update({
+        where: {
+          id: this.mapper.toPrimaryKey(projectId),
+        },
+        data: {
+          currentMemberCount: {
+            decrement: 1,
+          },
+        },
+      });
+
+      return updatedProject.currentMemberCount;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new RecordNotFoundError();
+        }
+      }
+
+      throw error;
+    }
+  }
+
   findAllCursorPaginated(
     params: ICursorPaginatedParams<Project, ProjectFilter>,
   ): Promise<ICursorPaginated<Project>> {
