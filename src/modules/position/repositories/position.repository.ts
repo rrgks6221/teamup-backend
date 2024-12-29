@@ -3,7 +3,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Position } from '@module/position/entities/position.entity';
 import { PositionMapper } from '@module/position/mappers/position.mapper';
 import {
-  PositionFilter,
   PositionRaw,
   PositionRepositoryPort,
 } from '@module/position/repositories/position.repository.port';
@@ -69,7 +68,7 @@ export class PositionRepository
   }
 
   findAllCursorPaginated(
-    params: ICursorPaginatedParams<Position, PositionFilter>,
+    params: ICursorPaginatedParams,
   ): Promise<ICursorPaginated<Position>> {
     throw new Error('Method not implemented.');
   }

@@ -3,32 +3,32 @@ import { IBaseMapper } from '@common/base/base.mapper';
 
 import { PrismaService } from '@shared/prisma/prisma.service';
 
-export enum SortOrder {
-  Desc = 'DESC',
-  Asc = 'ASC',
-}
-
 export interface ICursorPaginated<T> {
-  cursor: string | null;
+  cursor?: string;
   data: T[];
 }
 
-export type OrderBy<T> = Partial<Record<keyof T, SortOrder>>[];
-
-export interface ICursorPaginatedParams<T, Filter> {
+export interface ICursorPaginatedParams<
+  Order = Record<string, unknown>,
+  Filter = Record<string, unknown>,
+> {
   limit?: number;
-  cursor: string | null;
-  orderBy: OrderBy<T>;
+  cursor?: string;
+  orderBy: Order;
   filter: Filter;
 }
 
-export interface RepositoryPort<E, ListFilter = Record<keyof E, unknown>> {
+export interface RepositoryPort<
+  E,
+  ListFilter = Record<string, unknown>,
+  ListOrder = Record<string, unknown>,
+> {
   insert(entity: E): Promise<E>;
 
   findOneById(id: EntityId): Promise<E | undefined>;
 
   findAllCursorPaginated(
-    params: ICursorPaginatedParams<E, ListFilter>,
+    params: ICursorPaginatedParams<ListOrder, ListFilter>,
   ): Promise<ICursorPaginated<E>>;
 
   update(entity: E): Promise<E>;

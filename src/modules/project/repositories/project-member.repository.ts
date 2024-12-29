@@ -3,7 +3,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ProjectMember } from '@module/project/entities/project-member.entity';
 import { ProjectMemberMapper } from '@module/project/mappers/project-member.mapper';
 import {
-  ProjectMemberFilter,
   ProjectMemberRaw,
   ProjectMemberRepositoryPort,
 } from '@module/project/repositories/project-member.repository.port';
@@ -56,7 +55,7 @@ export class ProjectMemberRepository
   }
 
   findAllCursorPaginated(
-    params: ICursorPaginatedParams<ProjectMember, ProjectMemberFilter>,
+    params: ICursorPaginatedParams,
   ): Promise<ICursorPaginated<ProjectMember>> {
     throw new Error('Method not implemented.');
   }

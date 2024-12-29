@@ -3,7 +3,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Account } from '@module/account/entities/account.entity';
 import { AccountMapper } from '@module/account/mappers/account.mapper';
 import {
-  AccountFilter,
   AccountRaw,
   AccountRepositoryPort,
 } from '@module/account/repositories/account/account.repository.port';
@@ -45,7 +44,7 @@ export class AccountRepository
   }
 
   findAllCursorPaginated(
-    params: ICursorPaginatedParams<Account, AccountFilter>,
+    params: ICursorPaginatedParams,
   ): Promise<ICursorPaginated<Account>> {
     throw new Error('Method not implemented.');
   }

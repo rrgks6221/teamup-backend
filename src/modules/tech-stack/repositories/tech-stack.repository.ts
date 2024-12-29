@@ -3,7 +3,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TechStack } from '@module/tech-stack/entities/tech-stack.entity';
 import { TechStackMapper } from '@module/tech-stack/mappers/tech-stack.mapper';
 import {
-  TechStackFilter,
   TechStackRaw,
   TechStackRepositoryPort,
 } from '@module/tech-stack/repositories/tech-stack.repository.port';
@@ -70,7 +69,7 @@ export class TechStackRepository
   }
 
   findAllCursorPaginated(
-    params: ICursorPaginatedParams<TechStack, TechStackFilter>,
+    params: ICursorPaginatedParams,
   ): Promise<ICursorPaginated<TechStack>> {
     throw new Error('Method not implemented.');
   }
