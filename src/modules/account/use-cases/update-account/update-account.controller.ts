@@ -32,7 +32,7 @@ import { BaseHttpException } from '@common/base/base-http-exception';
 import { RequestValidationError } from '@common/base/base.error';
 import { NotEmptyObjectPipe } from '@common/pipes/not-empty-object.pipe';
 
-@ApiTags('accounts')
+@ApiTags('account')
 @Controller()
 export class UpdateAccountController {
   constructor(

@@ -58,6 +58,7 @@ export const setSwagger = (app: INestApplication) => {
     .setDescription('The era-meet API description')
     .setVersion('0.1')
     .addTag('era-meet')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
