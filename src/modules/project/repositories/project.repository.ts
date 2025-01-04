@@ -6,6 +6,7 @@ import { Project } from '@module/project/entities/project.entity';
 import { ProjectMapper } from '@module/project/mappers/project.mapper';
 import {
   ProjectFilter,
+  ProjectOrder,
   ProjectRaw,
   ProjectRepositoryPort,
 } from '@module/project/repositories/project.repository.port';
@@ -84,9 +85,51 @@ export class ProjectRepository
     }
   }
 
-  findAllCursorPaginated(
-    params: ICursorPaginatedParams<Project, ProjectFilter>,
+  async findAllCursorPaginated(
+    params: ICursorPaginatedParams<ProjectOrder, ProjectFilter>,
   ): Promise<ICursorPaginated<Project>> {
-    throw new Error('Method not implemented.');
+    const { limit = 20, cursor, orderBy, filter = {} } = params;
+
+    const myCursor =
+      cursor === undefined
+        ? undefined
+        : {
+            id: BigInt(cursor),
+          };
+
+    const where: Prisma.ProjectWhereInput = {};
+
+    if (filter.statuses !== undefined) {
+      where.status = {
+        in: Array.from(filter.statuses),
+      };
+    }
+
+    const myOrder: Prisma.ProjectOrderByWithRelationInput = {};
+
+    if (orderBy !== undefined) {
+      Object.assign(myOrder, orderBy);
+    } else {
+      myOrder.id = 'asc';
+    }
+
+    const projects = await this.prismaService.project.findMany({
+      take: limit + 1,
+      cursor: myCursor,
+      skip: myCursor === undefined ? undefined : 1,
+      where,
+      orderBy: myOrder,
+    });
+
+    let nextCursor: string | undefined;
+    if (projects.at(limit) !== undefined) {
+      nextCursor = projects.at(limit - 1)?.id?.toString();
+      projects.pop();
+    }
+
+    return {
+      cursor: nextCursor,
+      data: projects.map((project) => this.mapper.toEntity(project)),
+    };
   }
 }

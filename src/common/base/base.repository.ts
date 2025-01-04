@@ -14,8 +14,8 @@ export interface ICursorPaginatedParams<
 > {
   limit?: number;
   cursor?: string;
-  orderBy: Order;
-  filter: Filter;
+  orderBy?: Order;
+  filter?: Filter;
 }
 
 export interface RepositoryPort<

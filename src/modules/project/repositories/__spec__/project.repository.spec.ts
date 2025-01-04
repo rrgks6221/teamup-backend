@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ProjectFactory } from '@module/project/entities/__spec__/project.factory';
-import { Project } from '@module/project/entities/project.entity';
+import {
+  Project,
+  ProjectStatus,
+} from '@module/project/entities/project.entity';
 import { ProjectRepository } from '@module/project/repositories/project.repository';
 import {
   PROJECT_REPOSITORY,
@@ -128,6 +131,92 @@ describe(ProjectRepository.name, () => {
             repository.decrementMemberCount(projectId),
           ).rejects.toThrow(RecordNotFoundError);
         });
+      });
+    });
+  });
+
+  describe(ProjectRepository.prototype.findAllCursorPaginated.name, () => {
+    let projects: Project[];
+
+    beforeAll(async () => {
+      projects = await Promise.all(
+        [
+          ProjectFactory.build({ status: ProjectStatus.recruiting }),
+          ProjectFactory.build({ status: ProjectStatus.inProgress }),
+          ProjectFactory.build({ status: ProjectStatus.completed }),
+        ].map((project) => repository.insert(project)),
+      );
+    });
+
+    describe('프로젝트 상태로 필터링 하는 경우', () => {
+      it('프로젝트 상태와 일치하는 프로젝트만 반환해야한다.', async () => {
+        const statuses = ['completed', 'inProgress'];
+
+        const result = await repository.findAllCursorPaginated({
+          filter: {
+            statuses: new Set(['completed', 'inProgress']),
+          },
+        });
+
+        expect(result.data.length).toBeGreaterThanOrEqual(2);
+        expect(result.data).toSatisfyAll<Project>((el) =>
+          statuses.includes(el.status),
+        );
+      });
+    });
+
+    describe('정렬 옵션이 존재하지 않는 경우', () => {
+      it('기본 정렬인 id로 정렬된 프로젝트 목록이 반환돼야한다.', async () => {
+        const result = await repository.findAllCursorPaginated({});
+
+        expect(result.data.length).toBeGreaterThanOrEqual(1);
+        expect(result.data).toEqual(
+          [...result.data].sort((a, b) => {
+            if (a.id > b.id) {
+              return 1;
+            }
+            if (a.id < b.id) {
+              return -1;
+            }
+            return 0;
+          }),
+        );
+      });
+    });
+
+    describe('커서가 존재하는 경우', () => {
+      it('커서 이후의 프로젝트 목록만 반환해야한다.', async () => {
+        const cursor = projects[0].id;
+        const result = await repository.findAllCursorPaginated({
+          cursor,
+        });
+
+        expect(result.data.length).toBeGreaterThanOrEqual(1);
+        expect(result.data).toSatisfyAll<Project>((el) => el.id > cursor);
+      });
+    });
+
+    describe('다음 커서가 존재하지 않는 경우', () => {
+      it('프로젝트 목록만 반환해야한다.', async () => {
+        const result = await repository.findAllCursorPaginated({
+          limit: 10000,
+        });
+
+        expect(result.cursor).toBeUndefined();
+        expect(result.data.length).toBeGreaterThanOrEqual(1);
+        expect(result.data).toBeArray();
+      });
+    });
+
+    describe('다음 커서가 존재하는 경우', () => {
+      it('커서를 포함한 프로젝트를 반환해야한다.', async () => {
+        const result = await repository.findAllCursorPaginated({
+          limit: 1,
+        });
+
+        expect(result.cursor).toBeDefined();
+        expect(result.data.length).toBeGreaterThanOrEqual(1);
+        expect(result.data).toBeArrayOfSize(1);
       });
     });
   });

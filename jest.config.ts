@@ -20,7 +20,10 @@ export default {
       { tsconfig: '<rootDir>/../tsconfig.spec.json' },
     ],
   },
-  setupFilesAfterEnv: ['<rootDir>/../test/after-env-setup.ts'],
+  setupFilesAfterEnv: [
+    '<rootDir>/../test/after-env-setup.ts',
+    'jest-extended/all',
+  ],
   globalSetup: '<rootDir>/../test/global-setup.ts',
   globalTeardown: '<rootDir>/../test/global-teardown.ts',
 };
