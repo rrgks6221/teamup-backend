@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Inject } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiNotFoundResponse,
@@ -15,6 +15,7 @@ import {
   GetCurrentAccountQuery,
   IGetCurrentAccountService,
 } from '@module/account/use-cases/get-current-account/get-current-account.service.interface';
+import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
 import {
@@ -30,6 +31,7 @@ export class GetCurrentAccountController {
     private readonly getCurrentAccountService: IGetCurrentAccountService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '내 계정 조회' })
   @ApiBearerAuth()
   @ApiOkResponse({ type: AccountResponseDto })
