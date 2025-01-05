@@ -4,12 +4,14 @@ import { ProjectCreatedModule } from '@module/project/event-handlers/project-cre
 import { ProjectMemberCreatedModule } from '@module/project/event-handlers/project-member-created-event/project-member-created.module';
 import { ProjectMemberRemovedModule } from '@module/project/event-handlers/project-member-removed-event/project-member-removed.module';
 import { CreateProjectModule } from '@module/project/use-cases/create-project/create-project.module';
+import { GetProjectModule } from '@module/project/use-cases/get-project/get-project.module';
 import { ListProjectsModule } from '@module/project/use-cases/list-projects/list-projects.module';
 import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-project-member/remove-project-member.module';
 
 @Module({
   imports: [
     CreateProjectModule,
+    GetProjectModule,
     ListProjectsModule,
     RemoveProjectMemberModule,
 
