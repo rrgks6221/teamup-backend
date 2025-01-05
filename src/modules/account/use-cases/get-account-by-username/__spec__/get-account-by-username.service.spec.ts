@@ -3,12 +3,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AccountFactory } from '@module/account/entities/__spec__/account.factory';
 import { Account } from '@module/account/entities/account.entity';
 import { AccountNotFoundError } from '@module/account/errors/account-not-found.error';
+import { AccountRepositoryModule } from '@module/account/repositories/account/account.repository.module';
 import {
   ACCOUNT_REPOSITORY,
   AccountRepositoryPort,
 } from '@module/account/repositories/account/account.repository.port';
 import { GetAccountByUsernameQueryFactory } from '@module/account/use-cases/get-account-by-username/__spec__/get-account-by-username-query.factory';
-import { GetAccountByUsernameModule } from '@module/account/use-cases/get-account-by-username/get-account-by-username.module';
 import { GetAccountByUsernameService } from '@module/account/use-cases/get-account-by-username/get-account-by-username.service';
 import {
   GET_ACCOUNT_BY_USERNAME_SERVICE,
@@ -25,7 +25,13 @@ describe(GetAccountByUsernameService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [GetAccountByUsernameModule],
+      imports: [AccountRepositoryModule],
+      providers: [
+        {
+          provide: GET_ACCOUNT_BY_USERNAME_SERVICE,
+          useClass: GetAccountByUsernameService,
+        },
+      ],
     }).compile();
 
     service = module.get<IGetAccountByUsernameService>(

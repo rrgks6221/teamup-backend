@@ -2,12 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { AccountFactory } from '@module/account/entities/__spec__/account.factory';
 import { AccountNotFoundError } from '@module/account/errors/account-not-found.error';
+import { AccountRepositoryModule } from '@module/account/repositories/account/account.repository.module';
 import {
   ACCOUNT_REPOSITORY,
   AccountRepositoryPort,
 } from '@module/account/repositories/account/account.repository.port';
 import { DeleteAccountCommandFactory } from '@module/account/use-cases/delete-account/__spec__/delete-account-command.factory';
-import { DeleteAccountModule } from '@module/account/use-cases/delete-account/delete-account.module';
 import { DeleteAccountService } from '@module/account/use-cases/delete-account/delete-account.service';
 import {
   DELETE_ACCOUNT_SERVICE,
@@ -24,7 +24,13 @@ describe(DeleteAccountService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [DeleteAccountModule],
+      imports: [AccountRepositoryModule],
+      providers: [
+        {
+          provide: DELETE_ACCOUNT_SERVICE,
+          useClass: DeleteAccountService,
+        },
+      ],
     }).compile();
 
     service = module.get<IDeleteAccountService>(DELETE_ACCOUNT_SERVICE);
