@@ -1,8 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { Prisma } from '@prisma/client';
+
 import { ProjectMember } from '@module/project/entities/project-member.entity';
 import { ProjectMemberMapper } from '@module/project/mappers/project-member.mapper';
 import {
+  ProjectMemberFilter,
+  ProjectMemberOrder,
   ProjectMemberRaw,
   ProjectMemberRepositoryPort,
 } from '@module/project/repositories/project-member.repository.port';
@@ -54,9 +58,51 @@ export class ProjectMemberRepository
     return this.mapper.toEntity(raw);
   }
 
-  findAllCursorPaginated(
-    params: ICursorPaginatedParams,
+  async findAllCursorPaginated(
+    params: ICursorPaginatedParams<ProjectMemberOrder, ProjectMemberFilter>,
   ): Promise<ICursorPaginated<ProjectMember>> {
-    throw new Error('Method not implemented.');
+    const { limit = 20, cursor, orderBy, filter = {} } = params;
+
+    const myCursor =
+      cursor === undefined
+        ? undefined
+        : {
+            id: BigInt(cursor),
+          };
+
+    const where: Prisma.ProjectMemberWhereInput = {};
+
+    if (filter.projectId !== undefined) {
+      where.projectId = this.mapper.toPrimaryKey(filter.projectId);
+    }
+
+    const myOrder: Prisma.ProjectMemberOrderByWithRelationInput = {};
+
+    if (orderBy !== undefined) {
+      Object.assign(myOrder, orderBy);
+    } else {
+      myOrder.id = 'asc';
+    }
+
+    const projectMembers = await this.prismaService.projectMember.findMany({
+      take: limit + 1,
+      cursor: myCursor,
+      skip: myCursor === undefined ? undefined : 1,
+      where,
+      orderBy: myOrder,
+    });
+
+    let nextCursor: string | undefined;
+    if (projectMembers.at(limit) !== undefined) {
+      nextCursor = projectMembers.at(limit - 1)?.id?.toString();
+      projectMembers.pop();
+    }
+
+    return {
+      cursor: nextCursor,
+      data: projectMembers.map((projectMember) =>
+        this.mapper.toEntity(projectMember),
+      ),
+    };
   }
 }

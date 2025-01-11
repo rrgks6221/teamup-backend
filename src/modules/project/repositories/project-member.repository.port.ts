@@ -9,10 +9,18 @@ export const PROJECT_MEMBER_REPOSITORY = Symbol('PROJECT_MEMBER_REPOSITORY');
 
 export interface ProjectMemberRaw extends ProjectMemberModel {}
 
-export interface ProjectMemberFilter {}
+export interface ProjectMemberFilter {
+  projectId?: string;
+}
+
+export interface ProjectMemberOrder extends Record<never, 'desc' | 'asc'> {}
 
 export interface ProjectMemberRepositoryPort
-  extends RepositoryPort<ProjectMember, ProjectMemberFilter> {
+  extends RepositoryPort<
+    ProjectMember,
+    ProjectMemberFilter,
+    ProjectMemberOrder
+  > {
   findOneByAccountInProject(
     projectId: EntityId,
     accountId: EntityId,
