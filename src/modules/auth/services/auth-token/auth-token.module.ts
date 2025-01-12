@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
-import { AuthTokenRepositoryModule } from '@module/auth/repositories/auth-token/auth-token.repository.module';
 import { AuthTokenService } from '@module/auth/services/auth-token/auth-token.service';
 import { AUTH_TOKEN_SERVICE } from '@module/auth/services/auth-token/auth-token.service.interface';
 
@@ -13,7 +12,6 @@ import { AppConfigService } from '@common/app-config/app-config.service';
 @Module({
   imports: [
     AppConfigModule,
-    AuthTokenRepositoryModule,
     JwtModule.registerAsync({
       global: true,
       useFactory: (appConfigService: AppConfigService) => {
