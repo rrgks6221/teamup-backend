@@ -2,10 +2,12 @@ import {
   ProjectMember,
   ProjectMemberRole,
 } from '@module/project/entities/project-member.entity';
+import { ProjectRecruitmentPost } from '@module/project/entities/project-recruitment-post.entity';
 import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
 import { ProjectCreatedEvent } from '@module/project/events/project-created.event';
 import { ProjectMemberCreatedEvent } from '@module/project/events/project-member-created.event';
 import { ProjectMemberRemovedEvent } from '@module/project/events/project-member-removed.event';
+import { ProjectRecruitmentCreatedEvent } from '@module/project/events/project-recruitment-post-created.event';
 
 import {
   AggregateRoot,
@@ -47,6 +49,17 @@ interface CreateMemberProps {
   name: string;
   profileImagePath?: string;
   techStackNames?: string[];
+}
+
+interface CreateRecruitmentPostProps {
+  projectId: string;
+  authorId: string;
+  title: string;
+  description: string;
+  position: string;
+  techStackNames?: string[];
+  maxRecruitsCount?: number;
+  applicantsEndsAt?: Date;
 }
 
 export class Project extends AggregateRoot<ProjectProps> {
@@ -155,6 +168,37 @@ export class Project extends AggregateRoot<ProjectProps> {
         memberId: member.id,
       }),
     );
+  }
+
+  createRecruitmentPost(props: CreateRecruitmentPostProps) {
+    const recruitmentPost = ProjectRecruitmentPost.create({
+      projectId: props.projectId,
+      authorId: props.authorId,
+      title: props.title,
+      description: props.description,
+      position: props.position,
+      techStackNames: props.techStackNames,
+      maxRecruitsCount: props.maxRecruitsCount,
+      applicantsEndsAt: props.applicantsEndsAt,
+    });
+
+    this.apply(
+      new ProjectRecruitmentCreatedEvent(this.id, {
+        projectId: recruitmentPost.projectId,
+        authorId: recruitmentPost.authorId,
+        title: recruitmentPost.title,
+        description: recruitmentPost.description,
+        position: recruitmentPost.position,
+        techStackNames: recruitmentPost.techStackNames,
+        recruitmentStatus: recruitmentPost.recruitmentStatus,
+        maxRecruitsCount: recruitmentPost.maxRecruitsCount,
+        currentRecruitsCount: recruitmentPost.currentRecruitsCount,
+        applicantsEndsAt: recruitmentPost.applicantsEndsAt,
+        applicantsCount: recruitmentPost.applicantsCount,
+      }),
+    );
+
+    return recruitmentPost;
   }
 
   public validate(): void {}

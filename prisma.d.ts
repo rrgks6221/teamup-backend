@@ -12,4 +12,5 @@ namespace PrismaJson {
   // Project
   type ProjectTags = string[];
   type ProjectMemberTechStackNames = string[];
+  type ProjectRecruitmentPostTechStackNames = string[];
 }

@@ -46,8 +46,9 @@ model Account {
   createdAt DateTime @default(now()) @db.Timestamp(3)
   updatedAt DateTime @updatedAt @db.Timestamp(3)
 
-  projects       Project[]
-  projectMembers ProjectMember[]
+  projects                Project[]
+  projectMembers          ProjectMember[]
+  projectRecruitmentPosts ProjectRecruitmentPost[]
 }
 
 model AccountDomainEvent {
@@ -132,7 +133,8 @@ model Project {
   createdAt DateTime @default(now()) @db.Timestamp(3)
   updatedAt DateTime @updatedAt @db.Timestamp(3)
 
-  projectMembers ProjectMember[]
+  projectMembers         ProjectMember[]
+  projectRecruitmentPost ProjectRecruitmentPost[]
 }
 
 model ProjectDomainEvent {
@@ -166,4 +168,32 @@ model ProjectMember {
   updatedAt DateTime @updatedAt @db.Timestamp(3)
 
   @@unique([accountId, projectId])
+}
+
+enum ProjectRecruitmentPostStatus {
+  open
+  close
+}
+
+model ProjectRecruitmentPost {
+  id BigInt @id
+
+  account   Account @relation(fields: [authorId], references: [id])
+  authorId  BigInt
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId BigInt
+
+  title                String
+  description          String
+  position             String
+  /// [ProjectRecruitmentPostTechStackNames]
+  techStackNames            Json                         @default("[]")
+  recruitmentStatus    ProjectRecruitmentPostStatus
+  maxRecruitsCount     Int?
+  currentRecruitsCount Int
+  applicantsEndsAt     DateTime?
+  applicantsCount      Int
+
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @updatedAt @db.Timestamp(3)
 }
