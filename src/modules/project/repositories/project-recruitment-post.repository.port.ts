@@ -11,10 +11,16 @@ export const PROJECT_RECRUITMENT_POST_REPOSITORY = Symbol(
 export interface ProjectRecruitmentPostRaw
   extends ProjectRecruitmentPostModel {}
 
-export interface ProjectRecruitmentPostFilter {}
+export interface ProjectRecruitmentPostFilter {
+  projectId?: string;
+}
+
+export interface ProjectRecruitmentPostOrder
+  extends Record<never, 'desc' | 'asc'> {}
 
 export interface ProjectRecruitmentPostRepositoryPort
   extends RepositoryPort<
     ProjectRecruitmentPost,
-    ProjectRecruitmentPostFilter
+    ProjectRecruitmentPostFilter,
+    ProjectRecruitmentPostOrder
   > {}

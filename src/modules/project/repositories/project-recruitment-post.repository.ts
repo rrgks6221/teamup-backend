@@ -1,8 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { Prisma } from '@prisma/client';
+
 import { ProjectRecruitmentPost } from '@module/project/entities/project-recruitment-post.entity';
 import { ProjectRecruitmentPostMapper } from '@module/project/mappers/project-recruitment-post.mapper';
 import {
+  ProjectRecruitmentPostFilter,
+  ProjectRecruitmentPostOrder,
   ProjectRecruitmentPostRaw,
   ProjectRecruitmentPostRepositoryPort,
 } from '@module/project/repositories/project-recruitment-post.repository.port';
@@ -29,9 +33,55 @@ export class ProjectRecruitmentPostRepository
     super(prismaService, ProjectRecruitmentPostMapper);
   }
 
-  findAllCursorPaginated(
-    params: ICursorPaginatedParams,
+  async findAllCursorPaginated(
+    params: ICursorPaginatedParams<
+      ProjectRecruitmentPostOrder,
+      ProjectRecruitmentPostFilter
+    >,
   ): Promise<ICursorPaginated<ProjectRecruitmentPost>> {
-    throw new Error('Method not implemented.');
+    const { limit = 20, cursor, orderBy, filter = {} } = params;
+
+    const myCursor =
+      cursor === undefined
+        ? undefined
+        : {
+            id: BigInt(cursor),
+          };
+
+    const where: Prisma.ProjectRecruitmentPostWhereInput = {};
+
+    if (filter.projectId !== undefined) {
+      where.projectId = this.mapper.toPrimaryKey(filter.projectId);
+    }
+
+    const myOrder: Prisma.ProjectRecruitmentPostOrderByWithRelationInput = {};
+
+    if (orderBy !== undefined) {
+      Object.assign(myOrder, orderBy);
+    } else {
+      myOrder.id = 'asc';
+    }
+
+    const projectRecruitmentPosts =
+      await this.prismaService.projectRecruitmentPost.findMany({
+        take: limit + 1,
+        cursor: myCursor,
+        skip: myCursor === undefined ? undefined : 1,
+        where,
+        orderBy: myOrder,
+      });
+
+    let nextCursor: string | undefined;
+    if (projectRecruitmentPosts.at(limit) !== undefined) {
+      nextCursor = projectRecruitmentPosts.at(limit - 1)?.id?.toString();
+      projectRecruitmentPosts.pop();
+    }
+
+    return {
+      cursor: nextCursor,
+      data: projectRecruitmentPosts.map((projectRecruitmentPost) =>
+        this.mapper.toEntity(projectRecruitmentPost),
+      ),
+    };
   }
 }
