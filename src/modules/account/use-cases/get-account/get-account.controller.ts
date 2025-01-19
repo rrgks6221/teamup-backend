@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -22,9 +21,11 @@ import {
   GetAccountQuery,
   IGetAccountService,
 } from '@module/account/use-cases/get-account/get-account.service.interface';
+import { UnauthorizedUserError } from '@module/auth/errors/unauthorized-user.error';
 import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
+import { ApiErrorResponse } from '@common/decorator/api-fail-response.decorator';
 import {
   CurrentUser,
   ICurrentUser,
@@ -32,9 +33,6 @@ import {
 
 @ApiTags('account')
 @ApiOkResponse({ type: AccountResponseDto })
-@ApiNotFoundResponse({
-  schema: BaseHttpException.buildSwaggerSchema([AccountNotFoundError.CODE]),
-})
 @Controller()
 export class GetAccountController {
   constructor(
@@ -45,6 +43,10 @@ export class GetAccountController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '내 계정 조회' })
   @ApiBearerAuth()
+  @ApiErrorResponse({
+    [HttpStatus.UNAUTHORIZED]: [UnauthorizedUserError],
+    [HttpStatus.NOT_FOUND]: [AccountNotFoundError],
+  })
   @Get('accounts/me')
   async getCurrentAccount(
     @CurrentUser() currentUser: ICurrentUser,
@@ -64,6 +66,9 @@ export class GetAccountController {
     }
   }
 
+  @ApiErrorResponse({
+    [HttpStatus.NOT_FOUND]: [AccountNotFoundError],
+  })
   @ApiOperation({ summary: '특정 계정 조회' })
   @Get('accounts/:id')
   async getAccount(@Param('id') id: string): Promise<AccountResponseDto> {

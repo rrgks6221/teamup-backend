@@ -8,16 +8,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiConflictResponse,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-  ApiUnauthorizedResponse,
-  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
 import { AccountDtoAssembler } from '@module/account/assemblers/account-dto.assembler';
@@ -37,6 +31,7 @@ import { JwtAuthGuard } from '@module/auth/jwt/jwt-auth.guard';
 
 import { BaseHttpException } from '@common/base/base-http-exception';
 import { RequestValidationError } from '@common/base/base.error';
+import { ApiErrorResponse } from '@common/decorator/api-fail-response.decorator';
 import {
   CurrentUser,
   ICurrentUser,
@@ -55,25 +50,13 @@ export class UpdateAccountController {
   @ApiOperation({ summary: '계정 업데이트' })
   @ApiBearerAuth()
   @ApiOkResponse({ type: AccountResponseDto })
-  @ApiBadRequestResponse({
-    schema: BaseHttpException.buildSwaggerSchema([RequestValidationError.CODE]),
-  })
-  @ApiUnauthorizedResponse({
-    schema: BaseHttpException.buildSwaggerSchema([UnauthorizedUserError.CODE]),
-  })
-  @ApiForbiddenResponse({
-    schema: BaseHttpException.buildSwaggerSchema([PermissionDeniedError.CODE]),
-  })
-  @ApiNotFoundResponse({
-    schema: BaseHttpException.buildSwaggerSchema([AccountNotFoundError.CODE]),
-  })
-  @ApiConflictResponse({
-    schema: BaseHttpException.buildSwaggerSchema([
-      AccountNicknameAlreadyOccupiedError.CODE,
-    ]),
-  })
-  @ApiUnprocessableEntityResponse({
-    schema: BaseHttpException.buildSwaggerSchema([AccountValidationError.CODE]),
+  @ApiErrorResponse({
+    [HttpStatus.BAD_REQUEST]: [RequestValidationError],
+    [HttpStatus.UNAUTHORIZED]: [UnauthorizedUserError],
+    [HttpStatus.FORBIDDEN]: [PermissionDeniedError],
+    [HttpStatus.NOT_FOUND]: [AccountNotFoundError],
+    [HttpStatus.CONFLICT]: [AccountNicknameAlreadyOccupiedError],
+    [HttpStatus.UNPROCESSABLE_ENTITY]: [AccountValidationError],
   })
   @Patch('accounts/:id')
   async update(
