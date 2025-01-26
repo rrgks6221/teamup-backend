@@ -49,6 +49,7 @@ model Account {
   projects                Project[]
   projectMembers          ProjectMember[]
   projectRecruitmentPosts ProjectRecruitmentPost[]
+  comments Comment[]
 }
 
 model AccountDomainEvent {
@@ -196,4 +197,36 @@ model ProjectRecruitmentPost {
 
   createdAt DateTime @default(now()) @db.Timestamp(3)
   updatedAt DateTime @updatedAt @db.Timestamp(3)
+}
+
+enum CommentPostType {
+  recruitmentPost
+}
+
+model Comment {
+  id BigInt @id
+
+  account   Account @relation(fields: [authorId], references: [id])
+  authorId  BigInt
+  postId BigInt
+
+  postType CommentPostType
+  description String
+
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @updatedAt @db.Timestamp(3)
+
+  @@index([postType, postId])
+}
+
+model CommentDomainEvent {
+  id           BigInt   @id
+  actorId      BigInt?
+  aggregateId  BigInt
+  eventName    String
+  eventPayload Json
+  version      Int
+  storedAt     DateTime @default(now()) @db.Timestamp(3)
+
+  @@unique([aggregateId, version])
 }

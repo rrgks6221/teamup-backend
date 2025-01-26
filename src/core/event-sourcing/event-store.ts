@@ -79,5 +79,8 @@ export class EventStore implements IEventStore {
     if (aggregate === 'Project') {
       return this.prismaService.projectDomainEvent;
     }
+    if (aggregate === 'Comment') {
+      return this.prismaService.commentDomainEvent;
+    }
   }
 }

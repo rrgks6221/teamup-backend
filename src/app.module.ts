@@ -5,6 +5,7 @@ import { RequestContextModule } from 'nestjs-request-context';
 
 import { AccountModule } from '@module/account/account.module';
 import { AuthModule } from '@module/auth/auth.module';
+import { CommentModule } from '@module/comment/comment.module';
 import { ImageModule } from '@module/image/image.module';
 import { PositionModule } from '@module/position/position.module';
 import { ProjectModule } from '@module/project/project.module';
@@ -34,6 +35,7 @@ import { EventStoreModule } from '@core/event-sourcing/event-store.module';
     TechStackModule,
     ImageModule,
     ProjectModule,
+    CommentModule,
   ],
 })
 export class AppModule {}
