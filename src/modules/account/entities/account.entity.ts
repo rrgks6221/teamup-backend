@@ -91,18 +91,36 @@ export class Account extends BaseEntity<AccountProps> {
   update(updateAccountProps: UpdateAccountProps) {
     if (updateAccountProps.nickname !== undefined) {
       this.props.nickname = updateAccountProps.nickname;
+      this.nicknameValidate();
     }
 
     return this;
   }
 
   public validate(): void {
-    if (this.props.nickname !== undefined) {
-      if (this.props.nickname.length > Account.NICKNAME_MAX_LENGTH) {
-        throw new AccountValidationError(
-          'account nickname can not be longer than 20 characters',
-        );
-      }
+    this.nicknameValidate();
+    this.usernameValidate();
+  }
+
+  private nicknameValidate() {
+    if (
+      this.props.nickname !== undefined &&
+      this.props.nickname.length > Account.NICKNAME_MAX_LENGTH
+    ) {
+      throw new AccountValidationError(
+        'Account nickname can not be longer than 10 characters',
+      );
+    }
+  }
+
+  private usernameValidate() {
+    if (
+      this.props.username !== undefined &&
+      this.props.username.length > Account.USERNAME_MAX_LENGTH
+    ) {
+      throw new AccountValidationError(
+        'Account username can not be longer than 20 characters',
+      );
     }
   }
 }
