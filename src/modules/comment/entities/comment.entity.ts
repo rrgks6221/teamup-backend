@@ -1,4 +1,5 @@
 import { CommentCreatedEvent } from '@module/comment/events/comment-created.event';
+import { CommentRemovedEvent } from '@module/comment/events/comment-removed.event';
 
 import {
   AggregateRoot,
@@ -71,6 +72,15 @@ export class Comment extends AggregateRoot<CommentProps> {
 
   get description() {
     return this.props.description;
+  }
+
+  remove() {
+    this.apply(
+      new CommentRemovedEvent(this.id, {
+        postId: this.props.postId,
+        postType: this.props.postType,
+      }),
+    );
   }
 
   public validate(): void {}
