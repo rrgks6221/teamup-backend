@@ -5,7 +5,7 @@
     "source.organizeImports": "explicit"
   },
 
-  "cSpell.words": [],
+  "cSpell.words": ["teamup"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "notebook.defaultFormatter": "esbenp.prettier-vscode",
   "typescript.preferences.importModuleSpecifier": "non-relative"

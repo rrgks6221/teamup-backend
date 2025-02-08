@@ -12,7 +12,7 @@ export default {
   },
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
-  displayName: 'era-meet',
+  displayName: 'teamup-backend',
   transform: {
     '^.+\\.[tj]s$': [
       'ts-jest',

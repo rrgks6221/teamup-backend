@@ -60,10 +60,10 @@ export const setGlobalExceptionFilter = (app: INestApplication) => {
 
 export const setSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
-    .setTitle('era-meet')
-    .setDescription('The era-meet API description')
+    .setTitle('teamup-backend')
+    .setDescription('The teamup-backend API description')
     .setVersion('0.1')
-    .addTag('era-meet')
+    .addTag('teamup-backend')
     .addBearerAuth()
     .build();
 
