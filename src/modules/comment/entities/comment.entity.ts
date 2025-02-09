@@ -1,5 +1,6 @@
 import { CommentCreatedEvent } from '@module/comment/events/comment-created.event';
 import { CommentRemovedEvent } from '@module/comment/events/comment-removed.event';
+import { CommentUpdatedEvent } from '@module/comment/events/comment-updated.event';
 
 import {
   AggregateRoot,
@@ -23,6 +24,10 @@ interface CreateCommentProps {
   authorId: string;
   postType: CommentPostType;
   description: string;
+}
+
+interface UpdateCommentProps {
+  description?: string;
 }
 
 export class Comment extends AggregateRoot<CommentProps> {
@@ -72,6 +77,22 @@ export class Comment extends AggregateRoot<CommentProps> {
 
   get description() {
     return this.props.description;
+  }
+
+  update(props: UpdateCommentProps) {
+    if (props.description !== undefined) {
+      this.props.description = props.description;
+    }
+
+    this.updatedAt = new Date();
+
+    this.apply(
+      new CommentUpdatedEvent(this.id, {
+        description: props.description,
+      }),
+    );
+
+    return this;
   }
 
   remove() {
