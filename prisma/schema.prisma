@@ -49,7 +49,7 @@ model Account {
   projects                Project[]
   projectMembers          ProjectMember[]
   projectRecruitmentPosts ProjectRecruitmentPost[]
-  comments Comment[]
+  comments                Comment[]
 }
 
 model AccountDomainEvent {
@@ -188,12 +188,13 @@ model ProjectRecruitmentPost {
   description          String
   position             String
   /// [ProjectRecruitmentPostTechStackNames]
-  techStackNames            Json                         @default("[]")
+  techStackNames       Json                         @default("[]")
   recruitmentStatus    ProjectRecruitmentPostStatus
   maxRecruitsCount     Int?
   currentRecruitsCount Int
   applicantsEndsAt     DateTime?
   applicantsCount      Int
+  commentsCount        Int                          @default(0)
 
   createdAt DateTime @default(now()) @db.Timestamp(3)
   updatedAt DateTime @updatedAt @db.Timestamp(3)
@@ -206,11 +207,11 @@ enum CommentPostType {
 model Comment {
   id BigInt @id
 
-  account   Account @relation(fields: [authorId], references: [id])
-  authorId  BigInt
-  postId BigInt
+  account  Account @relation(fields: [authorId], references: [id])
+  authorId BigInt
+  postId   BigInt
 
-  postType CommentPostType
+  postType    CommentPostType
   description String
 
   createdAt DateTime @default(now()) @db.Timestamp(3)

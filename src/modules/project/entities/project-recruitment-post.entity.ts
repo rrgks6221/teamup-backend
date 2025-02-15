@@ -21,6 +21,7 @@ export interface ProjectRecruitmentPostProps {
   currentRecruitsCount: number;
   applicantsEndsAt?: Date;
   applicantsCount: number;
+  commentsCount: number;
 }
 
 interface CreateProjectRecruitmentPostProps {
@@ -60,6 +61,7 @@ export class ProjectRecruitmentPost extends BaseEntity<ProjectRecruitmentPostPro
         currentRecruitsCount: 0,
         applicantsEndsAt: createProjectRecruitmentPostProps.applicantsEndsAt,
         applicantsCount: 0,
+        commentsCount: 0,
       },
       createdAt: date,
       updatedAt: date,
@@ -108,6 +110,10 @@ export class ProjectRecruitmentPost extends BaseEntity<ProjectRecruitmentPostPro
 
   get applicantsCount() {
     return this.props.applicantsCount;
+  }
+
+  get commentsCount() {
+    return this.props.commentsCount;
   }
 
   public validate(): void {}

@@ -195,6 +195,7 @@ export class Project extends AggregateRoot<ProjectProps> {
         currentRecruitsCount: recruitmentPost.currentRecruitsCount,
         applicantsEndsAt: recruitmentPost.applicantsEndsAt,
         applicantsCount: recruitmentPost.applicantsCount,
+        commentsCount: recruitmentPost.commentsCount,
       }),
     );
 

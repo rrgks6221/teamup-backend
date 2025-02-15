@@ -28,6 +28,7 @@ export const ProjectRecruitmentPostFactory = Factory.define<
     currentRecruitsCount: () => 0,
     applicantsEndsAt: () => new Date(),
     applicantsCount: () => 0,
+    commentsCount: () => 0,
   })
   .after(
     ({ id, createdAt, updatedAt, ...props }) =>

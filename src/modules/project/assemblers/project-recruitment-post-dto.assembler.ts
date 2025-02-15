@@ -22,6 +22,7 @@ export class ProjectRecruitmentPostDtoAssembler {
     dto.currentRecruitsCount = projectRecruitmentPost.currentRecruitsCount;
     dto.applicantsEndsAt = projectRecruitmentPost.applicantsEndsAt ?? null;
     dto.applicantsCount = projectRecruitmentPost.applicantsCount;
+    dto.commentsCount = projectRecruitmentPost.commentsCount;
 
     return dto;
   }

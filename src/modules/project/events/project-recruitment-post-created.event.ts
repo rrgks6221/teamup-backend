@@ -14,6 +14,7 @@ interface ProjectRecruitmentCreatedEventPayload {
   currentRecruitsCount: number;
   applicantsEndsAt?: Date;
   applicantsCount: number;
+  commentsCount: number;
 }
 
 export class ProjectRecruitmentCreatedEvent extends DomainEvent<ProjectRecruitmentCreatedEventPayload> {

@@ -9,6 +9,7 @@ import {
 } from '@module/project/repositories/project-recruitment-post.repository.port';
 
 import { generateEntityId } from '@common/base/base.entity';
+import { RecordNotFoundError } from '@common/base/base.error';
 
 import { PRISMA_SERVICE } from '@shared/prisma/prisma.di-token';
 import { PrismaService } from '@shared/prisma/prisma.service';
@@ -60,6 +61,87 @@ describe(ProjectRecruitmentPostRepository.name, () => {
       });
     });
   });
+
+  describe(
+    ProjectRecruitmentPostRepository.prototype.incrementCommentsCount.name,
+    () => {
+      let projectId: string;
+
+      beforeEach(() => {
+        projectId = generateEntityId();
+      });
+
+      describe('식별자와 일치하는 프로젝트 모집 게시글이 존재하는 경우', () => {
+        let projectRecruitmentPost: ProjectRecruitmentPost;
+
+        beforeEach(async () => {
+          projectRecruitmentPost = await repository.insert(
+            ProjectRecruitmentPostFactory.build({ id: projectId }),
+          );
+        });
+
+        describe('프로젝트의 현재 사용자 수를 증가시키면', () => {
+          it('현재 사용자 수를 1 증가시켜야한다.', async () => {
+            await expect(
+              repository.incrementCommentsCount(projectId),
+            ).resolves.toEqual(projectRecruitmentPost.commentsCount + 1);
+          });
+        });
+      });
+
+      describe('식별자와 일치하는 프로젝트가 존재하지 않는 경우', () => {
+        describe('프로젝트의 현재 사용자 수를 증가시키면', () => {
+          it('프로젝트가 존재하지 않는다는 에러가 발생해야한다.', async () => {
+            await expect(
+              repository.incrementCommentsCount(projectId),
+            ).rejects.toThrow(RecordNotFoundError);
+          });
+        });
+      });
+    },
+  );
+
+  describe(
+    ProjectRecruitmentPostRepository.prototype.decrementCommentsCount.name,
+    () => {
+      let projectId: string;
+
+      beforeEach(() => {
+        projectId = generateEntityId();
+      });
+
+      describe('식별자와 일치하는 프로젝트가 존재하는 경우', () => {
+        let projectRecruitmentPost: ProjectRecruitmentPost;
+
+        beforeEach(async () => {
+          projectRecruitmentPost = await repository.insert(
+            ProjectRecruitmentPostFactory.build({
+              id: projectId,
+              commentsCount: 1,
+            }),
+          );
+        });
+
+        describe('프로젝트의 현재 사용자 수를 증가시키면', () => {
+          it('현재 사용자 수를 1 감소시켜야한다.', async () => {
+            await expect(
+              repository.decrementCommentsCount(projectId),
+            ).resolves.toEqual(projectRecruitmentPost.commentsCount - 1);
+          });
+        });
+      });
+
+      describe('식별자와 일치하는 프로젝트가 존재하지 않는 경우', () => {
+        describe('프로젝트의 현재 사용자 수를 감소시키면', () => {
+          it('프로젝트가 존재하지 않는다는 에러가 발생해야한다.', async () => {
+            await expect(
+              repository.decrementCommentsCount(projectId),
+            ).rejects.toThrow(RecordNotFoundError);
+          });
+        });
+      });
+    },
+  );
 
   describe(
     ProjectRecruitmentPostRepository.prototype.findAllCursorPaginated.name,

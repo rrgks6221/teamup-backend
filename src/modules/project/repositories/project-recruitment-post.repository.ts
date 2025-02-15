@@ -11,6 +11,8 @@ import {
   ProjectRecruitmentPostRepositoryPort,
 } from '@module/project/repositories/project-recruitment-post.repository.port';
 
+import { EntityId } from '@common/base/base.entity';
+import { RecordNotFoundError } from '@common/base/base.error';
 import {
   BaseRepository,
   ICursorPaginated,
@@ -31,6 +33,58 @@ export class ProjectRecruitmentPostRepository
     @Inject(PRISMA_SERVICE) protected readonly prismaService: PrismaService,
   ) {
     super(prismaService, ProjectRecruitmentPostMapper);
+  }
+
+  async incrementCommentsCount(projectId: EntityId): Promise<number> {
+    try {
+      const updatedProject =
+        await this.prismaService.projectRecruitmentPost.update({
+          where: {
+            id: this.mapper.toPrimaryKey(projectId),
+          },
+          data: {
+            commentsCount: {
+              increment: 1,
+            },
+          },
+        });
+
+      return updatedProject.commentsCount;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new RecordNotFoundError();
+        }
+      }
+
+      throw error;
+    }
+  }
+
+  async decrementCommentsCount(projectId: EntityId): Promise<number> {
+    try {
+      const updatedProject =
+        await this.prismaService.projectRecruitmentPost.update({
+          where: {
+            id: this.mapper.toPrimaryKey(projectId),
+          },
+          data: {
+            commentsCount: {
+              decrement: 1,
+            },
+          },
+        });
+
+      return updatedProject.commentsCount;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new RecordNotFoundError();
+        }
+      }
+
+      throw error;
+    }
   }
 
   async findAllCursorPaginated(

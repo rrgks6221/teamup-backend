@@ -43,4 +43,7 @@ export class ProjectRecruitmentPostResponseDto extends BaseResponseDto {
 
   @ApiProperty()
   applicantsCount: number;
+
+  @ApiProperty()
+  commentsCount: number;
 }

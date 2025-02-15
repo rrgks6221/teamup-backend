@@ -24,6 +24,7 @@ export class ProjectRecruitmentPostMapper extends BaseMapper {
         currentRecruitsCount: raw.currentRecruitsCount,
         applicantsEndsAt: raw.applicantsEndsAt ?? undefined,
         applicantsCount: raw.applicantsCount,
+        commentsCount: raw.commentsCount,
       },
     });
   }
@@ -46,6 +47,7 @@ export class ProjectRecruitmentPostMapper extends BaseMapper {
       currentRecruitsCount: entity.props.currentRecruitsCount,
       applicantsEndsAt: entity.props.applicantsEndsAt ?? null,
       applicantsCount: entity.props.applicantsCount,
+      commentsCount: entity.props.commentsCount,
     };
   }
 }

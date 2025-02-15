@@ -2,6 +2,7 @@ import { ProjectRecruitmentPost as ProjectRecruitmentPostModel } from '@prisma/c
 
 import { ProjectRecruitmentPost } from '@module/project/entities/project-recruitment-post.entity';
 
+import { EntityId } from '@common/base/base.entity';
 import { RepositoryPort } from '@common/base/base.repository';
 
 export const PROJECT_RECRUITMENT_POST_REPOSITORY = Symbol(
@@ -23,4 +24,7 @@ export interface ProjectRecruitmentPostRepositoryPort
     ProjectRecruitmentPost,
     ProjectRecruitmentPostFilter,
     ProjectRecruitmentPostOrder
-  > {}
+  > {
+  incrementCommentsCount(projectId: EntityId): Promise<number>;
+  decrementCommentsCount(projectId: EntityId): Promise<number>;
+}
