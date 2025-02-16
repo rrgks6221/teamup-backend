@@ -8,7 +8,7 @@ module.exports = async function () {
     'postgres:16.1',
   ).start();
 
-  process.env.DATABASE_URL = postgresContainer.getConnectionUri();
+  process.env.DATABASE_URL = `${postgresContainer.getConnectionUri()}?connection_limit=1`;
 
   console.log(process.env.DATABASE_URL);
 
