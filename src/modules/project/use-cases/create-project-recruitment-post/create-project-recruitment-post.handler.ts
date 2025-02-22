@@ -75,8 +75,6 @@ export class CreateProjectRecruitmentPostHandler
       description: command.description,
       position: positions[0].name,
       techStackNames: techStacks.map((techStack) => techStack.name),
-      maxRecruitsCount: command.maxRecruitsCount,
-      applicantsEndsAt: command.applicantsEndsAt,
     });
 
     await this.projectRecruitmentPostRepository.insert(projectRecruitmentPost);

@@ -7,8 +7,6 @@ export interface ICreateProjectRecruitmentPostCommandProps {
   description: string;
   positionId: string;
   techStackIds?: string[];
-  maxRecruitsCount?: number;
-  applicantsEndsAt?: Date;
 }
 
 export class CreateProjectRecruitmentPostCommand implements ICommand {
@@ -18,8 +16,6 @@ export class CreateProjectRecruitmentPostCommand implements ICommand {
   readonly description: string;
   readonly positionId: string;
   readonly techStackIds: string[];
-  readonly maxRecruitsCount?: number;
-  readonly applicantsEndsAt?: Date;
 
   constructor(props: ICreateProjectRecruitmentPostCommandProps) {
     this.projectId = props.projectId;
@@ -28,7 +24,5 @@ export class CreateProjectRecruitmentPostCommand implements ICommand {
     this.description = props.description;
     this.positionId = props.positionId;
     this.techStackIds = props.techStackIds ?? [];
-    this.maxRecruitsCount = props.maxRecruitsCount;
-    this.applicantsEndsAt = props.applicantsEndsAt;
   }
 }

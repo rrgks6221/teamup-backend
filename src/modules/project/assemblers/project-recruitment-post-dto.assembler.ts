@@ -18,10 +18,6 @@ export class ProjectRecruitmentPostDtoAssembler {
     dto.position = projectRecruitmentPost.position;
     dto.techStackNames = projectRecruitmentPost.techStackNames;
     dto.recruitmentStatus = projectRecruitmentPost.recruitmentStatus;
-    dto.maxRecruitsCount = projectRecruitmentPost.maxRecruitsCount ?? null;
-    dto.currentRecruitsCount = projectRecruitmentPost.currentRecruitsCount;
-    dto.applicantsEndsAt = projectRecruitmentPost.applicantsEndsAt ?? null;
-    dto.applicantsCount = projectRecruitmentPost.applicantsCount;
     dto.commentsCount = projectRecruitmentPost.commentsCount;
 
     return dto;

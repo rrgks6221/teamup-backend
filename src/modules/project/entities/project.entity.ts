@@ -178,8 +178,6 @@ export class Project extends AggregateRoot<ProjectProps> {
       description: props.description,
       position: props.position,
       techStackNames: props.techStackNames,
-      maxRecruitsCount: props.maxRecruitsCount,
-      applicantsEndsAt: props.applicantsEndsAt,
     });
 
     this.apply(
@@ -191,10 +189,6 @@ export class Project extends AggregateRoot<ProjectProps> {
         position: recruitmentPost.position,
         techStackNames: recruitmentPost.techStackNames,
         recruitmentStatus: recruitmentPost.recruitmentStatus,
-        maxRecruitsCount: recruitmentPost.maxRecruitsCount,
-        currentRecruitsCount: recruitmentPost.currentRecruitsCount,
-        applicantsEndsAt: recruitmentPost.applicantsEndsAt,
-        applicantsCount: recruitmentPost.applicantsCount,
         commentsCount: recruitmentPost.commentsCount,
       }),
     );

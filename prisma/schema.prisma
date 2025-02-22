@@ -190,10 +190,6 @@ model ProjectRecruitmentPost {
   /// [ProjectRecruitmentPostTechStackNames]
   techStackNames       Json                         @default("[]")
   recruitmentStatus    ProjectRecruitmentPostStatus
-  maxRecruitsCount     Int?
-  currentRecruitsCount Int
-  applicantsEndsAt     DateTime?
-  applicantsCount      Int
   commentsCount        Int                          @default(0)
 
   createdAt DateTime @default(now()) @db.Timestamp(3)

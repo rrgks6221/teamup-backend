@@ -16,6 +16,4 @@ export const CreateProjectRecruitmentPostCommandFactory =
     description: () => faker.string.alpha(),
     positionId: () => generateEntityId(),
     techStackIds: () => [],
-    maxRecruitsCount: () => 99,
-    applicantsEndsAt: () => new Date(),
   });

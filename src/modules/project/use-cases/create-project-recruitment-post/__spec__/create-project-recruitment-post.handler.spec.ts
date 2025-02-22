@@ -109,8 +109,6 @@ describe(CreateProjectRecruitmentPostHandler.name, () => {
               title: command.title,
               description: command.description,
               techStackNames: command.techStackIds,
-              maxRecruitsCount: command.maxRecruitsCount,
-              applicantsEndsAt: command.applicantsEndsAt,
             }),
           );
         });

@@ -24,10 +24,6 @@ export const ProjectRecruitmentPostFactory = Factory.define<
     techStackNames: () => [],
     recruitmentStatus: () =>
       faker.helpers.enumValue(ProjectRecruitmentPostStatus),
-    maxRecruitsCount: () => 99,
-    currentRecruitsCount: () => 0,
-    applicantsEndsAt: () => new Date(),
-    applicantsCount: () => 0,
     commentsCount: () => 0,
   })
   .after(

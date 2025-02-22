@@ -10,10 +10,6 @@ interface ProjectRecruitmentCreatedEventPayload {
   position: string;
   techStackNames: string[];
   recruitmentStatus: ProjectRecruitmentPostStatus;
-  maxRecruitsCount?: number;
-  currentRecruitsCount: number;
-  applicantsEndsAt?: Date;
-  applicantsCount: number;
   commentsCount: number;
 }
 

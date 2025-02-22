@@ -66,8 +66,6 @@ export class CreateProjectRecruitmentPostController {
         description: body.description,
         positionId: body.positionId,
         techStackIds: body.techStackIds,
-        maxRecruitsCount: body.maxRecruitsCount,
-        applicantsEndsAt: body.applicantsEndsAt,
       });
 
       const projectRecruitmentPost = await this.commandBus.execute<

@@ -20,10 +20,6 @@ export class ProjectRecruitmentPostMapper extends BaseMapper {
         position: raw.position,
         techStackNames: raw.techStackNames,
         recruitmentStatus: ProjectRecruitmentPostStatus[raw.recruitmentStatus],
-        maxRecruitsCount: raw.maxRecruitsCount ?? undefined,
-        currentRecruitsCount: raw.currentRecruitsCount,
-        applicantsEndsAt: raw.applicantsEndsAt ?? undefined,
-        applicantsCount: raw.applicantsCount,
         commentsCount: raw.commentsCount,
       },
     });
@@ -43,10 +39,6 @@ export class ProjectRecruitmentPostMapper extends BaseMapper {
       position: entity.props.position,
       techStackNames: entity.props.techStackNames,
       recruitmentStatus: entity.props.recruitmentStatus,
-      maxRecruitsCount: entity.props.maxRecruitsCount ?? null,
-      currentRecruitsCount: entity.props.currentRecruitsCount,
-      applicantsEndsAt: entity.props.applicantsEndsAt ?? null,
-      applicantsCount: entity.props.applicantsCount,
       commentsCount: entity.props.commentsCount,
     };
   }

@@ -17,10 +17,6 @@ export interface ProjectRecruitmentPostProps {
   position: string;
   techStackNames: string[];
   recruitmentStatus: ProjectRecruitmentPostStatus;
-  maxRecruitsCount?: number;
-  currentRecruitsCount: number;
-  applicantsEndsAt?: Date;
-  applicantsCount: number;
   commentsCount: number;
 }
 
@@ -31,9 +27,6 @@ interface CreateProjectRecruitmentPostProps {
   description: string;
   position: string;
   techStackNames?: string[];
-  maxRecruitsCount?: number;
-  currentRecruitsCount?: number;
-  applicantsEndsAt?: Date;
 }
 
 export class ProjectRecruitmentPost extends BaseEntity<ProjectRecruitmentPostProps> {
@@ -57,10 +50,6 @@ export class ProjectRecruitmentPost extends BaseEntity<ProjectRecruitmentPostPro
         position: createProjectRecruitmentPostProps.position,
         techStackNames: createProjectRecruitmentPostProps.techStackNames ?? [],
         recruitmentStatus: ProjectRecruitmentPostStatus.open,
-        maxRecruitsCount: createProjectRecruitmentPostProps.maxRecruitsCount,
-        currentRecruitsCount: 0,
-        applicantsEndsAt: createProjectRecruitmentPostProps.applicantsEndsAt,
-        applicantsCount: 0,
         commentsCount: 0,
       },
       createdAt: date,
@@ -94,22 +83,6 @@ export class ProjectRecruitmentPost extends BaseEntity<ProjectRecruitmentPostPro
 
   get recruitmentStatus() {
     return this.props.recruitmentStatus;
-  }
-
-  get maxRecruitsCount() {
-    return this.props.maxRecruitsCount;
-  }
-
-  get currentRecruitsCount() {
-    return this.props.currentRecruitsCount;
-  }
-
-  get applicantsEndsAt() {
-    return this.props.applicantsEndsAt;
-  }
-
-  get applicantsCount() {
-    return this.props.applicantsCount;
   }
 
   get commentsCount() {
