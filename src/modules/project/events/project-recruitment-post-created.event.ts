@@ -11,6 +11,7 @@ interface ProjectRecruitmentCreatedEventPayload {
   techStackNames: string[];
   recruitmentStatus: ProjectRecruitmentPostStatus;
   commentsCount: number;
+  viewCount: number;
 }
 
 export class ProjectRecruitmentCreatedEvent extends DomainEvent<ProjectRecruitmentCreatedEventPayload> {

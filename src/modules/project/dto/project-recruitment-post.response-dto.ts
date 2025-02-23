@@ -46,4 +46,7 @@ export class ProjectRecruitmentPostResponseDto extends BaseResponseDto {
 
   @ApiProperty()
   commentsCount: number;
+
+  @ApiProperty()
+  viewCount: number;
 }

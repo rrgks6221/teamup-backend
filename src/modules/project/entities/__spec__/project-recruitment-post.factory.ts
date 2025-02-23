@@ -25,6 +25,7 @@ export const ProjectRecruitmentPostFactory = Factory.define<
     recruitmentStatus: () =>
       faker.helpers.enumValue(ProjectRecruitmentPostStatus),
     commentsCount: () => 0,
+    viewCount: () => 0,
   })
   .after(
     ({ id, createdAt, updatedAt, ...props }) =>

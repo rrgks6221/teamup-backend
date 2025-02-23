@@ -144,6 +144,45 @@ describe(ProjectRecruitmentPostRepository.name, () => {
   );
 
   describe(
+    ProjectRecruitmentPostRepository.prototype.incrementViewCount.name,
+    () => {
+      let projectId: string;
+
+      beforeEach(() => {
+        projectId = generateEntityId();
+      });
+
+      describe('식별자와 일치하는 프로젝트 모집 게시글이 존재하는 경우', () => {
+        let projectRecruitmentPost: ProjectRecruitmentPost;
+
+        beforeEach(async () => {
+          projectRecruitmentPost = await repository.insert(
+            ProjectRecruitmentPostFactory.build({ id: projectId }),
+          );
+        });
+
+        describe('프로젝트의 조회수를 증가시키면', () => {
+          it('조회수를 1 증가시켜야한다.', async () => {
+            await expect(
+              repository.incrementCommentsCount(projectId),
+            ).resolves.toEqual(projectRecruitmentPost.viewCount + 1);
+          });
+        });
+      });
+
+      describe('식별자와 일치하는 프로젝트가 존재하지 않는 경우', () => {
+        describe('프로젝트의 조회수를 증가시키면', () => {
+          it('프로젝트가 존재하지 않는다는 에러가 발생해야한다.', async () => {
+            await expect(
+              repository.incrementCommentsCount(projectId),
+            ).rejects.toThrow(RecordNotFoundError);
+          });
+        });
+      });
+    },
+  );
+
+  describe(
     ProjectRecruitmentPostRepository.prototype.findAllCursorPaginated.name,
     () => {
       let projectId: string;

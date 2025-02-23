@@ -18,6 +18,7 @@ export interface ProjectRecruitmentPostProps {
   techStackNames: string[];
   recruitmentStatus: ProjectRecruitmentPostStatus;
   commentsCount: number;
+  viewCount: number;
 }
 
 interface CreateProjectRecruitmentPostProps {
@@ -51,6 +52,7 @@ export class ProjectRecruitmentPost extends BaseEntity<ProjectRecruitmentPostPro
         techStackNames: createProjectRecruitmentPostProps.techStackNames ?? [],
         recruitmentStatus: ProjectRecruitmentPostStatus.open,
         commentsCount: 0,
+        viewCount: 0,
       },
       createdAt: date,
       updatedAt: date,
@@ -87,6 +89,10 @@ export class ProjectRecruitmentPost extends BaseEntity<ProjectRecruitmentPostPro
 
   get commentsCount() {
     return this.props.commentsCount;
+  }
+
+  get viewCount() {
+    return this.props.viewCount;
   }
 
   public validate(): void {}

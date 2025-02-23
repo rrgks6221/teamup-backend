@@ -87,6 +87,32 @@ export class ProjectRecruitmentPostRepository
     }
   }
 
+  async incrementViewCount(projectId: EntityId): Promise<number> {
+    try {
+      const updatedProject =
+        await this.prismaService.projectRecruitmentPost.update({
+          where: {
+            id: this.mapper.toPrimaryKey(projectId),
+          },
+          data: {
+            viewCount: {
+              increment: 1,
+            },
+          },
+        });
+
+      return updatedProject.viewCount;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new RecordNotFoundError();
+        }
+      }
+
+      throw error;
+    }
+  }
+
   async findAllCursorPaginated(
     params: ICursorPaginatedParams<
       ProjectRecruitmentPostOrder,

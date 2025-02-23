@@ -190,6 +190,7 @@ export class Project extends AggregateRoot<ProjectProps> {
         techStackNames: recruitmentPost.techStackNames,
         recruitmentStatus: recruitmentPost.recruitmentStatus,
         commentsCount: recruitmentPost.commentsCount,
+        viewCount: recruitmentPost.viewCount,
       }),
     );
 

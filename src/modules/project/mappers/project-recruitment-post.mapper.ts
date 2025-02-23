@@ -21,6 +21,7 @@ export class ProjectRecruitmentPostMapper extends BaseMapper {
         techStackNames: raw.techStackNames,
         recruitmentStatus: ProjectRecruitmentPostStatus[raw.recruitmentStatus],
         commentsCount: raw.commentsCount,
+        viewCount: raw.viewCount,
       },
     });
   }
@@ -40,6 +41,7 @@ export class ProjectRecruitmentPostMapper extends BaseMapper {
       techStackNames: entity.props.techStackNames,
       recruitmentStatus: entity.props.recruitmentStatus,
       commentsCount: entity.props.commentsCount,
+      viewCount: entity.props.viewCount,
     };
   }
 }

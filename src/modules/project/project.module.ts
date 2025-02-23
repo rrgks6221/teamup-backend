@@ -8,6 +8,7 @@ import { CreateProjectModule } from '@module/project/use-cases/create-project/cr
 import { GetProjectMemberModule } from '@module/project/use-cases/get-project-member/get-project-member.module';
 import { GetProjectRecruitmentPostModule } from '@module/project/use-cases/get-project-recruitment-post/get-project-recruitment-post.module';
 import { GetProjectModule } from '@module/project/use-cases/get-project/get-project.module';
+import { IncrementRecruitmentPostViewCountModule } from '@module/project/use-cases/increment-recruitment-post-view-count/increment-recruitment-post-view-count.module';
 import { ListProjectMembersModule } from '@module/project/use-cases/list-project-members/list-project-members.module';
 import { ListProjectRecruitmentPostsModule } from '@module/project/use-cases/list-project-recruitment-posts/list-project-recruitment-posts.module';
 import { ListProjectsModule } from '@module/project/use-cases/list-projects/list-projects.module';
@@ -21,6 +22,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
     GetProjectMemberModule,
     GetProjectRecruitmentPostModule,
     ListProjectsModule,
+    IncrementRecruitmentPostViewCountModule,
     ListProjectMembersModule,
     ListProjectRecruitmentPostsModule,
     RemoveProjectMemberModule,

@@ -19,6 +19,7 @@ export class ProjectRecruitmentPostDtoAssembler {
     dto.techStackNames = projectRecruitmentPost.techStackNames;
     dto.recruitmentStatus = projectRecruitmentPost.recruitmentStatus;
     dto.commentsCount = projectRecruitmentPost.commentsCount;
+    dto.viewCount = projectRecruitmentPost.viewCount;
 
     return dto;
   }

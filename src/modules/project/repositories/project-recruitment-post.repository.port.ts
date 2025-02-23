@@ -27,4 +27,5 @@ export interface ProjectRecruitmentPostRepositoryPort
   > {
   incrementCommentsCount(projectId: EntityId): Promise<number>;
   decrementCommentsCount(projectId: EntityId): Promise<number>;
+  incrementViewCount(projectId: EntityId): Promise<number>;
 }
