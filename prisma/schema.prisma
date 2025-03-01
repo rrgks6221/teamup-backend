@@ -49,6 +49,7 @@ model Account {
   projects                Project[]
   projectMembers          ProjectMember[]
   projectRecruitmentPosts ProjectRecruitmentPost[]
+  projectApplications     ProjectApplication[]
   comments                Comment[]
 }
 
@@ -136,6 +137,7 @@ model Project {
 
   projectMembers         ProjectMember[]
   projectRecruitmentPost ProjectRecruitmentPost[]
+  projectApplications    ProjectApplication[]
 }
 
 model ProjectDomainEvent {
@@ -192,6 +194,31 @@ model ProjectRecruitmentPost {
   recruitmentStatus ProjectRecruitmentPostStatus
   commentsCount     Int                          @default(0)
   viewCount         Int                          @default(0)
+
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @updatedAt @db.Timestamp(3)
+}
+
+enum ProjectApplicationStatus {
+  pending
+  checked
+  approved
+  rejected
+}
+
+model ProjectApplication {
+  id BigInt @id
+
+  account     Account @relation(fields: [applicantId], references: [id])
+  applicantId BigInt
+  project     Project @relation(fields: [projectId], references: [id])
+  projectId   BigInt
+
+  position   String
+  status     ProjectApplicationStatus
+  checkedAt  DateTime?
+  approvedAt DateTime?
+  rejectedAt DateTime?
 
   createdAt DateTime @default(now()) @db.Timestamp(3)
   updatedAt DateTime @updatedAt @db.Timestamp(3)

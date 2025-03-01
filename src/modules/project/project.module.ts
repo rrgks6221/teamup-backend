@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { ProjectCreatedModule } from '@module/project/event-handlers/project-created-event/project-created.module';
 import { ProjectMemberCreatedModule } from '@module/project/event-handlers/project-member-created-event/project-member-created.module';
 import { ProjectMemberRemovedModule } from '@module/project/event-handlers/project-member-removed-event/project-member-removed.module';
+import { CreateProjectApplicationModule } from '@module/project/use-cases/create-project-application/create-project-application.module';
 import { CreateProjectRecruitmentPostModule } from '@module/project/use-cases/create-project-recruitment-post/create-project-recruitment-post.module';
 import { CreateProjectModule } from '@module/project/use-cases/create-project/create-project.module';
 import { GetProjectMemberModule } from '@module/project/use-cases/get-project-member/get-project-member.module';
@@ -17,6 +18,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
 @Module({
   imports: [
     CreateProjectModule,
+    CreateProjectApplicationModule,
     CreateProjectRecruitmentPostModule,
     GetProjectModule,
     GetProjectMemberModule,

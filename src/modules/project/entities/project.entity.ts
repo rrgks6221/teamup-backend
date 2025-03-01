@@ -1,9 +1,11 @@
+import { ProjectApplication } from '@module/project/entities/project-application.entity';
 import {
   ProjectMember,
   ProjectMemberRole,
 } from '@module/project/entities/project-member.entity';
 import { ProjectRecruitmentPost } from '@module/project/entities/project-recruitment-post.entity';
 import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
+import { ProjectApplicationCreatedEvent } from '@module/project/events/project-application-created.event';
 import { ProjectCreatedEvent } from '@module/project/events/project-created.event';
 import { ProjectMemberCreatedEvent } from '@module/project/events/project-member-created.event';
 import { ProjectMemberRemovedEvent } from '@module/project/events/project-member-removed.event';
@@ -60,6 +62,11 @@ interface CreateRecruitmentPostProps {
   techStackNames?: string[];
   maxRecruitsCount?: number;
   applicantsEndsAt?: Date;
+}
+
+interface CreateApplicationProps {
+  applicantId: string;
+  position: string;
 }
 
 export class Project extends AggregateRoot<ProjectProps> {
@@ -195,6 +202,25 @@ export class Project extends AggregateRoot<ProjectProps> {
     );
 
     return recruitmentPost;
+  }
+
+  createApplication(props: CreateApplicationProps) {
+    const projectApplication = ProjectApplication.create({
+      projectId: this.id,
+      applicantId: props.applicantId,
+      position: props.position,
+    });
+
+    this.apply(
+      new ProjectApplicationCreatedEvent(this.id, {
+        projectId: this.id,
+        applicantId: projectApplication.applicantId,
+        position: projectApplication.position,
+        status: projectApplication.status,
+      }),
+    );
+
+    return projectApplication;
   }
 
   public validate(): void {}
