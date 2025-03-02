@@ -1,3 +1,5 @@
+import { ProjectApplicationValidationError } from '@module/project/errors/project-application-validation.error';
+
 import {
   BaseEntity,
   CreateEntityProps,
@@ -88,6 +90,48 @@ export class ProjectApplication extends BaseEntity<ProjectApplicationProps> {
       return 'processed';
     }
     return 'inprogress';
+  }
+
+  markAsChecked() {
+    if (this.status !== ProjectApplicationStatus.pending) {
+      throw new ProjectApplicationValidationError(
+        'Project application checked is only possible in the pending state',
+      );
+    }
+
+    const now = new Date();
+
+    this.props.status = ProjectApplicationStatus.checked;
+    this.props.checkedAt = now;
+    this.updatedAt = now;
+  }
+
+  approve() {
+    if (this.status !== ProjectApplicationStatus.checked) {
+      throw new ProjectApplicationValidationError(
+        'Project application approve is only possible in the checked state',
+      );
+    }
+
+    const now = new Date();
+
+    this.props.status = ProjectApplicationStatus.approved;
+    this.props.approvedAt = now;
+    this.updatedAt = now;
+  }
+
+  reject() {
+    if (this.status !== ProjectApplicationStatus.checked) {
+      throw new ProjectApplicationValidationError(
+        'Project application reject is only possible in the checked state',
+      );
+    }
+
+    const now = new Date();
+
+    this.props.status = ProjectApplicationStatus.rejected;
+    this.props.rejectedAt = now;
+    this.updatedAt = now;
   }
 
   public validate(): void {}

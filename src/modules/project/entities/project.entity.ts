@@ -5,7 +5,10 @@ import {
 } from '@module/project/entities/project-member.entity';
 import { ProjectRecruitmentPost } from '@module/project/entities/project-recruitment-post.entity';
 import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
+import { ProjectApplicationApprovedEvent } from '@module/project/events/project-application-approved.event';
 import { ProjectApplicationCreatedEvent } from '@module/project/events/project-application-created.event';
+import { ProjectApplicationMarkAsCheckedEvent } from '@module/project/events/project-application-mark-as-checked.event';
+import { ProjectApplicationRejectedEvent } from '@module/project/events/project-application-rejected.event';
 import { ProjectCreatedEvent } from '@module/project/events/project-created.event';
 import { ProjectMemberCreatedEvent } from '@module/project/events/project-member-created.event';
 import { ProjectMemberRemovedEvent } from '@module/project/events/project-member-removed.event';
@@ -221,6 +224,43 @@ export class Project extends AggregateRoot<ProjectProps> {
     );
 
     return projectApplication;
+  }
+
+  markApplicationAsChecked(application: ProjectApplication) {
+    application.markAsChecked();
+
+    this.apply(
+      new ProjectApplicationMarkAsCheckedEvent(this.id, {
+        projectId: this.id,
+        applicationId: application.id,
+        applicantId: application.applicantId,
+      }),
+    );
+  }
+
+  approveApplication(application: ProjectApplication) {
+    application.approve();
+
+    this.apply(
+      new ProjectApplicationApprovedEvent(this.id, {
+        projectId: this.id,
+        applicationId: application.id,
+        applicantId: application.applicantId,
+        position: application.position,
+      }),
+    );
+  }
+
+  rejectApplication(application: ProjectApplication) {
+    application.reject();
+
+    this.apply(
+      new ProjectApplicationRejectedEvent(this.id, {
+        projectId: this.id,
+        applicationId: application.id,
+        applicantId: application.applicantId,
+      }),
+    );
   }
 
   public validate(): void {}

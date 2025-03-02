@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
 
+import { ProjectApplicationApprovedModule } from '@module/project/event-handlers/project-application-approved-event/project-application-approved.module';
+import { ProjectApplicationMarkAsCheckedModule } from '@module/project/event-handlers/project-application-mark-as-checked-event/project-application-mark-as-checked.module';
+import { ProjectApplicationRejectedModule } from '@module/project/event-handlers/project-application-rejected-event/project-application-rejected.module';
 import { ProjectCreatedModule } from '@module/project/event-handlers/project-created-event/project-created.module';
 import { ProjectMemberCreatedModule } from '@module/project/event-handlers/project-member-created-event/project-member-created.module';
 import { ProjectMemberRemovedModule } from '@module/project/event-handlers/project-member-removed-event/project-member-removed.module';
+import { ChangeProjectApplicationStatusModule } from '@module/project/use-cases/change-project-application-status/change-project-application-status.module';
 import { CreateProjectApplicationModule } from '@module/project/use-cases/create-project-application/create-project-application.module';
 import { CreateProjectRecruitmentPostModule } from '@module/project/use-cases/create-project-recruitment-post/create-project-recruitment-post.module';
 import { CreateProjectModule } from '@module/project/use-cases/create-project/create-project.module';
@@ -17,6 +21,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
 
 @Module({
   imports: [
+    ChangeProjectApplicationStatusModule,
     CreateProjectModule,
     CreateProjectApplicationModule,
     CreateProjectRecruitmentPostModule,
@@ -33,6 +38,9 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
     ProjectCreatedModule,
     ProjectMemberCreatedModule,
     ProjectMemberRemovedModule,
+    ProjectApplicationApprovedModule,
+    ProjectApplicationMarkAsCheckedModule,
+    ProjectApplicationRejectedModule,
   ],
 })
 export class ProjectModule {}
