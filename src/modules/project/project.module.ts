@@ -8,6 +8,7 @@ import { ProjectMemberCreatedModule } from '@module/project/event-handlers/proje
 import { ProjectMemberRemovedModule } from '@module/project/event-handlers/project-member-removed-event/project-member-removed.module';
 import { ChangeProjectApplicationStatusModule } from '@module/project/use-cases/change-project-application-status/change-project-application-status.module';
 import { CreateProjectApplicationModule } from '@module/project/use-cases/create-project-application/create-project-application.module';
+import { CreateProjectMemberModule } from '@module/project/use-cases/create-project-member/create-project-member.module';
 import { CreateProjectRecruitmentPostModule } from '@module/project/use-cases/create-project-recruitment-post/create-project-recruitment-post.module';
 import { CreateProjectModule } from '@module/project/use-cases/create-project/create-project.module';
 import { GetProjectMemberModule } from '@module/project/use-cases/get-project-member/get-project-member.module';
@@ -27,6 +28,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
     CreateProjectRecruitmentPostModule,
     GetProjectModule,
     GetProjectMemberModule,
+    CreateProjectMemberModule,
     GetProjectRecruitmentPostModule,
     ListProjectsModule,
     IncrementRecruitmentPostViewCountModule,

@@ -144,6 +144,7 @@ export class Project extends AggregateRoot<ProjectProps> {
       accountId: props.accountId,
       projectId: this.id,
       role: props.role,
+      position: props.position,
       name: props.name,
       profileImagePath: props.profileImagePath,
       techStackNames: props.techStackNames,
