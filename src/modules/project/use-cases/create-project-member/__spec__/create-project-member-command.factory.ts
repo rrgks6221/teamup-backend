@@ -13,6 +13,6 @@ export const CreateProjectMemberCommandFactory =
   ).attrs({
     accountId: () => generateEntityId(),
     projectId: () => generateEntityId(),
-    position: () => faker.string.alpha(),
+    positionName: () => faker.string.alpha(),
     role: () => faker.helpers.enumValue(ProjectMemberRole),
   });

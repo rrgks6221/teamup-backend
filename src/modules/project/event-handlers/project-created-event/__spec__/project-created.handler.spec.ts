@@ -45,7 +45,7 @@ describe(ProjectCreatedHandler.name, () => {
       ProjectMemberFactory.build({
         projectId: event.aggregateId,
         accountId: event.eventPayload.ownerId,
-        position: undefined,
+        positionName: undefined,
         role: ProjectMemberRole.owner,
       }),
     );

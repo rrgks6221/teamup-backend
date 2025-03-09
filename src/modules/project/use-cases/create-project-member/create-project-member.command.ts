@@ -5,20 +5,20 @@ import { ProjectMemberRole } from '@module/project/entities/project-member.entit
 export interface ICreateProjectMemberCommandProps {
   accountId: string;
   projectId: string;
-  position?: string;
+  positionName?: string;
   role: ProjectMemberRole;
 }
 
 export class CreateProjectMemberCommand implements ICommand {
   readonly accountId: string;
   readonly projectId: string;
-  readonly position?: string;
+  readonly positionName?: string;
   readonly role: ProjectMemberRole;
 
   constructor(props: ICreateProjectMemberCommandProps) {
     this.accountId = props.accountId;
     this.projectId = props.projectId;
-    this.position = props.position;
+    this.positionName = props.positionName;
     this.role = props.role;
   }
 }

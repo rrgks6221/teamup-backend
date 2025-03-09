@@ -91,7 +91,7 @@ describe(CreateProjectMemberHandler.name, () => {
               expect.objectContaining({
                 accountId: command.accountId,
                 projectId: command.projectId,
-                position: command.position,
+                positionName: command.positionName,
                 role: command.role,
               }),
             );

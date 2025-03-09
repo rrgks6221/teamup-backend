@@ -21,7 +21,7 @@ export class ProjectCreatedHandler
     const command = new CreateProjectMemberCommand({
       accountId: eventPayload.ownerId,
       projectId: aggregateId,
-      position: undefined,
+      positionName: undefined,
       role: ProjectMemberRole.owner,
     });
 

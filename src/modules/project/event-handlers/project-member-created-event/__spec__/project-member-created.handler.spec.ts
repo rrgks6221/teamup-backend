@@ -38,7 +38,7 @@ describe(ProjectMemberCreatedHandler.name, () => {
     event = new ProjectMemberCreatedEvent(generateEntityId(), {
       accountId: generateEntityId(),
       projectId: generateEntityId(),
-      position: undefined,
+      positionName: undefined,
       role: faker.helpers.enumValue(ProjectMemberRole),
       name: faker.string.alpha(0),
       profileImagePath: undefined,

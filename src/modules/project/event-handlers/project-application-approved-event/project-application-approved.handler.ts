@@ -24,7 +24,7 @@ export class ProjectApplicationApprovedHandler
     const command = new CreateProjectMemberCommand({
       accountId: eventPayload.applicantId,
       projectId: eventPayload.projectId,
-      position: eventPayload.position,
+      positionName: eventPayload.position,
       role: ProjectMemberRole.member,
     });
 

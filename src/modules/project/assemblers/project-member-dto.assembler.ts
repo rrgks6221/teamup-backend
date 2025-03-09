@@ -11,7 +11,7 @@ export class ProjectMemberDtoAssembler {
 
     dto.accountId = projectMember.accountId;
     dto.projectId = projectMember.projectId;
-    dto.position = projectMember.position;
+    dto.positionName = projectMember.positionName;
     dto.role = projectMember.role;
     dto.name = projectMember.name;
     dto.profileImagePath = projectMember.profileImagePath;

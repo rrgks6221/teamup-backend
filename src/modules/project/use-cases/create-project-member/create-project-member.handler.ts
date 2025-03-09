@@ -62,7 +62,7 @@ export class CreateProjectMemberHandler
 
     const projectMember = project.createMember({
       accountId: command.accountId,
-      position: command.position,
+      positionName: command.positionName,
       role: command.role,
       name: account.name,
       profileImagePath: account.profileImagePath,

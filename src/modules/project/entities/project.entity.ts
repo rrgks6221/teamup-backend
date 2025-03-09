@@ -49,7 +49,7 @@ interface CreateProjectProps {
 
 interface CreateMemberProps {
   accountId: string;
-  position?: string;
+  positionName?: string;
   role: ProjectMemberRole;
   name: string;
   profileImagePath?: string;
@@ -144,7 +144,7 @@ export class Project extends AggregateRoot<ProjectProps> {
       accountId: props.accountId,
       projectId: this.id,
       role: props.role,
-      position: props.position,
+      positionName: props.positionName,
       name: props.name,
       profileImagePath: props.profileImagePath,
       techStackNames: props.techStackNames,
@@ -154,7 +154,7 @@ export class Project extends AggregateRoot<ProjectProps> {
       new ProjectMemberCreatedEvent(this.id, {
         accountId: member.accountId,
         projectId: member.projectId,
-        position: member.position,
+        positionName: member.positionName,
         role: member.role,
         name: member.name,
         profileImagePath: member.profileImagePath,

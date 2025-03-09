@@ -12,7 +12,7 @@ export class ProjectMemberResponseDto extends BaseResponseDto {
   projectId: string;
 
   @ApiPropertyOptional()
-  position?: string;
+  positionName?: string;
 
   @ApiProperty({
     enum: ProjectMemberRole,

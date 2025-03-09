@@ -5,7 +5,7 @@ import { DomainEvent } from '@common/base/base.domain-event';
 interface ProjectMemberCreatedEventPayload {
   accountId: string;
   projectId: string;
-  position?: string;
+  positionName?: string;
   role: ProjectMemberRole;
   name: string;
   profileImagePath?: string;

@@ -15,7 +15,7 @@ export class ProjectMemberMapper extends BaseMapper {
       props: {
         accountId: this.toEntityId(raw.accountId),
         projectId: this.toEntityId(raw.projectId),
-        position: raw.position ?? undefined,
+        positionName: raw.positionName ?? undefined,
         role: ProjectMemberRole[raw.role],
         name: raw.name,
         profileImagePath: raw.profileImagePath ?? undefined,
@@ -31,7 +31,7 @@ export class ProjectMemberMapper extends BaseMapper {
       updatedAt: entity.updatedAt,
       accountId: this.toPrimaryKey(entity.props.accountId),
       projectId: this.toPrimaryKey(entity.props.projectId),
-      position: entity.props.position ?? null,
+      positionName: entity.props.positionName ?? null,
       role: entity.props.role,
       name: entity.props.name,
       profileImagePath: entity.props.profileImagePath ?? null,

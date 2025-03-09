@@ -12,7 +12,7 @@ export enum ProjectMemberRole {
 export interface ProjectMemberProps {
   accountId: string;
   projectId: string;
-  position?: string;
+  positionName?: string;
   role: ProjectMemberRole;
   name: string;
   profileImagePath?: string;
@@ -22,7 +22,7 @@ export interface ProjectMemberProps {
 interface CreateProjectMemberProps {
   accountId: string;
   projectId: string;
-  position?: string;
+  positionName?: string;
   role: ProjectMemberRole;
   name: string;
   profileImagePath?: string;
@@ -43,7 +43,7 @@ export class ProjectMember extends AggregateRoot<ProjectMemberProps> {
       props: {
         accountId: createProjectMemberProps.accountId,
         projectId: createProjectMemberProps.projectId,
-        position: createProjectMemberProps.position,
+        positionName: createProjectMemberProps.positionName,
         role: createProjectMemberProps.role,
         name: createProjectMemberProps.name,
         profileImagePath: createProjectMemberProps.profileImagePath,
@@ -62,8 +62,8 @@ export class ProjectMember extends AggregateRoot<ProjectMemberProps> {
     return this.props.projectId;
   }
 
-  get position() {
-    return this.props.position;
+  get positionName() {
+    return this.props.positionName;
   }
 
   get role() {

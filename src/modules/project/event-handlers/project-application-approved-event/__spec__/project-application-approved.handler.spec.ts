@@ -43,7 +43,7 @@ describe(ProjectApplicationApprovedHandler.name, () => {
       ProjectMemberFactory.build({
         projectId: event.eventPayload.projectId,
         accountId: event.eventPayload.applicantId,
-        position: event.eventPayload.position,
+        positionName: event.eventPayload.position,
         role: ProjectMemberRole.member,
       }),
     );
