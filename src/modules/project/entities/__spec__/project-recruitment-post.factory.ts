@@ -20,7 +20,7 @@ export const ProjectRecruitmentPostFactory = Factory.define<
     authorId: () => generateEntityId(),
     title: () => faker.string.alpha(),
     description: () => faker.string.alpha(),
-    position: () => faker.string.alpha(),
+    positionName: () => faker.string.alpha(),
     techStackNames: () => [],
     recruitmentStatus: () =>
       faker.helpers.enumValue(ProjectRecruitmentPostStatus),

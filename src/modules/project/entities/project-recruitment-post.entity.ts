@@ -14,7 +14,7 @@ export interface ProjectRecruitmentPostProps {
   authorId: string;
   title: string;
   description: string;
-  position: string;
+  positionName: string;
   techStackNames: string[];
   recruitmentStatus: ProjectRecruitmentPostStatus;
   commentsCount: number;
@@ -26,7 +26,7 @@ interface CreateProjectRecruitmentPostProps {
   authorId: string;
   title: string;
   description: string;
-  position: string;
+  positionName: string;
   techStackNames?: string[];
 }
 
@@ -48,7 +48,7 @@ export class ProjectRecruitmentPost extends BaseEntity<ProjectRecruitmentPostPro
         authorId: createProjectRecruitmentPostProps.authorId,
         title: createProjectRecruitmentPostProps.title,
         description: createProjectRecruitmentPostProps.description,
-        position: createProjectRecruitmentPostProps.position,
+        positionName: createProjectRecruitmentPostProps.positionName,
         techStackNames: createProjectRecruitmentPostProps.techStackNames ?? [],
         recruitmentStatus: ProjectRecruitmentPostStatus.open,
         commentsCount: 0,
@@ -75,8 +75,8 @@ export class ProjectRecruitmentPost extends BaseEntity<ProjectRecruitmentPostPro
     return this.props.description;
   }
 
-  get position() {
-    return this.props.position;
+  get positionName() {
+    return this.props.positionName;
   }
 
   get techStackNames() {

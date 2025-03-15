@@ -7,7 +7,7 @@ interface ProjectRecruitmentCreatedEventPayload {
   authorId: string;
   title: string;
   description: string;
-  position: string;
+  positionName: string;
   techStackNames: string[];
   recruitmentStatus: ProjectRecruitmentPostStatus;
   commentsCount: number;

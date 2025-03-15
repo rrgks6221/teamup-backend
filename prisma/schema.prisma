@@ -188,7 +188,7 @@ model ProjectRecruitmentPost {
 
   title             String
   description       String
-  position          String
+  positionName      String
   /// [ProjectRecruitmentPostTechStackNames]
   techStackNames    Json                         @default("[]")
   recruitmentStatus ProjectRecruitmentPostStatus

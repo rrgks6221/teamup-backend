@@ -18,7 +18,7 @@ export class ProjectRecruitmentPostResponseDto extends BaseResponseDto {
   description: string;
 
   @ApiProperty()
-  position: string;
+  positionName: string;
 
   @ApiProperty()
   techStackNames: string[];

@@ -73,7 +73,7 @@ export class CreateProjectRecruitmentPostHandler
       authorId: command.currentUserId,
       title: command.title,
       description: command.description,
-      position: positions[0].name,
+      positionName: positions[0].name,
       techStackNames: techStacks.map((techStack) => techStack.name),
     });
 

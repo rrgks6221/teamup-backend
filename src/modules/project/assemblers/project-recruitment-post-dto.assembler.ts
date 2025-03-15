@@ -15,7 +15,7 @@ export class ProjectRecruitmentPostDtoAssembler {
     dto.authorId = projectRecruitmentPost.authorId;
     dto.title = projectRecruitmentPost.title;
     dto.description = projectRecruitmentPost.description;
-    dto.position = projectRecruitmentPost.position;
+    dto.positionName = projectRecruitmentPost.positionName;
     dto.techStackNames = projectRecruitmentPost.techStackNames;
     dto.recruitmentStatus = projectRecruitmentPost.recruitmentStatus;
     dto.commentsCount = projectRecruitmentPost.commentsCount;

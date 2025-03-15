@@ -61,7 +61,7 @@ interface CreateRecruitmentPostProps {
   authorId: string;
   title: string;
   description: string;
-  position: string;
+  positionName: string;
   techStackNames?: string[];
   maxRecruitsCount?: number;
   applicantsEndsAt?: Date;
@@ -187,7 +187,7 @@ export class Project extends AggregateRoot<ProjectProps> {
       authorId: props.authorId,
       title: props.title,
       description: props.description,
-      position: props.position,
+      positionName: props.positionName,
       techStackNames: props.techStackNames,
     });
 
@@ -197,7 +197,7 @@ export class Project extends AggregateRoot<ProjectProps> {
         authorId: recruitmentPost.authorId,
         title: recruitmentPost.title,
         description: recruitmentPost.description,
-        position: recruitmentPost.position,
+        positionName: recruitmentPost.positionName,
         techStackNames: recruitmentPost.techStackNames,
         recruitmentStatus: recruitmentPost.recruitmentStatus,
         commentsCount: recruitmentPost.commentsCount,
