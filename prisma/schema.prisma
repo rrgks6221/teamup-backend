@@ -214,11 +214,11 @@ model ProjectApplication {
   project     Project @relation(fields: [projectId], references: [id])
   projectId   BigInt
 
-  position   String
-  status     ProjectApplicationStatus
-  checkedAt  DateTime?
-  approvedAt DateTime?
-  rejectedAt DateTime?
+  positionName String
+  status       ProjectApplicationStatus
+  checkedAt    DateTime?
+  approvedAt   DateTime?
+  rejectedAt   DateTime?
 
   createdAt DateTime @default(now()) @db.Timestamp(3)
   updatedAt DateTime @updatedAt @db.Timestamp(3)

@@ -13,7 +13,7 @@ export class ProjectApplicationDtoAssembler {
 
     dto.projectId = projectApplication.projectId;
     dto.applicantId = projectApplication.applicantId;
-    dto.position = projectApplication.position;
+    dto.positionName = projectApplication.positionName;
     dto.status = projectApplication.status;
     dto.checkedAt = projectApplication.checkedAt ?? null;
     dto.approvedAt = projectApplication.approvedAt ?? null;

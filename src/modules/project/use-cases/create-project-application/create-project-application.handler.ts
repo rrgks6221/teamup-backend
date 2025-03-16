@@ -84,7 +84,7 @@ export class CreateProjectApplicationHandler
 
     const projectApplication = project.createApplication({
       applicantId: command.applicantId,
-      position: position.name,
+      positionName: position.name,
     });
 
     await this.projectApplicationRepository.insert(projectApplication);

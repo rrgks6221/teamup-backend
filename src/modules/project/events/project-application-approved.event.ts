@@ -4,7 +4,7 @@ interface ProjectApplicationApprovedEventPayload {
   projectId: string;
   applicationId: string;
   applicantId: string;
-  position: string;
+  positionName: string;
 }
 
 export class ProjectApplicationApprovedEvent extends DomainEvent<ProjectApplicationApprovedEventPayload> {

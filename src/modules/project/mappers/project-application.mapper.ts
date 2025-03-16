@@ -15,7 +15,7 @@ export class ProjectApplicationMapper extends BaseMapper {
       props: {
         projectId: this.toEntityId(raw.projectId),
         applicantId: this.toEntityId(raw.applicantId),
-        position: raw.position,
+        positionName: raw.positionName,
         status: ProjectApplicationStatus[raw.status],
         checkedAt: raw.checkedAt ?? undefined,
         approvedAt: raw.approvedAt ?? undefined,
@@ -31,7 +31,7 @@ export class ProjectApplicationMapper extends BaseMapper {
       updatedAt: entity.updatedAt,
       projectId: this.toPrimaryKey(entity.props.projectId),
       applicantId: this.toPrimaryKey(entity.props.applicantId),
-      position: entity.props.position,
+      positionName: entity.props.positionName,
       status: entity.props.status,
       checkedAt: entity.props.checkedAt ?? null,
       approvedAt: entity.props.approvedAt ?? null,

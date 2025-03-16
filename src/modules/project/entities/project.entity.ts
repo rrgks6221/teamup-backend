@@ -69,7 +69,7 @@ interface CreateRecruitmentPostProps {
 
 interface CreateApplicationProps {
   applicantId: string;
-  position: string;
+  positionName: string;
 }
 
 export class Project extends AggregateRoot<ProjectProps> {
@@ -212,14 +212,14 @@ export class Project extends AggregateRoot<ProjectProps> {
     const projectApplication = ProjectApplication.create({
       projectId: this.id,
       applicantId: props.applicantId,
-      position: props.position,
+      positionName: props.positionName,
     });
 
     this.apply(
       new ProjectApplicationCreatedEvent(this.id, {
         projectId: this.id,
         applicantId: projectApplication.applicantId,
-        position: projectApplication.position,
+        positionName: projectApplication.positionName,
         status: projectApplication.status,
       }),
     );
@@ -247,7 +247,7 @@ export class Project extends AggregateRoot<ProjectProps> {
         projectId: this.id,
         applicationId: application.id,
         applicantId: application.applicantId,
-        position: application.position,
+        positionName: application.positionName,
       }),
     );
   }

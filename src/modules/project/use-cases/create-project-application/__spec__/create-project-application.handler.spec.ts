@@ -110,7 +110,7 @@ describe(CreateProjectApplicationHandler.name, () => {
               expect.objectContaining({
                 projectId: command.projectId,
                 applicantId: command.applicantId,
-                position: expect.any(String),
+                positionName: expect.any(String),
               }),
             );
           });

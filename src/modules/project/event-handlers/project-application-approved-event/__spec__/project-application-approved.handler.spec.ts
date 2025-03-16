@@ -36,14 +36,14 @@ describe(ProjectApplicationApprovedHandler.name, () => {
       projectId: generateEntityId(),
       applicantId: generateEntityId(),
       applicationId: generateEntityId(),
-      position: faker.string.alpha(),
+      positionName: faker.string.alpha(),
     });
 
     jest.spyOn(commandBus, 'execute').mockResolvedValue(
       ProjectMemberFactory.build({
         projectId: event.eventPayload.projectId,
         accountId: event.eventPayload.applicantId,
-        positionName: event.eventPayload.position,
+        positionName: event.eventPayload.positionName,
         role: ProjectMemberRole.member,
       }),
     );

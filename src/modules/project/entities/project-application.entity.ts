@@ -16,7 +16,7 @@ export enum ProjectApplicationStatus {
 export interface ProjectApplicationProps {
   projectId: string;
   applicantId: string;
-  position: string;
+  positionName: string;
   status: ProjectApplicationStatus;
   checkedAt?: Date;
   approvedAt?: Date;
@@ -26,7 +26,7 @@ export interface ProjectApplicationProps {
 interface CreateProjectApplicationProps {
   projectId: string;
   applicantId: string;
-  position: string;
+  positionName: string;
 }
 
 export class ProjectApplication extends BaseEntity<ProjectApplicationProps> {
@@ -43,7 +43,7 @@ export class ProjectApplication extends BaseEntity<ProjectApplicationProps> {
       props: {
         projectId: createProjectApplicationProps.projectId,
         applicantId: createProjectApplicationProps.applicantId,
-        position: createProjectApplicationProps.position,
+        positionName: createProjectApplicationProps.positionName,
         status: ProjectApplicationStatus.pending,
         checkedAt: undefined,
         approvedAt: undefined,
@@ -62,8 +62,8 @@ export class ProjectApplication extends BaseEntity<ProjectApplicationProps> {
     return this.props.applicantId;
   }
 
-  get position() {
-    return this.props.position;
+  get positionName() {
+    return this.props.positionName;
   }
 
   get status() {

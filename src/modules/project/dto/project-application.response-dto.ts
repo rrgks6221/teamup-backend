@@ -12,7 +12,7 @@ export class ProjectApplicationResponseDto extends BaseResponseDto {
   applicantId: string;
 
   @ApiProperty()
-  position: string;
+  positionName: string;
 
   @ApiProperty({
     nullable: true,

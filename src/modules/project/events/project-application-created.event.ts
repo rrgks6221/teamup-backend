@@ -5,7 +5,7 @@ import { DomainEvent } from '@common/base/base.domain-event';
 interface ProjectApplicationCreatedEventPayload {
   projectId: string;
   applicantId: string;
-  position: string;
+  positionName: string;
   status: ProjectApplicationStatus;
 }
 
