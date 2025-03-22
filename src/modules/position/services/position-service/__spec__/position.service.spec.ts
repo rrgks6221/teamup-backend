@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { faker } from '@faker-js/faker';
+
 import { PositionFactory } from '@module/position/entities/__spec__/position.factory';
 import { PositionNotFoundError } from '@module/position/errors/position-not-found.error';
 import { PositionRepositoryModule } from '@module/position/repositories/position.repository.module';
@@ -12,8 +14,6 @@ import {
   IPositionService,
   POSITION_SERVICE,
 } from '@module/position/services/position-service/position.service.interface';
-
-import { generateEntityId } from '@common/base/base.entity';
 
 describe(PositionService.name, () => {
   let service: IPositionService;
@@ -37,28 +37,28 @@ describe(PositionService.name, () => {
       module.get<PositionRepositoryPort>(POSITION_REPOSITORY);
   });
 
-  describe(PositionService.prototype.findByIdsOrFail.name, () => {
-    let ids: string[];
+  describe(PositionService.prototype.findByNamesOrFail.name, () => {
+    let names: string[];
 
     beforeEach(() => {
-      ids = [generateEntityId(), generateEntityId()];
+      names = [faker.string.nanoid(), faker.string.nanoid()];
     });
 
     describe('포지션 식별자 목록에 해당하는 포지션이 모두 존재하는 경우', () => {
       beforeEach(async () => {
         await Promise.all(
-          ids.map((id) =>
-            positionRepository.insert(PositionFactory.build({ id })),
+          names.map((name) =>
+            positionRepository.insert(PositionFactory.build({ name })),
           ),
         );
       });
 
       describe('포지션 식별자 목록로 포지션 목록을 조회하면', () => {
         it('포지션 목록이 조회된다.', async () => {
-          await expect(service.findByIdsOrFail(ids)).resolves.toEqual(
+          await expect(service.findByNamesOrFail(names)).resolves.toEqual(
             expect.arrayContaining([
-              expect.objectContaining({ id: ids[0] }),
-              expect.objectContaining({ id: ids[1] }),
+              expect.objectContaining({ name: names[0] }),
+              expect.objectContaining({ name: names[1] }),
             ]),
           );
         });
@@ -67,12 +67,14 @@ describe(PositionService.name, () => {
 
     describe('포지션 식별자 목록에 해당하는 포지션이 일부만 존재하는 경우', () => {
       beforeEach(async () => {
-        await positionRepository.insert(PositionFactory.build({ id: ids[0] }));
+        await positionRepository.insert(
+          PositionFactory.build({ name: names[0] }),
+        );
       });
 
       describe('포지션 식별자 목록로 포지션 목록을 조회하면', () => {
         it('포지션이 존재하지 않는다는 에러가 발생한다.', async () => {
-          await expect(service.findByIdsOrFail(ids)).rejects.toThrow(
+          await expect(service.findByNamesOrFail(names)).rejects.toThrow(
             PositionNotFoundError,
           );
         });

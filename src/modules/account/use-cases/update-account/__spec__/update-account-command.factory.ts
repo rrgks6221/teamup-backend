@@ -14,7 +14,7 @@ export const UpdateAccountCommandFactory = Factory.define<UpdateAccountCommand>(
   name: () => faker.string.nanoid(Account.NAME_MAX_LENGTH),
   introduce: () => faker.string.alpha(),
   profileImagePath: () => faker.string.nanoid(),
-  positionIds: () => [],
+  positionNames: () => [],
   techStackIds: () => [],
   snsLinks: () => [],
 });

@@ -57,6 +57,21 @@ export class PositionRepository
     return raws.map((raw) => this.mapper.toEntity(raw));
   }
 
+  async findByNames(names: Set<string>): Promise<Position[]> {
+    const raws = await this.prismaService.position.findMany({
+      where: {
+        name: {
+          in: Array.from(names),
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+
+    return raws.map((raw) => this.mapper.toEntity(raw));
+  }
+
   async findAll(): Promise<Position[]> {
     const raws = await this.prismaService.position.findMany({
       orderBy: {

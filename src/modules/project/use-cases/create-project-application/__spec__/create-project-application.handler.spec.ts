@@ -81,8 +81,10 @@ describe(CreateProjectApplicationHandler.name, () => {
 
     jest.spyOn(eventStore, 'storeAggregateEvents');
     jest
-      .spyOn(positionService, 'findByIdsOrFail')
-      .mockResolvedValue([PositionFactory.build({ id: command.positionId })]);
+      .spyOn(positionService, 'findByNamesOrFail')
+      .mockResolvedValue([
+        PositionFactory.build({ name: command.positionName }),
+      ]);
   });
 
   describe('식별자와 일치하는 프로젝트가 존재하고', () => {
@@ -110,7 +112,7 @@ describe(CreateProjectApplicationHandler.name, () => {
               expect.objectContaining({
                 projectId: command.projectId,
                 applicantId: command.applicantId,
-                positionName: expect.any(String),
+                positionName: command.positionName,
               }),
             );
           });

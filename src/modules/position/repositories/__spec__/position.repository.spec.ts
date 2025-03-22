@@ -121,6 +121,38 @@ describe(PositionRepository.name, () => {
     });
   });
 
+  describe(PositionRepository.prototype.findByNames.name, () => {
+    let positionNames: string[];
+
+    beforeEach(() => {
+      positionNames = [faker.string.nanoid(), faker.string.nanoid()];
+    });
+
+    describe('포지션 이름목록과 일치하는 포지션이 존재하는 경우', () => {
+      beforeEach(async () => {
+        await Promise.all([
+          repository.insert(PositionFactory.build()),
+          ...positionNames.map((name) =>
+            repository.insert(PositionFactory.build({ name })),
+          ),
+        ]);
+      });
+
+      describe('포지션을 조회하면', () => {
+        it('이름과 일치하는 포지션 리스트가 조회된다.', async () => {
+          await expect(
+            repository.findByNames(new Set(positionNames)),
+          ).resolves.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({ name: positionNames[0] }),
+              expect.objectContaining({ name: positionNames[1] }),
+            ]),
+          );
+        });
+      });
+    });
+  });
+
   describe(PositionRepository.prototype.findAll.name, () => {
     describe('포지션 전체를 조회하면', () => {
       let positions: Position[];

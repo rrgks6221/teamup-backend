@@ -62,7 +62,7 @@ export class CreateProjectApplicationController {
       const command = new CreateProjectApplicationCommand({
         projectId,
         applicantId: currentUser.id,
-        positionId: body.positionId,
+        positionName: body.positionName,
       });
 
       const projectApplication = await this.commandBus.execute<

@@ -64,7 +64,7 @@ export class CreateProjectRecruitmentPostHandler
     }
 
     const [positions, techStacks] = await Promise.all([
-      this.positionService.findByIdsOrFail([command.positionId]),
+      this.positionService.findByNamesOrFail([command.positionName]),
       this.techStackService.findByIdsOrFail(command.techStackIds),
     ]);
 

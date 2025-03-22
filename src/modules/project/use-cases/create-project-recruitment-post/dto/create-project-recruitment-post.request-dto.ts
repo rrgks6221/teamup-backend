@@ -14,8 +14,8 @@ export class CreateProjectRecruitmentPostRequestDto {
   description: string;
 
   @ApiProperty()
-  @IsPositiveIntString()
-  positionId: string;
+  @IsString()
+  positionName: string;
 
   @ApiPropertyOptional({
     uniqueItems: true,

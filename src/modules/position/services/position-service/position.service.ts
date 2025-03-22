@@ -15,10 +15,10 @@ export class PositionService implements IPositionService {
     private readonly positionRepository: PositionRepositoryPort,
   ) {}
 
-  async findByIdsOrFail(ids: string[]): Promise<Position[]> {
-    const positions = await this.positionRepository.findByIds(new Set(ids));
+  async findByNamesOrFail(names: string[]): Promise<Position[]> {
+    const positions = await this.positionRepository.findByNames(new Set(names));
 
-    if (positions.length !== ids.length) {
+    if (positions.length !== names.length) {
       throw new PositionNotFoundError(
         'All matching positions in the position id list do not exist',
       );

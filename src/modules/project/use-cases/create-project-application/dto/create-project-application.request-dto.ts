@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { IsPositiveIntString } from '@common/validators/is-positive-int-string.validator';
+import { IsString } from 'class-validator';
 
 export class CreateProjectApplicationRequestDto {
   @ApiProperty()
-  @IsPositiveIntString()
-  positionId: string;
+  @IsString()
+  positionName: string;
 }

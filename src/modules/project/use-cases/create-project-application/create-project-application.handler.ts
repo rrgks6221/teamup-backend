@@ -78,8 +78,8 @@ export class CreateProjectApplicationHandler
       );
     }
 
-    const [position] = await this.positionService.findByIdsOrFail([
-      command.positionId,
+    const [position] = await this.positionService.findByNamesOrFail([
+      command.positionName,
     ]);
 
     const projectApplication = project.createApplication({

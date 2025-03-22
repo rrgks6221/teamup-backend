@@ -50,11 +50,11 @@ export class UpdateAccountRequestDto {
   @ApiPropertyOptional({
     uniqueItems: true,
   })
-  @IsPositiveIntString({ each: true })
+  @IsString({ each: true })
   @ArrayUnique()
   @IsArray()
   @IsOptional()
-  positionIds?: string[];
+  positionNames?: string[];
 
   @ApiPropertyOptional({
     uniqueItems: true,

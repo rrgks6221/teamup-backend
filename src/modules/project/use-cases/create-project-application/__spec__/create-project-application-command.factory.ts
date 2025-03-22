@@ -11,5 +11,5 @@ export const CreateProjectApplicationCommandFactory =
   ).attrs({
     projectId: () => generateEntityId(),
     applicantId: () => generateEntityId(),
-    positionId: () => generateEntityId(),
+    positionName: () => generateEntityId(),
   });

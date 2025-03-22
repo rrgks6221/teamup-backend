@@ -64,7 +64,7 @@ export class CreateProjectRecruitmentPostController {
         currentUserId: currentUser.id,
         title: body.title,
         description: body.description,
-        positionId: body.positionId,
+        positionName: body.positionName,
         techStackIds: body.techStackIds,
       });
 

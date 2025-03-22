@@ -14,5 +14,6 @@ export interface PositionRepositoryPort
   extends RepositoryPort<Position, PositionFilter> {
   findOneByName(name: string): Promise<Position | undefined>;
   findByIds(ids: Set<string>): Promise<Position[]>;
+  findByNames(ids: Set<string>): Promise<Position[]>;
   findAll(): Promise<Position[]>;
 }

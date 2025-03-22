@@ -78,8 +78,10 @@ describe(CreateProjectRecruitmentPostHandler.name, () => {
 
     jest.spyOn(eventStore, 'storeAggregateEvents');
     jest
-      .spyOn(positionService, 'findByIdsOrFail')
-      .mockResolvedValue([PositionFactory.build({ id: command.positionId })]);
+      .spyOn(positionService, 'findByNamesOrFail')
+      .mockResolvedValue([
+        PositionFactory.build({ name: command.positionName }),
+      ]);
     jest
       .spyOn(techStackService, 'findByIdsOrFail')
       .mockResolvedValue(

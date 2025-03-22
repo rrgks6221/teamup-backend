@@ -46,9 +46,9 @@ export class UpdateAccountHandler
 
     let positionNames: string[] | undefined;
 
-    if (command.positionIds !== undefined) {
-      const positions = await this.positionService.findByIdsOrFail(
-        command.positionIds,
+    if (command.positionNames !== undefined) {
+      const positions = await this.positionService.findByNamesOrFail(
+        command.positionNames,
       );
 
       positionNames = positions.map((position) => position.name);

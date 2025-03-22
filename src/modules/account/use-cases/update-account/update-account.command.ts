@@ -9,7 +9,7 @@ export interface IUpdateAccountCommandProps {
   name?: string;
   introduce?: string;
   profileImagePath?: string;
-  positionIds?: string[];
+  positionNames?: string[];
   techStackIds?: string[];
   snsLinks?: { url: string; platform: string }[];
 }
@@ -19,7 +19,7 @@ export class UpdateAccountCommand implements ICommand {
   readonly name?: string;
   readonly introduce?: string;
   readonly profileImagePath?: string;
-  readonly positionIds?: string[];
+  readonly positionNames?: string[];
   readonly techStackIds?: string[];
   readonly snsLinks?: {
     url: string;
@@ -32,7 +32,7 @@ export class UpdateAccountCommand implements ICommand {
     this.name = props.name;
     this.introduce = props.introduce;
     this.profileImagePath = props.profileImagePath;
-    this.positionIds = props.positionIds;
+    this.positionNames = props.positionNames;
     this.techStackIds = props.techStackIds;
     this.snsLinks = props.snsLinks?.map((snsLink) => ({
       url: snsLink.url,
