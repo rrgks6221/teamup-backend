@@ -15,5 +15,5 @@ export const CreateProjectRecruitmentPostCommandFactory =
     title: () => faker.string.alpha(),
     description: () => faker.string.alpha(),
     positionName: () => generateEntityId(),
-    techStackIds: () => [],
+    techStackNames: () => [],
   });

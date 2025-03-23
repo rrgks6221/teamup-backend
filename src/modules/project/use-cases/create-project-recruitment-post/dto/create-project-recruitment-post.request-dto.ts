@@ -23,5 +23,5 @@ export class CreateProjectRecruitmentPostRequestDto {
   @IsPositiveIntString({ each: true })
   @ArrayUnique()
   @IsOptional()
-  techStackIds?: string[];
+  techStackNames?: string[];
 }

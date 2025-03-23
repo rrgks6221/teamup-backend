@@ -15,10 +15,12 @@ export class TechStackService implements ITechStackService {
     private readonly techStackRepository: TechStackRepositoryPort,
   ) {}
 
-  async findByIdsOrFail(ids: string[]): Promise<TechStack[]> {
-    const techStacks = await this.techStackRepository.findByIds(new Set(ids));
+  async findByNamesOrFail(names: string[]): Promise<TechStack[]> {
+    const techStacks = await this.techStackRepository.findByNames(
+      new Set(names),
+    );
 
-    if (techStacks.length !== ids.length) {
+    if (techStacks.length !== names.length) {
       throw new TechStackNotFoundError(
         'All matching tech stacks in the tech stack id list do not exist',
       );

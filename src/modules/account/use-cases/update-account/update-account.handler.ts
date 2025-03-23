@@ -56,9 +56,9 @@ export class UpdateAccountHandler
 
     let techStackNames: string[] | undefined;
 
-    if (command.techStackIds !== undefined) {
-      const techStacks = await this.techStackService.findByIdsOrFail(
-        command.techStackIds,
+    if (command.techStackNames !== undefined) {
+      const techStacks = await this.techStackService.findByNamesOrFail(
+        command.techStackNames,
       );
 
       techStackNames = techStacks.map((techStack) => techStack.name);

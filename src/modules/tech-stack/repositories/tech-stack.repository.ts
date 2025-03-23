@@ -58,6 +58,21 @@ export class TechStackRepository
     return raws.map((raw) => this.mapper.toEntity(raw));
   }
 
+  async findByNames(names: Set<string>): Promise<TechStack[]> {
+    const raws = await this.prismaService.techStack.findMany({
+      where: {
+        name: {
+          in: Array.from(names),
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+
+    return raws.map((raw) => this.mapper.toEntity(raw));
+  }
+
   async findAll(): Promise<TechStack[]> {
     const raws = await this.prismaService.techStack.findMany({
       orderBy: {

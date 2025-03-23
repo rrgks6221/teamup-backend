@@ -6,7 +6,7 @@ export interface ICreateProjectRecruitmentPostCommandProps {
   title: string;
   description: string;
   positionName: string;
-  techStackIds?: string[];
+  techStackNames?: string[];
 }
 
 export class CreateProjectRecruitmentPostCommand implements ICommand {
@@ -15,7 +15,7 @@ export class CreateProjectRecruitmentPostCommand implements ICommand {
   readonly title: string;
   readonly description: string;
   readonly positionName: string;
-  readonly techStackIds: string[];
+  readonly techStackNames: string[];
 
   constructor(props: ICreateProjectRecruitmentPostCommandProps) {
     this.projectId = props.projectId;
@@ -23,6 +23,6 @@ export class CreateProjectRecruitmentPostCommand implements ICommand {
     this.title = props.title;
     this.description = props.description;
     this.positionName = props.positionName;
-    this.techStackIds = props.techStackIds ?? [];
+    this.techStackNames = props.techStackNames ?? [];
   }
 }

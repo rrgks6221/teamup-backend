@@ -38,28 +38,28 @@ describe(TechStackService.name, () => {
     );
   });
 
-  describe(TechStackService.prototype.findByIdsOrFail.name, () => {
-    let ids: string[];
+  describe(TechStackService.prototype.findByNamesOrFail.name, () => {
+    let names: string[];
 
     beforeEach(() => {
-      ids = [generateEntityId(), generateEntityId()];
+      names = [generateEntityId(), generateEntityId()];
     });
 
     describe('기술 스택 식별자 목록에 해당하는 기술 스택이 모두 존재하는 경우', () => {
       beforeEach(async () => {
         await Promise.all(
-          ids.map((id) =>
-            techStackRepository.insert(TechStackFactory.build({ id })),
+          names.map((name) =>
+            techStackRepository.insert(TechStackFactory.build({ name })),
           ),
         );
       });
 
       describe('기술 스택 식별자 목록로 기술 스택 목록을 조회하면', () => {
         it('기술 스택 목록이 조회된다.', async () => {
-          await expect(service.findByIdsOrFail(ids)).resolves.toEqual(
+          await expect(service.findByNamesOrFail(names)).resolves.toEqual(
             expect.arrayContaining([
-              expect.objectContaining({ id: ids[0] }),
-              expect.objectContaining({ id: ids[1] }),
+              expect.objectContaining({ name: names[0] }),
+              expect.objectContaining({ name: names[1] }),
             ]),
           );
         });
@@ -69,13 +69,13 @@ describe(TechStackService.name, () => {
     describe('기술 스택 식별자 목록에 해당하는 기술 스택이 일부만 존재하는 경우', () => {
       beforeEach(async () => {
         await techStackRepository.insert(
-          TechStackFactory.build({ id: ids[0] }),
+          TechStackFactory.build({ name: names[0] }),
         );
       });
 
       describe('기술 스택 식별자 목록로 기술 스택 목록을 조회하면', () => {
         it('기술 스택이 존재하지 않는다는 에러가 발생한다.', async () => {
-          await expect(service.findByIdsOrFail(ids)).rejects.toThrow(
+          await expect(service.findByNamesOrFail(names)).rejects.toThrow(
             TechStackNotFoundError,
           );
         });

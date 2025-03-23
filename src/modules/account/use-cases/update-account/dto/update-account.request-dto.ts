@@ -11,8 +11,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { IsPositiveIntString } from '@common/validators/is-positive-int-string.validator';
-
 class SnsLink {
   @ApiProperty()
   @IsString()
@@ -59,11 +57,11 @@ export class UpdateAccountRequestDto {
   @ApiPropertyOptional({
     uniqueItems: true,
   })
-  @IsPositiveIntString({ each: true })
+  @IsString({ each: true })
   @ArrayUnique()
   @IsArray()
   @IsOptional()
-  techStackIds?: string[];
+  techStackNames?: string[];
 
   @ApiProperty()
   @ValidateNested({ each: true })

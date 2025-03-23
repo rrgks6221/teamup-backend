@@ -83,10 +83,10 @@ describe(CreateProjectRecruitmentPostHandler.name, () => {
         PositionFactory.build({ name: command.positionName }),
       ]);
     jest
-      .spyOn(techStackService, 'findByIdsOrFail')
+      .spyOn(techStackService, 'findByNamesOrFail')
       .mockResolvedValue(
-        command.techStackIds.map((techStackId) =>
-          TechStackFactory.build({ id: techStackId }),
+        command.techStackNames.map((techStackName) =>
+          TechStackFactory.build({ name: techStackName }),
         ),
       );
   });
@@ -110,7 +110,7 @@ describe(CreateProjectRecruitmentPostHandler.name, () => {
               authorId: command.currentUserId,
               title: command.title,
               description: command.description,
-              techStackNames: command.techStackIds,
+              techStackNames: command.techStackNames,
             }),
           );
         });

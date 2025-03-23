@@ -64,7 +64,7 @@ export class UpdateAccountController {
           '',
         ),
         positionNames: body.positionNames,
-        techStackIds: body.techStackIds,
+        techStackNames: body.techStackNames,
         snsLinks: body.snsLinks,
       });
 
