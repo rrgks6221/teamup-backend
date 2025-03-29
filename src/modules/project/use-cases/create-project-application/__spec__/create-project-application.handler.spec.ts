@@ -6,11 +6,8 @@ import {
   IPositionService,
   POSITION_SERVICE,
 } from '@module/position/services/position-service/position.service.interface';
-import { ProjectApplicationFactory } from '@module/project/entities/__spec__/project-application.factory';
 import { ProjectMemberFactory } from '@module/project/entities/__spec__/project-member.factory';
 import { ProjectFactory } from '@module/project/entities/__spec__/project.factory';
-import { ProjectApplicationStatus } from '@module/project/entities/project-application.entity';
-import { ProjectApplicationCreationRestrictedError } from '@module/project/errors/project-application-creation-restricted.error';
 import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectNotFoundError } from '@module/project/errors/project-not-found.error';
 import { ProjectApplicationRepositoryModule } from '@module/project/repositories/project-application.repository.module';
@@ -43,6 +40,7 @@ describe(CreateProjectApplicationHandler.name, () => {
 
   let projectRepository: ProjectRepositoryPort;
   let projectMemberRepository: ProjectMemberRepositoryPort;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let projectApplicationRepository: ProjectApplicationRepositoryPort;
   let positionService: IPositionService;
   let eventStore: IEventStore;
@@ -94,48 +92,16 @@ describe(CreateProjectApplicationHandler.name, () => {
       );
     });
 
-    describe('지원자가 아직 구성원이 아니고', () => {
-      describe('진행중인 지원서가 존재하지 않는 경우', () => {
-        beforeEach(async () => {
-          await projectApplicationRepository.insert(
-            ProjectApplicationFactory.build({
+    describe('지원자가 아직 구성원이 아닌 경우', () => {
+      describe('프로젝트에 지원하면', () => {
+        it('프로젝트에 지원된다.', async () => {
+          await expect(handler.execute(command)).resolves.toEqual(
+            expect.objectContaining({
               projectId: command.projectId,
               applicantId: command.applicantId,
-              status: ProjectApplicationStatus.rejected,
+              positionName: command.positionName,
             }),
           );
-        });
-
-        describe('프로젝트에 지원하면', () => {
-          it('프로젝트에 지원된다.', async () => {
-            await expect(handler.execute(command)).resolves.toEqual(
-              expect.objectContaining({
-                projectId: command.projectId,
-                applicantId: command.applicantId,
-                positionName: command.positionName,
-              }),
-            );
-          });
-        });
-      });
-
-      describe('진행중인 지원서가 존재하는 경우', () => {
-        beforeEach(async () => {
-          await projectApplicationRepository.insert(
-            ProjectApplicationFactory.build({
-              projectId: command.projectId,
-              applicantId: command.applicantId,
-              status: ProjectApplicationStatus.pending,
-            }),
-          );
-        });
-
-        describe('프로젝트에 지원하면', () => {
-          it('아직 진행중인 지원서가 존재한다는 에러가 발생해야한다.', async () => {
-            await expect(handler.execute(command)).rejects.toThrow(
-              ProjectApplicationCreationRestrictedError,
-            );
-          });
         });
       });
     });

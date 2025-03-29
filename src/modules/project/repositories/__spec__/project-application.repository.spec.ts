@@ -62,7 +62,7 @@ describe(ProjectApplicationRepository.name, () => {
   });
 
   describe(
-    ProjectApplicationRepository.prototype.findLatestByProjectApplicant.name,
+    ProjectApplicationRepository.prototype.findByProjectApplicant.name,
     () => {
       let projectId: string;
       let applicantId: string;
@@ -72,7 +72,7 @@ describe(ProjectApplicationRepository.name, () => {
         applicantId = generateEntityId();
       });
 
-      describe('지원자와 프로젝트가 일치하는 지원서가 2개 이상 존재하는 경우', () => {
+      describe('지원자와 프로젝트가 일치하는 지원서가 존재하는 경우', () => {
         let applications: ProjectApplication[];
 
         beforeEach(async () => {
@@ -86,20 +86,28 @@ describe(ProjectApplicationRepository.name, () => {
                 projectId,
                 applicantId,
               }),
+              ProjectApplicationFactory.build({}),
             ].map((el) => repository.insert(el)),
           );
         });
 
         describe('지원서를 조회하면', () => {
-          it('가장 최신 지원서가 반환돼야한다.', async () => {
+          it('해당 프로젝트의 지원한 지원서 목록만 반환돼야한다.', async () => {
             await expect(
-              repository.findLatestByProjectApplicant(projectId, applicantId),
+              repository.findByProjectApplicant(projectId, applicantId),
             ).resolves.toEqual(
-              expect.objectContaining({
-                id: applications[1].id,
-                projectId,
-                applicantId,
-              }),
+              expect.arrayContaining([
+                expect.objectContaining({
+                  id: applications[0].id,
+                  projectId,
+                  applicantId,
+                }),
+                expect.objectContaining({
+                  id: applications[1].id,
+                  projectId,
+                  applicantId,
+                }),
+              ]),
             );
           });
         });
@@ -109,8 +117,8 @@ describe(ProjectApplicationRepository.name, () => {
         describe('지원서를 조회하면', () => {
           it('undefined가 반환돼야한다.', async () => {
             await expect(
-              repository.findLatestByProjectApplicant(projectId, applicantId),
-            ).resolves.toBeUndefined();
+              repository.findByProjectApplicant(projectId, applicantId),
+            ).resolves.toBeArrayOfSize(0);
           });
         });
       });

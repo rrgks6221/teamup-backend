@@ -14,8 +14,8 @@ export interface ProjectApplicationFilter {}
 
 export interface ProjectApplicationRepositoryPort
   extends RepositoryPort<ProjectApplication, ProjectApplicationFilter> {
-  findLatestByProjectApplicant(
+  findByProjectApplicant(
     projectId: string,
     applicantId: string,
-  ): Promise<ProjectApplication | undefined>;
+  ): Promise<ProjectApplication[]>;
 }

@@ -6,7 +6,6 @@ import {
   POSITION_SERVICE,
 } from '@module/position/services/position-service/position.service.interface';
 import { ProjectApplication } from '@module/project/entities/project-application.entity';
-import { ProjectApplicationCreationRestrictedError } from '@module/project/errors/project-application-creation-restricted.error';
 import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectNotFoundError } from '@module/project/errors/project-not-found.error';
 import {
@@ -49,13 +48,9 @@ export class CreateProjectApplicationHandler
   async execute(
     command: CreateProjectApplicationCommand,
   ): Promise<ProjectApplication> {
-    const [project, projectMember, application] = await Promise.all([
+    const [project, projectMember] = await Promise.all([
       this.projectRepository.findOneById(command.projectId),
       this.projectMemberRepository.findOneByAccountInProject(
-        command.projectId,
-        command.applicantId,
-      ),
-      this.projectApplicationRepository.findLatestByProjectApplicant(
         command.projectId,
         command.applicantId,
       ),
@@ -69,18 +64,15 @@ export class CreateProjectApplicationHandler
       throw new ProjectMemberAlreadyExistsError();
     }
 
-    if (
-      application !== undefined &&
-      application.getProgress() === 'inprogress'
-    ) {
-      throw new ProjectApplicationCreationRestrictedError(
-        'Inprogress application exists in that project.',
-      );
-    }
-
     const [position] = await this.positionService.findByNamesOrFail([
       command.positionName,
     ]);
+
+    project.applications =
+      await this.projectApplicationRepository.findByProjectApplicant(
+        command.projectId,
+        command.applicantId,
+      );
 
     const projectApplication = project.createApplication({
       applicantId: command.applicantId,

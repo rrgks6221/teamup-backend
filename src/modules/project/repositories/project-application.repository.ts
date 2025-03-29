@@ -29,29 +29,25 @@ export class ProjectApplicationRepository
     super(prismaService, ProjectApplicationMapper);
   }
 
-  async findLatestByProjectApplicant(
+  async findByProjectApplicant(
     projectId: string,
     applicantId: string,
-  ): Promise<ProjectApplication | undefined> {
+  ): Promise<ProjectApplication[]> {
     if (isNaN(Number(projectId)) || isNaN(Number(applicantId))) {
-      return;
+      return [];
     }
 
-    const raw = await this.prismaService.projectApplication.findFirst({
+    const raws = await this.prismaService.projectApplication.findMany({
       where: {
         projectId: this.mapper.toPrimaryKey(projectId),
         applicantId: this.mapper.toPrimaryKey(applicantId),
       },
       orderBy: {
-        id: 'desc',
+        id: 'asc',
       },
     });
 
-    if (raw === null) {
-      return;
-    }
-
-    return this.mapper.toEntity(raw);
+    return raws.map((raw) => this.mapper.toEntity(raw));
   }
 
   findAllCursorPaginated(

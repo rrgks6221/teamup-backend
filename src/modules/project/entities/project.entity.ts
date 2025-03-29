@@ -4,6 +4,7 @@ import {
   ProjectMemberRole,
 } from '@module/project/entities/project-member.entity';
 import { ProjectRecruitmentPost } from '@module/project/entities/project-recruitment-post.entity';
+import { ProjectApplicationCreationRestrictedError } from '@module/project/errors/project-application-creation-restricted.error';
 import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
 import { ProjectApplicationApprovedEvent } from '@module/project/events/project-application-approved.event';
 import { ProjectApplicationCreatedEvent } from '@module/project/events/project-application-created.event';
@@ -37,6 +38,7 @@ export interface ProjectProps {
   category: string;
   currentMemberCount: number;
   tags: string[];
+  applications?: ProjectApplication[];
 }
 
 interface CreateProjectProps {
@@ -139,6 +141,10 @@ export class Project extends AggregateRoot<ProjectProps> {
     return this.props.tags;
   }
 
+  set applications(value: ProjectApplication[]) {
+    this.props.applications = value;
+  }
+
   createMember(props: CreateMemberProps): ProjectMember {
     const member = ProjectMember.create({
       accountId: props.accountId,
@@ -209,6 +215,22 @@ export class Project extends AggregateRoot<ProjectProps> {
   }
 
   createApplication(props: CreateApplicationProps) {
+    if (this.props.applications === undefined) {
+      throw new Error('Project applications not set');
+    }
+
+    const inprogressApplication = this.props.applications.find(
+      (application) =>
+        application.applicantId === props.applicantId &&
+        application.getProgress() === 'inprogress',
+    );
+
+    if (inprogressApplication !== undefined) {
+      throw new ProjectApplicationCreationRestrictedError(
+        'Inprogress application exists in that project.',
+      );
+    }
+
     const projectApplication = ProjectApplication.create({
       projectId: this.id,
       applicantId: props.applicantId,
