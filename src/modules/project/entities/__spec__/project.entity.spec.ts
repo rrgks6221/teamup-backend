@@ -10,6 +10,7 @@ import {
 } from '@module/project/entities/project-member.entity';
 import { Project } from '@module/project/entities/project.entity';
 import { ProjectApplicationCreationRestrictedError } from '@module/project/errors/project-application-creation-restricted.error';
+import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
 
 import { generateEntityId } from '@common/base/base.entity';
@@ -19,6 +20,59 @@ describe(Project.name, () => {
 
   beforeEach(() => {
     project = ProjectFactory.build();
+  });
+
+  describe(Project.prototype.createMember.name, () => {
+    let props: Parameters<typeof Project.prototype.createMember>[0];
+
+    beforeEach(() => {
+      props = {
+        accountId: generateEntityId(),
+        role: ProjectMemberRole.member,
+        name: faker.string.alpha(),
+      };
+    });
+
+    describe('게정에 해당하는 구성원이 존재하지 않는 경우', () => {
+      beforeEach(() => {
+        project.members = [
+          ProjectMemberFactory.build({
+            accountId: generateEntityId(),
+          }),
+        ];
+      });
+
+      describe('구성원을 생성하면', () => {
+        it('구성원이 생성돼야한다.', () => {
+          expect(project.createMember(props)).toEqual(
+            expect.objectContaining({
+              projectId: project.id,
+              accountId: props.accountId,
+              role: props.role,
+              name: props.name,
+            }),
+          );
+        });
+      });
+    });
+
+    describe('게정에 해당하는 구성원이 이미 존재하는 경우', () => {
+      beforeEach(() => {
+        project.members = [
+          ProjectMemberFactory.build({
+            accountId: props.accountId,
+          }),
+        ];
+      });
+
+      describe('구성원을 생성하면', () => {
+        it('구성원이 이미 존재한다는 에러가 발생해야한다.', () => {
+          expect(() => project.createMember(props)).toThrow(
+            ProjectMemberAlreadyExistsError,
+          );
+        });
+      });
+    });
   });
 
   describe(Project.prototype.removeMember.name, () => {

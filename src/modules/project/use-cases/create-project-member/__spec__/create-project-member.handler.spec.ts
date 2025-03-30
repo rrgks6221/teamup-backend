@@ -7,9 +7,7 @@ import {
   ACCOUNT_REPOSITORY,
   AccountRepositoryPort,
 } from '@module/account/repositories/account/account.repository.port';
-import { ProjectMemberFactory } from '@module/project/entities/__spec__/project-member.factory';
 import { ProjectFactory } from '@module/project/entities/__spec__/project.factory';
-import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectNotFoundError } from '@module/project/errors/project-not-found.error';
 import { ProjectMemberRepositoryModule } from '@module/project/repositories/project-member.repository.module';
 import {
@@ -36,6 +34,7 @@ describe(CreateProjectMemberHandler.name, () => {
 
   let accountRepository: AccountRepositoryPort;
   let projectRepository: ProjectRepositoryPort;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let projectMemberRepository: ProjectMemberRepositoryPort;
   let eventStore: IEventStore;
 
@@ -84,39 +83,18 @@ describe(CreateProjectMemberHandler.name, () => {
         );
       });
 
-      describe('아직 프로젝트 구성원이 아닌 경우', () => {
-        describe('구성원을 생성하면', () => {
-          it('구성원이 생성되고 이벤트를 저장해야한다.', async () => {
-            await expect(handler.execute(command)).resolves.toEqual(
-              expect.objectContaining({
-                accountId: command.accountId,
-                projectId: command.projectId,
-                positionName: command.positionName,
-                role: command.role,
-              }),
-            );
-
-            expect(eventStore.storeAggregateEvents).toHaveBeenCalled();
-          });
-        });
-      });
-
-      describe('이미 프로젝트 구성원인 경우', () => {
-        beforeEach(async () => {
-          await projectMemberRepository.insert(
-            ProjectMemberFactory.build({
-              projectId: command.projectId,
+      describe('구성원을 생성하면', () => {
+        it('구성원이 생성되고 이벤트를 저장해야한다.', async () => {
+          await expect(handler.execute(command)).resolves.toEqual(
+            expect.objectContaining({
               accountId: command.accountId,
+              projectId: command.projectId,
+              positionName: command.positionName,
+              role: command.role,
             }),
           );
-        });
 
-        describe('구성원을 생성하면', () => {
-          it('이미 프로젝트 구성원이라는 에러가 발생해야한다.', async () => {
-            await expect(handler.execute(command)).rejects.toThrow(
-              ProjectMemberAlreadyExistsError,
-            );
-          });
+          expect(eventStore.storeAggregateEvents).toHaveBeenCalled();
         });
       });
     });

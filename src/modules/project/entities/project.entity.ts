@@ -5,6 +5,7 @@ import {
 } from '@module/project/entities/project-member.entity';
 import { ProjectRecruitmentPost } from '@module/project/entities/project-recruitment-post.entity';
 import { ProjectApplicationCreationRestrictedError } from '@module/project/errors/project-application-creation-restricted.error';
+import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
 import { ProjectApplicationApprovedEvent } from '@module/project/events/project-application-approved.event';
 import { ProjectApplicationCreatedEvent } from '@module/project/events/project-application-created.event';
@@ -39,6 +40,7 @@ export interface ProjectProps {
   currentMemberCount: number;
   tags: string[];
   applications?: ProjectApplication[];
+  members?: ProjectMember[];
 }
 
 interface CreateProjectProps {
@@ -145,7 +147,23 @@ export class Project extends AggregateRoot<ProjectProps> {
     this.props.applications = value;
   }
 
+  set members(value: ProjectMember[]) {
+    this.props.members = value;
+  }
+
   createMember(props: CreateMemberProps): ProjectMember {
+    if (this.props.members === undefined) {
+      throw new Error('Project members not set');
+    }
+
+    const existingProjectMember = this.props.members.find(
+      (member) => member.accountId === props.accountId,
+    );
+
+    if (existingProjectMember !== undefined) {
+      throw new ProjectMemberAlreadyExistsError();
+    }
+
     const member = ProjectMember.create({
       accountId: props.accountId,
       projectId: this.id,

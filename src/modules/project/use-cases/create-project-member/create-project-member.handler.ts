@@ -7,7 +7,6 @@ import {
   AccountRepositoryPort,
 } from '@module/account/repositories/account/account.repository.port';
 import { ProjectMember } from '@module/project/entities/project-member.entity';
-import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectNotFoundError } from '@module/project/errors/project-not-found.error';
 import {
   PROJECT_MEMBER_REPOSITORY,
@@ -56,10 +55,9 @@ export class CreateProjectMemberHandler
       throw new AccountNotFoundError();
     }
 
-    if (existingProjectMember !== undefined) {
-      throw new ProjectMemberAlreadyExistsError();
-    }
-
+    project.members = [existingProjectMember].filter(
+      (member) => member !== undefined,
+    );
     const projectMember = project.createMember({
       accountId: command.accountId,
       positionName: command.positionName,
