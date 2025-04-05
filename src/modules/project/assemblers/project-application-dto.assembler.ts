@@ -16,6 +16,7 @@ export class ProjectApplicationDtoAssembler {
     dto.positionName = projectApplication.positionName;
     dto.status = projectApplication.status;
     dto.checkedAt = projectApplication.checkedAt ?? null;
+    dto.canceledAt = projectApplication.canceledAt ?? null;
     dto.approvedAt = projectApplication.approvedAt ?? null;
     dto.rejectedAt = projectApplication.rejectedAt ?? null;
 

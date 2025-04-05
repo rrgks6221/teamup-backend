@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 
 import { ProjectApplicationApprovedModule } from '@module/project/event-handlers/project-application-approved-event/project-application-approved.module';
+import { ProjectApplicationCanceledModule } from '@module/project/event-handlers/project-application-canceled-event/project-application-canceled.module';
 import { ProjectApplicationMarkAsCheckedModule } from '@module/project/event-handlers/project-application-mark-as-checked-event/project-application-mark-as-checked.module';
 import { ProjectApplicationRejectedModule } from '@module/project/event-handlers/project-application-rejected-event/project-application-rejected.module';
 import { ProjectCreatedModule } from '@module/project/event-handlers/project-created-event/project-created.module';
 import { ProjectMemberCreatedModule } from '@module/project/event-handlers/project-member-created-event/project-member-created.module';
 import { ProjectMemberRemovedModule } from '@module/project/event-handlers/project-member-removed-event/project-member-removed.module';
+import { CancelProjectApplicationModule } from '@module/project/use-cases/cancel-project-application/cancel-project-application.module';
 import { ChangeProjectApplicationStatusModule } from '@module/project/use-cases/change-project-application-status/change-project-application-status.module';
 import { CreateProjectApplicationModule } from '@module/project/use-cases/create-project-application/create-project-application.module';
 import { CreateProjectMemberModule } from '@module/project/use-cases/create-project-member/create-project-member.module';
@@ -22,6 +24,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
 
 @Module({
   imports: [
+    CancelProjectApplicationModule,
     ChangeProjectApplicationStatusModule,
     CreateProjectModule,
     CreateProjectApplicationModule,
@@ -42,6 +45,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
     ProjectMemberRemovedModule,
     ProjectApplicationApprovedModule,
     ProjectApplicationMarkAsCheckedModule,
+    ProjectApplicationCanceledModule,
     ProjectApplicationRejectedModule,
   ],
 })

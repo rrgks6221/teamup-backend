@@ -18,6 +18,7 @@ export class ProjectApplicationMapper extends BaseMapper {
         positionName: raw.positionName,
         status: ProjectApplicationStatus[raw.status],
         checkedAt: raw.checkedAt ?? undefined,
+        canceledAt: raw.canceledAt ?? undefined,
         approvedAt: raw.approvedAt ?? undefined,
         rejectedAt: raw.rejectedAt ?? undefined,
       },
@@ -34,6 +35,7 @@ export class ProjectApplicationMapper extends BaseMapper {
       positionName: entity.props.positionName,
       status: entity.props.status,
       checkedAt: entity.props.checkedAt ?? null,
+      canceledAt: entity.props.canceledAt ?? null,
       approvedAt: entity.props.approvedAt ?? null,
       rejectedAt: entity.props.rejectedAt ?? null,
     };

@@ -32,6 +32,11 @@ export class ProjectApplicationResponseDto extends BaseResponseDto {
   @ApiProperty({
     nullable: true,
   })
+  canceledAt: Date | null;
+
+  @ApiProperty({
+    nullable: true,
+  })
   approvedAt: Date | null;
 
   @ApiProperty({

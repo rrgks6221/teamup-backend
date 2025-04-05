@@ -8,6 +8,7 @@ import { ProjectApplicationCreationRestrictedError } from '@module/project/error
 import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
 import { ProjectApplicationApprovedEvent } from '@module/project/events/project-application-approved.event';
+import { ProjectApplicationCanceledEvent } from '@module/project/events/project-application-canceled.event';
 import { ProjectApplicationCreatedEvent } from '@module/project/events/project-application-created.event';
 import { ProjectApplicationMarkAsCheckedEvent } from '@module/project/events/project-application-mark-as-checked.event';
 import { ProjectApplicationRejectedEvent } from '@module/project/events/project-application-rejected.event';
@@ -275,6 +276,19 @@ export class Project extends AggregateRoot<ProjectProps> {
         projectId: this.id,
         applicationId: application.id,
         applicantId: application.applicantId,
+      }),
+    );
+  }
+
+  cancelApplication(application: ProjectApplication) {
+    application.cancel();
+
+    this.apply(
+      new ProjectApplicationCanceledEvent(this.id, {
+        projectId: this.id,
+        applicationId: application.id,
+        applicantId: application.applicantId,
+        positionName: application.positionName,
       }),
     );
   }

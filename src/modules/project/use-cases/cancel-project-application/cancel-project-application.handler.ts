@@ -1,10 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import {
-  ProjectApplication,
-  ProjectApplicationStatus,
-} from '@module/project/entities/project-application.entity';
+import { ProjectApplication } from '@module/project/entities/project-application.entity';
 import { ProjectApplicationChangeStatusRestrictedError } from '@module/project/errors/project-application-change-status-restricted.error';
 import { ProjectApplicationNotFoundError } from '@module/project/errors/project-application-not-found.error';
 import { ProjectNotFoundError } from '@module/project/errors/project-not-found.error';
@@ -16,17 +13,17 @@ import {
   PROJECT_REPOSITORY,
   ProjectRepositoryPort,
 } from '@module/project/repositories/project.repository.port';
-import { ChangeProjectApplicationStatusCommand } from '@module/project/use-cases/change-project-application-status/change-project-application-status.command';
+import { CancelProjectApplicationCommand } from '@module/project/use-cases/cancel-project-application/cancel-project-application.command';
 
 import {
   EVENT_STORE,
   IEventStore,
 } from '@core/event-sourcing/event-store.interface';
 
-@CommandHandler(ChangeProjectApplicationStatusCommand)
-export class ChangeProjectApplicationStatusHandler
+@CommandHandler(CancelProjectApplicationCommand)
+export class CancelProjectApplicationHandler
   implements
-    ICommandHandler<ChangeProjectApplicationStatusCommand, ProjectApplication>
+    ICommandHandler<CancelProjectApplicationCommand, ProjectApplication>
 {
   constructor(
     @Inject(PROJECT_REPOSITORY)
@@ -38,7 +35,7 @@ export class ChangeProjectApplicationStatusHandler
   ) {}
 
   async execute(
-    command: ChangeProjectApplicationStatusCommand,
+    command: CancelProjectApplicationCommand,
   ): Promise<ProjectApplication> {
     const [project, application] = await Promise.all([
       this.projectRepository.findOneById(command.projectId),
@@ -53,21 +50,13 @@ export class ChangeProjectApplicationStatusHandler
       throw new ProjectApplicationNotFoundError();
     }
 
-    if (project.ownerId !== command.currentUserId) {
+    if (application.applicantId !== command.currentUserId) {
       throw new ProjectApplicationChangeStatusRestrictedError(
-        `Only project owner can ${command.status} application status`,
+        'Only project applicant can cancel application status',
       );
     }
 
-    if (command.status === ProjectApplicationStatus.checked) {
-      project.markApplicationAsChecked(application);
-    }
-    if (command.status === ProjectApplicationStatus.approved) {
-      project.approveApplication(application);
-    }
-    if (command.status === ProjectApplicationStatus.rejected) {
-      project.rejectApplication(application);
-    }
+    project.cancelApplication(application);
 
     await this.projectApplicationRepository.update(application);
 

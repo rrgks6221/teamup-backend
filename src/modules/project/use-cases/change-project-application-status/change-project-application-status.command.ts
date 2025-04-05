@@ -6,16 +6,19 @@ export interface IChangeProjectApplicationStatusCommandProps {
   currentUserId: string;
   projectId: string;
   applicationId: string;
-  status: Exclude<ProjectApplicationStatus, ProjectApplicationStatus.pending>;
+  status: Exclude<
+    ProjectApplicationStatus,
+    ProjectApplicationStatus.pending | ProjectApplicationStatus.canceled
+  >;
 }
 
 export class ChangeProjectApplicationStatusCommand implements ICommand {
   readonly currentUserId: string;
   readonly projectId: string;
   readonly applicationId: string;
-  readonly status: Exclude<
+  status: Exclude<
     ProjectApplicationStatus,
-    ProjectApplicationStatus.pending
+    ProjectApplicationStatus.pending | ProjectApplicationStatus.canceled
   >;
 
   constructor(props: IChangeProjectApplicationStatusCommandProps) {

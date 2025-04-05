@@ -9,6 +9,7 @@ import {
 export enum ProjectApplicationStatus {
   pending = 'pending',
   checked = 'checked',
+  canceled = 'canceled',
   approved = 'approved',
   rejected = 'rejected',
 }
@@ -19,6 +20,7 @@ export interface ProjectApplicationProps {
   positionName: string;
   status: ProjectApplicationStatus;
   checkedAt?: Date;
+  canceledAt?: Date;
   approvedAt?: Date;
   rejectedAt?: Date;
 }
@@ -46,6 +48,7 @@ export class ProjectApplication extends BaseEntity<ProjectApplicationProps> {
         positionName: createProjectApplicationProps.positionName,
         status: ProjectApplicationStatus.pending,
         checkedAt: undefined,
+        canceledAt: undefined,
         approvedAt: undefined,
         rejectedAt: undefined,
       },
@@ -74,6 +77,10 @@ export class ProjectApplication extends BaseEntity<ProjectApplicationProps> {
     return this.props.checkedAt;
   }
 
+  get canceledAt() {
+    return this.props.canceledAt;
+  }
+
   get approvedAt() {
     return this.props.approvedAt;
   }
@@ -84,6 +91,7 @@ export class ProjectApplication extends BaseEntity<ProjectApplicationProps> {
 
   getProgress() {
     if (
+      this.status === ProjectApplicationStatus.canceled ||
       this.status === ProjectApplicationStatus.approved ||
       this.status === ProjectApplicationStatus.rejected
     ) {
@@ -103,6 +111,20 @@ export class ProjectApplication extends BaseEntity<ProjectApplicationProps> {
 
     this.props.status = ProjectApplicationStatus.checked;
     this.props.checkedAt = now;
+    this.updatedAt = now;
+  }
+
+  cancel() {
+    if (this.status !== ProjectApplicationStatus.checked) {
+      throw new ProjectApplicationValidationError(
+        'Project application cancel is only possible in the checked state',
+      );
+    }
+
+    const now = new Date();
+
+    this.props.status = ProjectApplicationStatus.canceled;
+    this.props.canceledAt = now;
     this.updatedAt = now;
   }
 

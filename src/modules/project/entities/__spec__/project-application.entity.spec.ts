@@ -38,6 +38,7 @@ describe(ProjectApplication.name, () => {
         projectApplication = ProjectApplicationFactory.build({
           status: faker.helpers.arrayElement([
             ProjectApplicationStatus.checked,
+            ProjectApplicationStatus.canceled,
             ProjectApplicationStatus.approved,
             ProjectApplicationStatus.rejected,
           ]),
@@ -47,6 +48,47 @@ describe(ProjectApplication.name, () => {
       describe('체크 상태로 마킹하면', () => {
         it('pending 상태일때만 체크할 수 있다는 에러가 발생해야한다.', () => {
           expect(() => projectApplication.markAsChecked()).toThrow(
+            ProjectApplicationValidationError,
+          );
+        });
+      });
+    });
+  });
+
+  describe(ProjectApplication.prototype.cancel.name, () => {
+    describe('프로젝트 지원서 상태가 checked 상태인 경우', () => {
+      beforeEach(() => {
+        projectApplication = ProjectApplicationFactory.build({
+          status: ProjectApplicationStatus.checked,
+        });
+      });
+
+      describe('취소하면', () => {
+        it('canceled 상태로 변경돼야한다.', () => {
+          expect(projectApplication.cancel()).toBeUndefined();
+          expect(projectApplication.status).toBe(
+            ProjectApplicationStatus.canceled,
+          );
+          expect(projectApplication.canceledAt).toBeInstanceOf(Date);
+        });
+      });
+    });
+
+    describe('프로젝트 지원서 상태가 checked 상태가 아닌 경우', () => {
+      beforeEach(() => {
+        projectApplication = ProjectApplicationFactory.build({
+          status: faker.helpers.arrayElement([
+            ProjectApplicationStatus.pending,
+            ProjectApplicationStatus.canceled,
+            ProjectApplicationStatus.approved,
+            ProjectApplicationStatus.rejected,
+          ]),
+        });
+      });
+
+      describe('취소하면', () => {
+        it('checked 상태일때만 취소할 수 있다는 에러가 발생해야한다.', () => {
+          expect(() => projectApplication.cancel()).toThrow(
             ProjectApplicationValidationError,
           );
         });
@@ -78,6 +120,7 @@ describe(ProjectApplication.name, () => {
         projectApplication = ProjectApplicationFactory.build({
           status: faker.helpers.arrayElement([
             ProjectApplicationStatus.pending,
+            ProjectApplicationStatus.canceled,
             ProjectApplicationStatus.approved,
             ProjectApplicationStatus.rejected,
           ]),
@@ -118,6 +161,7 @@ describe(ProjectApplication.name, () => {
         projectApplication = ProjectApplicationFactory.build({
           status: faker.helpers.arrayElement([
             ProjectApplicationStatus.pending,
+            ProjectApplicationStatus.canceled,
             ProjectApplicationStatus.approved,
             ProjectApplicationStatus.rejected,
           ]),

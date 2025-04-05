@@ -18,5 +18,8 @@ export class ChangeProjectApplicationStatusRequestDto {
     ProjectApplicationStatus.checked,
     ProjectApplicationStatus.rejected,
   ])
-  status: Exclude<ProjectApplicationStatus, ProjectApplicationStatus.pending>;
+  status: Exclude<
+    ProjectApplicationStatus,
+    ProjectApplicationStatus.pending | ProjectApplicationStatus.canceled
+  >;
 }
