@@ -7,6 +7,7 @@ import { ProjectApplicationRejectedModule } from '@module/project/event-handlers
 import { ProjectCreatedModule } from '@module/project/event-handlers/project-created-event/project-created.module';
 import { ProjectMemberCreatedModule } from '@module/project/event-handlers/project-member-created-event/project-member-created.module';
 import { ProjectMemberRemovedModule } from '@module/project/event-handlers/project-member-removed-event/project-member-removed.module';
+import { ApproveProjectApplicationModule } from '@module/project/use-cases/approve-project-application/approve-project-application.module';
 import { CancelProjectApplicationModule } from '@module/project/use-cases/cancel-project-application/cancel-project-application.module';
 import { ChangeProjectApplicationStatusModule } from '@module/project/use-cases/change-project-application-status/change-project-application-status.module';
 import { CheckProjectApplicationModule } from '@module/project/use-cases/check-project-application/check-project-application.module';
@@ -25,6 +26,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
 
 @Module({
   imports: [
+    ApproveProjectApplicationModule,
     CancelProjectApplicationModule,
     ChangeProjectApplicationStatusModule,
     CheckProjectApplicationModule,
