@@ -22,6 +22,7 @@ import { IncrementRecruitmentPostViewCountModule } from '@module/project/use-cas
 import { ListProjectMembersModule } from '@module/project/use-cases/list-project-members/list-project-members.module';
 import { ListProjectRecruitmentPostsModule } from '@module/project/use-cases/list-project-recruitment-posts/list-project-recruitment-posts.module';
 import { ListProjectsModule } from '@module/project/use-cases/list-projects/list-projects.module';
+import { RejectProjectApplicationModule } from '@module/project/use-cases/reject-project-application/reject-project-application.module';
 import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-project-member/remove-project-member.module';
 
 @Module({
@@ -41,6 +42,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
     IncrementRecruitmentPostViewCountModule,
     ListProjectMembersModule,
     ListProjectRecruitmentPostsModule,
+    RejectProjectApplicationModule,
     RemoveProjectMemberModule,
 
     // event-handlers
