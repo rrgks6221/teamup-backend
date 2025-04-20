@@ -50,6 +50,8 @@ model Account {
   projectMembers          ProjectMember[]
   projectRecruitmentPosts ProjectRecruitmentPost[]
   projectApplications     ProjectApplication[]
+  sentInvitations         ProjectInvitation[]      @relation("inviter")
+  receivedInvitations     ProjectInvitation[]      @relation("invitee")
   comments                Comment[]
 }
 
@@ -138,6 +140,7 @@ model Project {
   projectMembers         ProjectMember[]
   projectRecruitmentPost ProjectRecruitmentPost[]
   projectApplications    ProjectApplication[]
+  projectInvitations     ProjectInvitation[]
 }
 
 model ProjectDomainEvent {
@@ -217,6 +220,35 @@ model ProjectApplication {
 
   positionName String
   status       ProjectApplicationStatus
+  checkedAt    DateTime?
+  canceledAt   DateTime?
+  approvedAt   DateTime?
+  rejectedAt   DateTime?
+
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @updatedAt @db.Timestamp(3)
+}
+
+enum ProjectInvitationStatus {
+  pending
+  checked
+  canceled
+  approved
+  rejected
+}
+
+model ProjectInvitation {
+  id BigInt @id
+
+  inviter   Account @relation(name: "inviter", fields: [inviterId], references: [id])
+  inviterId BigInt
+  invitee   Account @relation(name: "invitee", fields: [inviteeId], references: [id])
+  inviteeId BigInt
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId BigInt
+
+  positionName String
+  status       ProjectInvitationStatus
   checkedAt    DateTime?
   canceledAt   DateTime?
   approvedAt   DateTime?

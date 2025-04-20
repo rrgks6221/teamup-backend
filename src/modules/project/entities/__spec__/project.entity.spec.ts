@@ -1,15 +1,18 @@
 import { faker } from '@faker-js/faker';
 
 import { ProjectApplicationFactory } from '@module/project/entities/__spec__/project-application.factory';
+import { ProjectInvitationFactory } from '@module/project/entities/__spec__/project-invitation.factory';
 import { ProjectMemberFactory } from '@module/project/entities/__spec__/project-member.factory';
 import { ProjectFactory } from '@module/project/entities/__spec__/project.factory';
 import { ProjectApplicationStatus } from '@module/project/entities/project-application.entity';
+import { ProjectInvitationStatus } from '@module/project/entities/project-invitation.entity';
 import {
   ProjectMember,
   ProjectMemberRole,
 } from '@module/project/entities/project-member.entity';
 import { Project } from '@module/project/entities/project.entity';
 import { ProjectApplicationCreationRestrictedError } from '@module/project/errors/project-application-creation-restricted.error';
+import { ProjectInvitationCreationRestrictedError } from '@module/project/errors/project-invitation-creation-restricted.error';
 import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
 
@@ -158,6 +161,63 @@ describe(Project.name, () => {
         it('아직 처리되니 않은 지원서가 존재한다는 에러가 발생해야한다.', () => {
           expect(() => project.createApplication(props)).toThrow(
             ProjectApplicationCreationRestrictedError,
+          );
+        });
+      });
+    });
+  });
+
+  describe(Project.prototype.createInvitation.name, () => {
+    let props: Parameters<typeof Project.prototype.createInvitation>[0];
+
+    beforeEach(() => {
+      props = {
+        inviterId: generateEntityId(),
+        inviteeId: generateEntityId(),
+        positionName: faker.string.alpha(),
+      };
+    });
+
+    describe('진행중인 초대장이 존재하지 않는 경우', () => {
+      beforeEach(() => {
+        project.invitations = [
+          ProjectInvitationFactory.build({
+            status: ProjectInvitationStatus.rejected,
+            inviteeId: props.inviteeId,
+            inviterId: props.inviterId,
+          }),
+        ];
+      });
+
+      describe('초대장을 생성하면', () => {
+        it('초대장이 생성돼야한다.', () => {
+          expect(project.createInvitation(props)).toEqual(
+            expect.objectContaining({
+              projectId: project.id,
+              inviterId: props.inviterId,
+              inviteeId: props.inviteeId,
+              positionName: props.positionName,
+            }),
+          );
+        });
+      });
+    });
+
+    describe('진행중인 초대장이 존재하는 경우', () => {
+      beforeEach(() => {
+        project.invitations = [
+          ProjectInvitationFactory.build({
+            status: ProjectInvitationStatus.checked,
+            inviteeId: props.inviteeId,
+            inviterId: props.inviterId,
+          }),
+        ];
+      });
+
+      describe('초대장을 생성하면', () => {
+        it('아직 처리되니 않은 초대장이 존재한다는 에러가 발생해야한다.', () => {
+          expect(() => project.createInvitation(props)).toThrow(
+            ProjectInvitationCreationRestrictedError,
           );
         });
       });

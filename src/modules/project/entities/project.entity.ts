@@ -1,10 +1,12 @@
 import { ProjectApplication } from '@module/project/entities/project-application.entity';
+import { ProjectInvitation } from '@module/project/entities/project-invitation.entity';
 import {
   ProjectMember,
   ProjectMemberRole,
 } from '@module/project/entities/project-member.entity';
 import { ProjectRecruitmentPost } from '@module/project/entities/project-recruitment-post.entity';
 import { ProjectApplicationCreationRestrictedError } from '@module/project/errors/project-application-creation-restricted.error';
+import { ProjectInvitationCreationRestrictedError } from '@module/project/errors/project-invitation-creation-restricted.error';
 import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectMemberDeletionRestrictedError } from '@module/project/errors/project-member-deletion-restricted.error';
 import { ProjectApplicationApprovedEvent } from '@module/project/events/project-application-approved.event';
@@ -13,6 +15,7 @@ import { ProjectApplicationCreatedEvent } from '@module/project/events/project-a
 import { ProjectApplicationMarkAsCheckedEvent } from '@module/project/events/project-application-mark-as-checked.event';
 import { ProjectApplicationRejectedEvent } from '@module/project/events/project-application-rejected.event';
 import { ProjectCreatedEvent } from '@module/project/events/project-created.event';
+import { ProjectInvitationCreatedEvent } from '@module/project/events/project-invitation-created.event';
 import { ProjectMemberCreatedEvent } from '@module/project/events/project-member-created.event';
 import { ProjectMemberRemovedEvent } from '@module/project/events/project-member-removed.event';
 import { ProjectRecruitmentCreatedEvent } from '@module/project/events/project-recruitment-post-created.event';
@@ -41,6 +44,7 @@ export interface ProjectProps {
   currentMemberCount: number;
   tags: string[];
   applications?: ProjectApplication[];
+  invitations?: ProjectInvitation[];
   members?: ProjectMember[];
 }
 
@@ -74,6 +78,12 @@ interface CreateRecruitmentPostProps {
 
 interface CreateApplicationProps {
   applicantId: string;
+  positionName: string;
+}
+
+interface CreateInvitationProps {
+  inviterId: string;
+  inviteeId: string;
   positionName: string;
 }
 
@@ -146,6 +156,10 @@ export class Project extends AggregateRoot<ProjectProps> {
 
   set applications(value: ProjectApplication[]) {
     this.props.applications = value;
+  }
+
+  set invitations(value: ProjectInvitation[]) {
+    this.props.invitations = value;
   }
 
   set members(value: ProjectMember[]) {
@@ -316,6 +330,43 @@ export class Project extends AggregateRoot<ProjectProps> {
         applicantId: application.applicantId,
       }),
     );
+  }
+
+  createInvitation(props: CreateInvitationProps) {
+    if (this.props.invitations === undefined) {
+      throw new Error('Project invitations net set');
+    }
+
+    const inProgressInvitation = this.props.invitations.find(
+      (invitation) =>
+        invitation.inviteeId == props.inviteeId &&
+        invitation.getProgress() === 'inprogress',
+    );
+
+    if (inProgressInvitation !== undefined) {
+      throw new ProjectInvitationCreationRestrictedError(
+        'Inprogress invitation exists in that project and invitee.',
+      );
+    }
+
+    const projectInvitation = ProjectInvitation.create({
+      projectId: this.id,
+      inviteeId: props.inviteeId,
+      inviterId: props.inviterId,
+      positionName: props.positionName,
+    });
+
+    this.apply(
+      new ProjectInvitationCreatedEvent(this.id, {
+        projectId: this.id,
+        inviteeId: projectInvitation.inviteeId,
+        inviterId: projectInvitation.inviterId,
+        positionName: projectInvitation.positionName,
+        status: projectInvitation.status,
+      }),
+    );
+
+    return projectInvitation;
   }
 
   public validate(): void {}

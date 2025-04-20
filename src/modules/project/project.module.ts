@@ -11,6 +11,7 @@ import { ApproveProjectApplicationModule } from '@module/project/use-cases/appro
 import { CancelProjectApplicationModule } from '@module/project/use-cases/cancel-project-application/cancel-project-application.module';
 import { CheckProjectApplicationModule } from '@module/project/use-cases/check-project-application/check-project-application.module';
 import { CreateProjectApplicationModule } from '@module/project/use-cases/create-project-application/create-project-application.module';
+import { CreateProjectInvitationModule } from '@module/project/use-cases/create-project-invitation/create-project-invitation.module';
 import { CreateProjectMemberModule } from '@module/project/use-cases/create-project-member/create-project-member.module';
 import { CreateProjectRecruitmentPostModule } from '@module/project/use-cases/create-project-recruitment-post/create-project-recruitment-post.module';
 import { CreateProjectModule } from '@module/project/use-cases/create-project/create-project.module';
@@ -31,6 +32,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
     CheckProjectApplicationModule,
     CreateProjectModule,
     CreateProjectApplicationModule,
+    CreateProjectInvitationModule,
     CreateProjectRecruitmentPostModule,
     GetProjectModule,
     GetProjectMemberModule,
