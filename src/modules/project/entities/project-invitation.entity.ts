@@ -1,3 +1,5 @@
+import { ProjectInvitationValidationError } from '@module/project/errors/project-invitation-validation.error';
+
 import {
   BaseEntity,
   CreateEntityProps,
@@ -103,6 +105,20 @@ export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
       return 'processed';
     }
     return 'inprogress';
+  }
+
+  markAsChecked() {
+    if (this.status !== ProjectInvitationStatus.pending) {
+      throw new ProjectInvitationValidationError(
+        'Project invitation checked is only possible in the pending state',
+      );
+    }
+
+    const now = new Date();
+
+    this.props.status = ProjectInvitationStatus.checked;
+    this.props.checkedAt = now;
+    this.updatedAt = now;
   }
 
   public validate(): void {}

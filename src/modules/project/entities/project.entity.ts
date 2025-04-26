@@ -16,6 +16,7 @@ import { ProjectApplicationMarkAsCheckedEvent } from '@module/project/events/pro
 import { ProjectApplicationRejectedEvent } from '@module/project/events/project-application-rejected.event';
 import { ProjectCreatedEvent } from '@module/project/events/project-created.event';
 import { ProjectInvitationCreatedEvent } from '@module/project/events/project-invitation-created.event';
+import { ProjectInvitationMarkAsCheckedEvent } from '@module/project/events/project-invitation-mark-as-checked.event';
 import { ProjectMemberCreatedEvent } from '@module/project/events/project-member-created.event';
 import { ProjectMemberRemovedEvent } from '@module/project/events/project-member-removed.event';
 import { ProjectRecruitmentCreatedEvent } from '@module/project/events/project-recruitment-post-created.event';
@@ -367,6 +368,19 @@ export class Project extends AggregateRoot<ProjectProps> {
     );
 
     return projectInvitation;
+  }
+
+  markInvitationAsChecked(invitation: ProjectInvitation) {
+    invitation.markAsChecked();
+
+    this.apply(
+      new ProjectInvitationMarkAsCheckedEvent(this.id, {
+        projectId: this.id,
+        invitationId: invitation.id,
+        inviteeId: invitation.inviteeId,
+        inviterId: invitation.inviterId,
+      }),
+    );
   }
 
   public validate(): void {}

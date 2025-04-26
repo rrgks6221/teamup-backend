@@ -5,6 +5,7 @@ import { ProjectApplicationCanceledModule } from '@module/project/event-handlers
 import { ProjectApplicationMarkAsCheckedModule } from '@module/project/event-handlers/project-application-mark-as-checked-event/project-application-mark-as-checked.module';
 import { ProjectApplicationRejectedModule } from '@module/project/event-handlers/project-application-rejected-event/project-application-rejected.module';
 import { ProjectCreatedModule } from '@module/project/event-handlers/project-created-event/project-created.module';
+import { ProjectInvitationMarkAsCheckedModule } from '@module/project/event-handlers/project-invitation-mark-as-checked-event/project-invitation-mark-as-checked.module';
 import { ProjectMemberCreatedModule } from '@module/project/event-handlers/project-member-created-event/project-member-created.module';
 import { ProjectMemberRemovedModule } from '@module/project/event-handlers/project-member-removed-event/project-member-removed.module';
 import { ApproveProjectApplicationModule } from '@module/project/use-cases/approve-project-application/approve-project-application.module';
@@ -30,6 +31,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
     ApproveProjectApplicationModule,
     CancelProjectApplicationModule,
     CheckProjectApplicationModule,
+    CreateProjectInvitationModule,
     CreateProjectModule,
     CreateProjectApplicationModule,
     CreateProjectInvitationModule,
@@ -53,6 +55,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
     ProjectApplicationMarkAsCheckedModule,
     ProjectApplicationCanceledModule,
     ProjectApplicationRejectedModule,
+    ProjectInvitationMarkAsCheckedModule,
   ],
 })
 export class ProjectModule {}
