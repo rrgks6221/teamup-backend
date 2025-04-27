@@ -5,10 +5,12 @@ import { ProjectApplicationCanceledModule } from '@module/project/event-handlers
 import { ProjectApplicationMarkAsCheckedModule } from '@module/project/event-handlers/project-application-mark-as-checked-event/project-application-mark-as-checked.module';
 import { ProjectApplicationRejectedModule } from '@module/project/event-handlers/project-application-rejected-event/project-application-rejected.module';
 import { ProjectCreatedModule } from '@module/project/event-handlers/project-created-event/project-created.module';
+import { ProjectInvitationApprovedModule } from '@module/project/event-handlers/project-invitation-approved-event/project-invitation-approved.module';
 import { ProjectInvitationMarkAsCheckedModule } from '@module/project/event-handlers/project-invitation-mark-as-checked-event/project-invitation-mark-as-checked.module';
 import { ProjectMemberCreatedModule } from '@module/project/event-handlers/project-member-created-event/project-member-created.module';
 import { ProjectMemberRemovedModule } from '@module/project/event-handlers/project-member-removed-event/project-member-removed.module';
 import { ApproveProjectApplicationModule } from '@module/project/use-cases/approve-project-application/approve-project-application.module';
+import { ApproveProjectInvitationModule } from '@module/project/use-cases/approve-project-invitation/approve-project-invitation.module';
 import { CancelProjectApplicationModule } from '@module/project/use-cases/cancel-project-application/cancel-project-application.module';
 import { CheckProjectApplicationModule } from '@module/project/use-cases/check-project-application/check-project-application.module';
 import { CreateProjectApplicationModule } from '@module/project/use-cases/create-project-application/create-project-application.module';
@@ -29,6 +31,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
 @Module({
   imports: [
     ApproveProjectApplicationModule,
+    ApproveProjectInvitationModule,
     CancelProjectApplicationModule,
     CheckProjectApplicationModule,
     CreateProjectInvitationModule,
@@ -56,6 +59,7 @@ import { RemoveProjectMemberModule } from '@module/project/use-cases/remove-proj
     ProjectApplicationCanceledModule,
     ProjectApplicationRejectedModule,
     ProjectInvitationMarkAsCheckedModule,
+    ProjectInvitationApprovedModule,
   ],
 })
 export class ProjectModule {}

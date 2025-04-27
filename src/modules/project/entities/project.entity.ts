@@ -15,6 +15,7 @@ import { ProjectApplicationCreatedEvent } from '@module/project/events/project-a
 import { ProjectApplicationMarkAsCheckedEvent } from '@module/project/events/project-application-mark-as-checked.event';
 import { ProjectApplicationRejectedEvent } from '@module/project/events/project-application-rejected.event';
 import { ProjectCreatedEvent } from '@module/project/events/project-created.event';
+import { ProjectInvitationApprovedEvent } from '@module/project/events/project-invitation-approved.event';
 import { ProjectInvitationCreatedEvent } from '@module/project/events/project-invitation-created.event';
 import { ProjectInvitationMarkAsCheckedEvent } from '@module/project/events/project-invitation-mark-as-checked.event';
 import { ProjectMemberCreatedEvent } from '@module/project/events/project-member-created.event';
@@ -379,6 +380,20 @@ export class Project extends AggregateRoot<ProjectProps> {
         invitationId: invitation.id,
         inviteeId: invitation.inviteeId,
         inviterId: invitation.inviterId,
+      }),
+    );
+  }
+
+  approveInvitation(invitation: ProjectInvitation) {
+    invitation.approve();
+
+    this.apply(
+      new ProjectInvitationApprovedEvent(this.id, {
+        projectId: this.id,
+        invitationId: invitation.id,
+        inviteeId: invitation.inviteeId,
+        inviterId: invitation.inviterId,
+        positionName: invitation.positionName,
       }),
     );
   }
