@@ -135,5 +135,19 @@ export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
     this.updatedAt = now;
   }
 
+  reject() {
+    if (this.status !== ProjectInvitationStatus.checked) {
+      throw new ProjectInvitationValidationError(
+        'Project invitation reject is only possible in the checked state',
+      );
+    }
+
+    const now = new Date();
+
+    this.props.status = ProjectInvitationStatus.rejected;
+    this.props.rejectedAt = now;
+    this.updatedAt = now;
+  }
+
   public validate(): void {}
 }

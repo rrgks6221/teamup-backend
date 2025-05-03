@@ -95,4 +95,45 @@ describe(ProjectInvitation.name, () => {
       });
     });
   });
+
+  describe(ProjectInvitation.prototype.reject.name, () => {
+    describe('초대장 상태가 checked 상태인 경우', () => {
+      beforeEach(() => {
+        projectInvitation = ProjectInvitationFactory.build({
+          status: ProjectInvitationStatus.checked,
+        });
+      });
+
+      describe('거절하면', () => {
+        it('rejected 상태로 변경돼야한다.', () => {
+          expect(projectInvitation.reject()).toBeUndefined();
+          expect(projectInvitation.status).toBe(
+            ProjectInvitationStatus.rejected,
+          );
+          expect(projectInvitation.rejectedAt).toBeInstanceOf(Date);
+        });
+      });
+    });
+
+    describe('초대장 상태가 checked 상태가 아닌 경우', () => {
+      beforeEach(() => {
+        projectInvitation = ProjectInvitationFactory.build({
+          status: faker.helpers.arrayElement([
+            ProjectInvitationStatus.pending,
+            ProjectInvitationStatus.canceled,
+            ProjectInvitationStatus.approved,
+            ProjectInvitationStatus.rejected,
+          ]),
+        });
+      });
+
+      describe('거절하면', () => {
+        it('checked 상태일때만 거절할 수 있다는 에러가 발생해야한다.', () => {
+          expect(() => projectInvitation.reject()).toThrow(
+            ProjectInvitationValidationError,
+          );
+        });
+      });
+    });
+  });
 });
