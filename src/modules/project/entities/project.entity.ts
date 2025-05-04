@@ -16,6 +16,7 @@ import { ProjectApplicationMarkAsCheckedEvent } from '@module/project/events/pro
 import { ProjectApplicationRejectedEvent } from '@module/project/events/project-application-rejected.event';
 import { ProjectCreatedEvent } from '@module/project/events/project-created.event';
 import { ProjectInvitationApprovedEvent } from '@module/project/events/project-invitation-approved.event';
+import { ProjectInvitationCanceledEvent } from '@module/project/events/project-invitation-canceled.event';
 import { ProjectInvitationCreatedEvent } from '@module/project/events/project-invitation-created.event';
 import { ProjectInvitationMarkAsCheckedEvent } from '@module/project/events/project-invitation-mark-as-checked.event';
 import { ProjectInvitationRejectedEvent } from '@module/project/events/project-invitation-rejected.event';
@@ -404,6 +405,19 @@ export class Project extends AggregateRoot<ProjectProps> {
 
     this.apply(
       new ProjectInvitationRejectedEvent(this.id, {
+        projectId: this.id,
+        invitationId: invitation.id,
+        inviteeId: invitation.inviteeId,
+        inviterId: invitation.inviterId,
+      }),
+    );
+  }
+
+  cancelInvitation(invitation: ProjectInvitation) {
+    invitation.cancel();
+
+    this.apply(
+      new ProjectInvitationCanceledEvent(this.id, {
         projectId: this.id,
         invitationId: invitation.id,
         inviteeId: invitation.inviteeId,

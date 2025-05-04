@@ -136,4 +136,47 @@ describe(ProjectInvitation.name, () => {
       });
     });
   });
+
+  describe(ProjectInvitation.prototype.cancel.name, () => {
+    describe('초대장 상태가 checked나 pending 상태인 경우', () => {
+      beforeEach(() => {
+        projectInvitation = ProjectInvitationFactory.build({
+          status: faker.helpers.arrayElement([
+            ProjectInvitationStatus.pending,
+            ProjectInvitationStatus.checked,
+          ]),
+        });
+      });
+
+      describe('취소하면', () => {
+        it('canceled 상태로 변경돼야한다.', () => {
+          expect(projectInvitation.cancel()).toBeUndefined();
+          expect(projectInvitation.status).toBe(
+            ProjectInvitationStatus.canceled,
+          );
+          expect(projectInvitation.canceledAt).toBeInstanceOf(Date);
+        });
+      });
+    });
+
+    describe('초대장 상태가 checked나 pending 상태가 아닌 경우', () => {
+      beforeEach(() => {
+        projectInvitation = ProjectInvitationFactory.build({
+          status: faker.helpers.arrayElement([
+            ProjectInvitationStatus.canceled,
+            ProjectInvitationStatus.approved,
+            ProjectInvitationStatus.rejected,
+          ]),
+        });
+      });
+
+      describe('취소하면', () => {
+        it('checked나 pending 상태일때만 취소할 수 있다는 에러가 발생해야한다.', () => {
+          expect(() => projectInvitation.cancel()).toThrow(
+            ProjectInvitationValidationError,
+          );
+        });
+      });
+    });
+  });
 });
