@@ -115,9 +115,12 @@ export class ProjectApplication extends BaseEntity<ProjectApplicationProps> {
   }
 
   cancel() {
-    if (this.status !== ProjectApplicationStatus.checked) {
+    if (
+      this.status !== ProjectApplicationStatus.pending &&
+      this.status !== ProjectApplicationStatus.checked
+    ) {
       throw new ProjectApplicationValidationError(
-        'Project application cancel is only possible in the checked state',
+        'Project application cancel is only possible in the pending or checked state',
       );
     }
 

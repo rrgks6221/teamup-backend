@@ -56,10 +56,13 @@ describe(ProjectApplication.name, () => {
   });
 
   describe(ProjectApplication.prototype.cancel.name, () => {
-    describe('프로젝트 지원서 상태가 checked 상태인 경우', () => {
+    describe('프로젝트 지원서 상태가 checked나 pending 상태인 경우', () => {
       beforeEach(() => {
         projectApplication = ProjectApplicationFactory.build({
-          status: ProjectApplicationStatus.checked,
+          status: faker.helpers.arrayElement([
+            ProjectApplicationStatus.pending,
+            ProjectApplicationStatus.checked,
+          ]),
         });
       });
 
@@ -74,11 +77,10 @@ describe(ProjectApplication.name, () => {
       });
     });
 
-    describe('프로젝트 지원서 상태가 checked 상태가 아닌 경우', () => {
+    describe('프로젝트 지원서 상태가 checked나 pending 상태가 아닌 경우', () => {
       beforeEach(() => {
         projectApplication = ProjectApplicationFactory.build({
           status: faker.helpers.arrayElement([
-            ProjectApplicationStatus.pending,
             ProjectApplicationStatus.canceled,
             ProjectApplicationStatus.approved,
             ProjectApplicationStatus.rejected,
