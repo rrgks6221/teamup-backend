@@ -1,14 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { faker } from '@faker-js/faker';
+
 import { PositionFactory } from '@module/position/entities/__spec__/position.factory';
 import { PositionServiceModule } from '@module/position/services/position-service/position-service.module';
 import {
   IPositionService,
   POSITION_SERVICE,
 } from '@module/position/services/position-service/position.service.interface';
+import { ProjectMemberFactory } from '@module/project/entities/__spec__/project-member.factory';
 import { ProjectFactory } from '@module/project/entities/__spec__/project.factory';
+import { ProjectMemberRole } from '@module/project/entities/project-member.entity';
 import { ProjectNotFoundError } from '@module/project/errors/project-not-found.error';
 import { ProjectRecruitmentPostCreationRestrictedError } from '@module/project/errors/project-recruitment-creation-restricted.error';
+import { ProjectMemberRepositoryModule } from '@module/project/repositories/project-member.repository.module';
+import {
+  PROJECT_MEMBER_REPOSITORY,
+  ProjectMemberRepositoryPort,
+} from '@module/project/repositories/project-member.repository.port';
 import { ProjectRecruitmentPostRepositoryModule } from '@module/project/repositories/project-recruitment-post.repository.module';
 import {
   PROJECT_RECRUITMENT_POST_REPOSITORY,
@@ -39,6 +48,7 @@ describe(CreateProjectRecruitmentPostHandler.name, () => {
   let handler: CreateProjectRecruitmentPostHandler;
 
   let projectRepository: ProjectRepositoryPort;
+  let projectMemberRepository: ProjectMemberRepositoryPort;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let projectRecruitmentPostRepository: ProjectRecruitmentPostRepositoryPort;
   let eventStore: IEventStore;
@@ -51,6 +61,7 @@ describe(CreateProjectRecruitmentPostHandler.name, () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ProjectRepositoryModule,
+        ProjectMemberRepositoryModule,
         ProjectRecruitmentPostRepositoryModule,
         EventStoreModule,
         PositionServiceModule,
@@ -64,6 +75,9 @@ describe(CreateProjectRecruitmentPostHandler.name, () => {
     );
 
     projectRepository = module.get<ProjectRepositoryPort>(PROJECT_REPOSITORY);
+    projectMemberRepository = module.get<ProjectMemberRepositoryPort>(
+      PROJECT_MEMBER_REPOSITORY,
+    );
     projectRecruitmentPostRepository =
       module.get<ProjectRecruitmentPostRepositoryPort>(
         PROJECT_RECRUITMENT_POST_REPOSITORY,
@@ -92,12 +106,25 @@ describe(CreateProjectRecruitmentPostHandler.name, () => {
   });
 
   describe('식별자와 일치하는 프로젝트가 존재하고', () => {
-    describe('프로젝트 소유자가 게시글을 생성하는 경우', () => {
+    beforeEach(async () => {
+      await projectRepository.insert(
+        ProjectFactory.build({
+          id: command.projectId,
+          ownerId: command.currentUserId,
+        }),
+      );
+    });
+
+    describe('프로젝트 관리자가 게시글을 생성하는 경우', () => {
       beforeEach(async () => {
-        await projectRepository.insert(
-          ProjectFactory.build({
-            id: command.projectId,
-            ownerId: command.currentUserId,
+        await projectMemberRepository.insert(
+          ProjectMemberFactory.build({
+            projectId: command.projectId,
+            accountId: command.currentUserId,
+            role: faker.helpers.arrayElement([
+              ProjectMemberRole.owner,
+              ProjectMemberRole.admin,
+            ]),
           }),
         );
       });
@@ -117,10 +144,14 @@ describe(CreateProjectRecruitmentPostHandler.name, () => {
       });
     });
 
-    describe('프로젝트 소유자가 아닌 사람이 게시글을 생성하는 경우', () => {
+    describe('프로젝트 관리자가 아닌 사람이 게시글을 생성하는 경우', () => {
       beforeEach(async () => {
-        await projectRepository.insert(
-          ProjectFactory.build({ id: command.projectId }),
+        await projectMemberRepository.insert(
+          ProjectMemberFactory.build({
+            projectId: command.projectId,
+            accountId: command.currentUserId,
+            role: faker.helpers.arrayElement([ProjectMemberRole.member]),
+          }),
         );
       });
 

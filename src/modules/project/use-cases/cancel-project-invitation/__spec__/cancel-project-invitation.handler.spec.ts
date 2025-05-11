@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { faker } from '@faker-js/faker';
+
 import { ProjectInvitationFactory } from '@module/project/entities/__spec__/project-invitation.factory';
+import { ProjectMemberFactory } from '@module/project/entities/__spec__/project-member.factory';
 import { ProjectFactory } from '@module/project/entities/__spec__/project.factory';
 import {
   ProjectInvitation,
   ProjectInvitationStatus,
 } from '@module/project/entities/project-invitation.entity';
+import { ProjectMemberRole } from '@module/project/entities/project-member.entity';
 import { Project } from '@module/project/entities/project.entity';
 import { ProjectInvitationChangeStatusRestrictedError } from '@module/project/errors/project-invitation-change-status-restricted.error';
 import { ProjectInvitationNotFoundError } from '@module/project/errors/project-invitation-not-found.error';
@@ -15,6 +19,11 @@ import {
   PROJECT_INVITATION_REPOSITORY,
   ProjectInvitationRepositoryPort,
 } from '@module/project/repositories/project-invitation.repository.port';
+import { ProjectMemberRepositoryModule } from '@module/project/repositories/project-member.repository.module';
+import {
+  PROJECT_MEMBER_REPOSITORY,
+  ProjectMemberRepositoryPort,
+} from '@module/project/repositories/project-member.repository.port';
 import { ProjectRepositoryModule } from '@module/project/repositories/project.repository.module';
 import {
   PROJECT_REPOSITORY,
@@ -36,6 +45,7 @@ describe(CancelProjectInvitationHandler.name, () => {
   let handler: CancelProjectInvitationHandler;
 
   let projectRepository: ProjectRepositoryPort;
+  let projectMemberRepository: ProjectMemberRepositoryPort;
   let projectInvitationRepository: ProjectInvitationRepositoryPort;
   let eventStore: IEventStore;
 
@@ -45,6 +55,7 @@ describe(CancelProjectInvitationHandler.name, () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ProjectRepositoryModule,
+        ProjectMemberRepositoryModule,
         ProjectInvitationRepositoryModule,
         EventStoreModule,
       ],
@@ -56,6 +67,9 @@ describe(CancelProjectInvitationHandler.name, () => {
     );
 
     projectRepository = module.get<ProjectRepositoryPort>(PROJECT_REPOSITORY);
+    projectMemberRepository = module.get<ProjectMemberRepositoryPort>(
+      PROJECT_MEMBER_REPOSITORY,
+    );
     projectInvitationRepository = module.get<ProjectInvitationRepositoryPort>(
       PROJECT_INVITATION_REPOSITORY,
     );
@@ -96,7 +110,20 @@ describe(CancelProjectInvitationHandler.name, () => {
         );
       });
 
-      describe('초대자 본인이 취소하는 경우', () => {
+      describe('프로젝트 관리자가 취소하는 경우', () => {
+        beforeEach(async () => {
+          await projectMemberRepository.insert(
+            ProjectMemberFactory.build({
+              projectId: command.projectId,
+              accountId: command.currentUserId,
+              role: faker.helpers.arrayElement([
+                ProjectMemberRole.owner,
+                ProjectMemberRole.admin,
+              ]),
+            }),
+          );
+        });
+
         describe('초대장을 취소하면', () => {
           it('초대장이 취소돼야한다.', async () => {
             await expect(handler.execute(command)).resolves.toEqual(
@@ -109,9 +136,19 @@ describe(CancelProjectInvitationHandler.name, () => {
         });
       });
 
-      describe('초대자가 아닌 사람이 취소하려는 경우', () => {
+      describe('프로젝트 관리자가 아닌 사람이 취소하려는 경우', () => {
+        beforeEach(async () => {
+          await projectMemberRepository.insert(
+            ProjectMemberFactory.build({
+              projectId: command.projectId,
+              accountId: command.currentUserId,
+              role: faker.helpers.arrayElement([ProjectMemberRole.member]),
+            }),
+          );
+        });
+
         describe('초대장을 취소하면', () => {
-          it('초대한 사람만 초대장를 취소할 수 있다는 에러가 발생해야한다.', async () => {
+          it('관리자만 초대장를 취소할 수 있다는 에러가 발생해야한다.', async () => {
             await expect(
               handler.execute({
                 ...command,

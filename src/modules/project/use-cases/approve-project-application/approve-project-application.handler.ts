@@ -10,6 +10,10 @@ import {
   ProjectApplicationRepositoryPort,
 } from '@module/project/repositories/project-application.repository.port';
 import {
+  PROJECT_MEMBER_REPOSITORY,
+  ProjectMemberRepositoryPort,
+} from '@module/project/repositories/project-member.repository.port';
+import {
   PROJECT_REPOSITORY,
   ProjectRepositoryPort,
 } from '@module/project/repositories/project.repository.port';
@@ -28,6 +32,8 @@ export class ApproveProjectApplicationHandler
   constructor(
     @Inject(PROJECT_REPOSITORY)
     private readonly projectRepository: ProjectRepositoryPort,
+    @Inject(PROJECT_MEMBER_REPOSITORY)
+    private readonly projectMemberRepository: ProjectMemberRepositoryPort,
     @Inject(PROJECT_APPLICATION_REPOSITORY)
     private readonly projectApplicationRepository: ProjectApplicationRepositoryPort,
     @Inject(EVENT_STORE)
@@ -37,9 +43,13 @@ export class ApproveProjectApplicationHandler
   async execute(
     command: ApproveProjectApplicationCommand,
   ): Promise<ProjectApplication> {
-    const [project, application] = await Promise.all([
+    const [project, application, currentMember] = await Promise.all([
       this.projectRepository.findOneById(command.projectId),
       this.projectApplicationRepository.findOneById(command.applicationId),
+      this.projectMemberRepository.findOneByAccountInProject(
+        command.projectId,
+        command.currentUserId,
+      ),
     ]);
 
     if (project === undefined) {
@@ -50,9 +60,9 @@ export class ApproveProjectApplicationHandler
       throw new ProjectApplicationNotFoundError();
     }
 
-    if (project.ownerId !== command.currentUserId) {
+    if (currentMember === undefined || currentMember.isManager() === false) {
       throw new ProjectApplicationChangeStatusRestrictedError(
-        'Only project applicant can approve application status',
+        'Only project manager can approve application status',
       );
     }
 

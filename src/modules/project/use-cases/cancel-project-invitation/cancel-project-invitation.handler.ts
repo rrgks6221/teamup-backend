@@ -10,6 +10,10 @@ import {
   ProjectInvitationRepositoryPort,
 } from '@module/project/repositories/project-invitation.repository.port';
 import {
+  PROJECT_MEMBER_REPOSITORY,
+  ProjectMemberRepositoryPort,
+} from '@module/project/repositories/project-member.repository.port';
+import {
   PROJECT_REPOSITORY,
   ProjectRepositoryPort,
 } from '@module/project/repositories/project.repository.port';
@@ -27,6 +31,8 @@ export class CancelProjectInvitationHandler
   constructor(
     @Inject(PROJECT_REPOSITORY)
     private readonly projectRepository: ProjectRepositoryPort,
+    @Inject(PROJECT_MEMBER_REPOSITORY)
+    private readonly projectMemberRepository: ProjectMemberRepositoryPort,
     @Inject(PROJECT_INVITATION_REPOSITORY)
     private readonly projectInvitationRepository: ProjectInvitationRepositoryPort,
     @Inject(EVENT_STORE)
@@ -36,9 +42,13 @@ export class CancelProjectInvitationHandler
   async execute(
     command: CancelProjectInvitationCommand,
   ): Promise<ProjectInvitation> {
-    const [project, invitation] = await Promise.all([
+    const [project, invitation, currentMember] = await Promise.all([
       this.projectRepository.findOneById(command.projectId),
       this.projectInvitationRepository.findOneById(command.invitationId),
+      this.projectMemberRepository.findOneByAccountInProject(
+        command.projectId,
+        command.currentUserId,
+      ),
     ]);
 
     if (project === undefined) {
@@ -49,9 +59,9 @@ export class CancelProjectInvitationHandler
       throw new ProjectInvitationNotFoundError();
     }
 
-    if (invitation.inviterId !== command.currentUserId) {
+    if (currentMember === undefined || currentMember.isManager() === false) {
       throw new ProjectInvitationChangeStatusRestrictedError(
-        'Only project inviter can cancel invitation status',
+        'Only project manager can cancel invitation status',
       );
     }
 

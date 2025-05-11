@@ -6,6 +6,7 @@ import {
 
 export enum ProjectMemberRole {
   owner = 'owner',
+  admin = 'admin',
   member = 'member',
 }
 
@@ -80,6 +81,13 @@ export class ProjectMember extends AggregateRoot<ProjectMemberProps> {
 
   get techStackNames() {
     return this.props.techStackNames;
+  }
+
+  isManager() {
+    return (
+      this.role === ProjectMemberRole.owner ||
+      this.role === ProjectMemberRole.admin
+    );
   }
 
   public validate(): void {}

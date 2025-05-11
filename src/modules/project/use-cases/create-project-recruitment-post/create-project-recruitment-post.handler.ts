@@ -9,6 +9,10 @@ import { ProjectRecruitmentPost } from '@module/project/entities/project-recruit
 import { ProjectNotFoundError } from '@module/project/errors/project-not-found.error';
 import { ProjectRecruitmentPostCreationRestrictedError } from '@module/project/errors/project-recruitment-creation-restricted.error';
 import {
+  PROJECT_MEMBER_REPOSITORY,
+  ProjectMemberRepositoryPort,
+} from '@module/project/repositories/project-member.repository.port';
+import {
   PROJECT_RECRUITMENT_POST_REPOSITORY,
   ProjectRecruitmentPostRepositoryPort,
 } from '@module/project/repositories/project-recruitment-post.repository.port';
@@ -38,6 +42,8 @@ export class CreateProjectRecruitmentPostHandler
   constructor(
     @Inject(PROJECT_REPOSITORY)
     private readonly projectRepository: ProjectRepositoryPort,
+    @Inject(PROJECT_MEMBER_REPOSITORY)
+    private readonly projectMemberRepository: ProjectMemberRepositoryPort,
     @Inject(PROJECT_RECRUITMENT_POST_REPOSITORY)
     private readonly projectRecruitmentPostRepository: ProjectRecruitmentPostRepositoryPort,
     @Inject(POSITION_SERVICE)
@@ -51,15 +57,21 @@ export class CreateProjectRecruitmentPostHandler
   async execute(
     command: CreateProjectRecruitmentPostCommand,
   ): Promise<ProjectRecruitmentPost> {
-    const project = await this.projectRepository.findOneById(command.projectId);
+    const [project, currentMember] = await Promise.all([
+      this.projectRepository.findOneById(command.projectId),
+      this.projectMemberRepository.findOneByAccountInProject(
+        command.projectId,
+        command.currentUserId,
+      ),
+    ]);
 
     if (project === undefined) {
       throw new ProjectNotFoundError();
     }
 
-    if (project.ownerId !== command.currentUserId) {
+    if (currentMember === undefined || currentMember.isManager() === false) {
       throw new ProjectRecruitmentPostCreationRestrictedError(
-        'Only project owner can create recruitment post',
+        'Only project manager can create recruitment post',
       );
     }
 

@@ -117,6 +117,7 @@ enum ProjectStatus {
 
 enum ProjectMemberRole {
   owner
+  admin
   member
 }
 

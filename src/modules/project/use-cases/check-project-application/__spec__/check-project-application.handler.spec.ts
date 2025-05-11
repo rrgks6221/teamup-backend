@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { faker } from '@faker-js/faker';
+
 import { ProjectApplicationFactory } from '@module/project/entities/__spec__/project-application.factory';
+import { ProjectMemberFactory } from '@module/project/entities/__spec__/project-member.factory';
 import { ProjectFactory } from '@module/project/entities/__spec__/project.factory';
 import {
   ProjectApplication,
   ProjectApplicationStatus,
 } from '@module/project/entities/project-application.entity';
+import { ProjectMemberRole } from '@module/project/entities/project-member.entity';
 import { Project } from '@module/project/entities/project.entity';
 import { ProjectApplicationChangeStatusRestrictedError } from '@module/project/errors/project-application-change-status-restricted.error';
 import { ProjectApplicationNotFoundError } from '@module/project/errors/project-application-not-found.error';
@@ -15,6 +19,11 @@ import {
   PROJECT_APPLICATION_REPOSITORY,
   ProjectApplicationRepositoryPort,
 } from '@module/project/repositories/project-application.repository.port';
+import { ProjectMemberRepositoryModule } from '@module/project/repositories/project-member.repository.module';
+import {
+  PROJECT_MEMBER_REPOSITORY,
+  ProjectMemberRepositoryPort,
+} from '@module/project/repositories/project-member.repository.port';
 import { ProjectRepositoryModule } from '@module/project/repositories/project.repository.module';
 import {
   PROJECT_REPOSITORY,
@@ -36,6 +45,7 @@ describe(CheckProjectApplicationHandler.name, () => {
   let handler: CheckProjectApplicationHandler;
 
   let projectRepository: ProjectRepositoryPort;
+  let projectMemberRepository: ProjectMemberRepositoryPort;
   let projectApplicationRepository: ProjectApplicationRepositoryPort;
   let eventStore: IEventStore;
 
@@ -45,6 +55,7 @@ describe(CheckProjectApplicationHandler.name, () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ProjectRepositoryModule,
+        ProjectMemberRepositoryModule,
         ProjectApplicationRepositoryModule,
         EventStoreModule,
       ],
@@ -56,6 +67,9 @@ describe(CheckProjectApplicationHandler.name, () => {
     );
 
     projectRepository = module.get<ProjectRepositoryPort>(PROJECT_REPOSITORY);
+    projectMemberRepository = module.get<ProjectMemberRepositoryPort>(
+      PROJECT_MEMBER_REPOSITORY,
+    );
     projectApplicationRepository = module.get<ProjectApplicationRepositoryPort>(
       PROJECT_APPLICATION_REPOSITORY,
     );
@@ -95,7 +109,20 @@ describe(CheckProjectApplicationHandler.name, () => {
         );
       });
 
-      describe('지원자 본인이 체크하는 경우', () => {
+      describe('프로젝트 관리자가 체크하는 경우', () => {
+        beforeEach(async () => {
+          await projectMemberRepository.insert(
+            ProjectMemberFactory.build({
+              projectId: command.projectId,
+              accountId: command.currentUserId,
+              role: faker.helpers.arrayElement([
+                ProjectMemberRole.owner,
+                ProjectMemberRole.admin,
+              ]),
+            }),
+          );
+        });
+
         describe('지원서를 체크하면', () => {
           it('지원서가 체크돼야한다.', async () => {
             await expect(handler.execute(command)).resolves.toEqual(
@@ -108,9 +135,19 @@ describe(CheckProjectApplicationHandler.name, () => {
         });
       });
 
-      describe('지원자가 아닌 사람이 체크하려는 경우', () => {
+      describe('프로젝트 관리자가 아닌 사람이 체크하려는 경우', () => {
+        beforeEach(async () => {
+          await projectMemberRepository.insert(
+            ProjectMemberFactory.build({
+              projectId: command.projectId,
+              accountId: command.currentUserId,
+              role: faker.helpers.arrayElement([ProjectMemberRole.member]),
+            }),
+          );
+        });
+
         describe('지원서를 체크하면', () => {
-          it('프로젝틑 소유자만 지원서를 체크할 수 있다는 에러가 발생해야한다.', async () => {
+          it('프로젝틑 관리자만 지원서를 체크할 수 있다는 에러가 발생해야한다.', async () => {
             await expect(
               handler.execute({
                 ...command,
