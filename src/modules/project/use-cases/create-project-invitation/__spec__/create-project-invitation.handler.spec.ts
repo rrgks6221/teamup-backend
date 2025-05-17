@@ -16,8 +16,12 @@ import {
 } from '@module/position/services/position-service/position.service.interface';
 import { ProjectMemberFactory } from '@module/project/entities/__spec__/project-member.factory';
 import { ProjectFactory } from '@module/project/entities/__spec__/project.factory';
-import { ProjectMember } from '@module/project/entities/project-member.entity';
+import {
+  ProjectMember,
+  ProjectMemberRole,
+} from '@module/project/entities/project-member.entity';
 import { Project } from '@module/project/entities/project.entity';
+import { ProjectInvitationCreationRestrictedError } from '@module/project/errors/project-invitation-creation-restricted.error';
 import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectNotFoundError } from '@module/project/errors/project-not-found.error';
 import { ProjectInvitationRepositoryModule } from '@module/project/repositories/project-invitation.repository.module';
@@ -122,27 +126,65 @@ describe(CreateProjectInvitationHandler.name, () => {
         );
       });
 
-      describe('초대 대상 계정이 아직 프로젝트의 구성원이 아닌 경우', () => {
-        describe('초대장을 생성하면', () => {
-          it('초대장이 생성돼야한다.', async () => {
-            await expect(handler.execute(command)).resolves.toEqual(
-              expect.objectContaining({
+      describe('초대 대상 계정이 아직 프로젝트의 구성원이 아니고', () => {
+        describe('초대자가 프로젝트 관리자인 경우', () => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          let inviterMember: ProjectMember;
+
+          beforeEach(async () => {
+            inviterMember = await projectMemberRepository.insert(
+              ProjectMemberFactory.build({
                 projectId: command.projectId,
-                inviterId: command.inviterId,
-                inviteeId: command.inviteeId,
-                positionName: command.positionName,
+                accountId: command.inviterId,
+                role: ProjectMemberRole.admin,
               }),
             );
+          });
+
+          describe('초대장을 생성하면', () => {
+            it('초대장이 생성돼야한다.', async () => {
+              await expect(handler.execute(command)).resolves.toEqual(
+                expect.objectContaining({
+                  projectId: command.projectId,
+                  inviterId: command.inviterId,
+                  inviteeId: command.inviteeId,
+                  positionName: command.positionName,
+                }),
+              );
+            });
+          });
+        });
+
+        describe('초대자가 프로젝트 관리자가 아닌 경우', () => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          let inviterMember: ProjectMember;
+
+          beforeEach(async () => {
+            inviterMember = await projectMemberRepository.insert(
+              ProjectMemberFactory.build({
+                projectId: command.projectId,
+                accountId: command.inviterId,
+                role: ProjectMemberRole.member,
+              }),
+            );
+          });
+
+          describe('초대장을 생성하면', () => {
+            it('관리자만 프로젝트에 초대할 수 있다는 에러가 발생해야한다.', async () => {
+              await expect(handler.execute(command)).rejects.toThrow(
+                ProjectInvitationCreationRestrictedError,
+              );
+            });
           });
         });
       });
 
       describe('초대 대상 계정이 이미 프로젝트 구성원인 경우', () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        let member: ProjectMember;
+        let inviteeMember: ProjectMember;
 
         beforeEach(async () => {
-          member = await projectMemberRepository.insert(
+          inviteeMember = await projectMemberRepository.insert(
             ProjectMemberFactory.build({
               projectId: command.projectId,
               accountId: command.inviteeId,

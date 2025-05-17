@@ -11,6 +11,7 @@ import {
   POSITION_SERVICE,
 } from '@module/position/services/position-service/position.service.interface';
 import { ProjectInvitation } from '@module/project/entities/project-invitation.entity';
+import { ProjectInvitationCreationRestrictedError } from '@module/project/errors/project-invitation-creation-restricted.error';
 import { ProjectMemberAlreadyExistsError } from '@module/project/errors/project-member-already-exists.error';
 import { ProjectNotFoundError } from '@module/project/errors/project-not-found.error';
 import {
@@ -54,14 +55,19 @@ export class CreateProjectInvitationHandler
   async execute(
     command: CreateProjectInvitationCommand,
   ): Promise<ProjectInvitation> {
-    const [inviteeAccount, project, member] = await Promise.all([
-      this.accountRepository.findOneById(command.inviteeId),
-      this.projectRepository.findOneById(command.projectId),
-      this.projectMemberRepository.findOneByAccountInProject(
-        command.projectId,
-        command.inviteeId,
-      ),
-    ]);
+    const [inviteeAccount, project, inviteeMember, inviterMember] =
+      await Promise.all([
+        this.accountRepository.findOneById(command.inviteeId),
+        this.projectRepository.findOneById(command.projectId),
+        this.projectMemberRepository.findOneByAccountInProject(
+          command.projectId,
+          command.inviteeId,
+        ),
+        this.projectMemberRepository.findOneByAccountInProject(
+          command.projectId,
+          command.inviterId,
+        ),
+      ]);
 
     if (inviteeAccount === undefined) {
       throw new AccountNotFoundError('Invitee account not found');
@@ -71,8 +77,14 @@ export class CreateProjectInvitationHandler
       throw new ProjectNotFoundError();
     }
 
-    if (member !== undefined) {
+    if (inviteeMember !== undefined) {
       throw new ProjectMemberAlreadyExistsError();
+    }
+
+    if (inviterMember === undefined || inviterMember.isManager() === false) {
+      throw new ProjectInvitationCreationRestrictedError(
+        'Only project manager can invite project',
+      );
     }
 
     const [position] = await this.positionService.findByNamesOrFail([
