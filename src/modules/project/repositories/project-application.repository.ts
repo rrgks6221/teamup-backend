@@ -75,8 +75,10 @@ export class ProjectApplicationRepository
       if (filter.projectId !== undefined) {
         where.projectId = this.mapper.toPrimaryKey(filter.projectId);
       }
-      if (filter.status !== undefined) {
-        where.status = filter.status;
+      if (filter.statuses !== undefined) {
+        where.status = {
+          in: Array.from(filter.statuses),
+        };
       }
     }
 

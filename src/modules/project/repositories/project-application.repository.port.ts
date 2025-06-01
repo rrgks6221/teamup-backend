@@ -15,7 +15,7 @@ export interface ProjectApplicationRaw extends ProjectApplicationModel {}
 
 export interface ProjectApplicationFilter {
   projectId?: string;
-  status?: ProjectApplicationStatus;
+  statuses?: Set<ProjectApplicationStatus>;
 }
 
 export interface ProjectApplicationOrder

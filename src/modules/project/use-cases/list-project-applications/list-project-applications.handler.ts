@@ -64,6 +64,8 @@ export class ListProjectApplicationsHandler
         limit: query.limit,
         filter: {
           projectId: query.projectId,
+          statuses:
+            query.statuses === undefined ? undefined : new Set(query.statuses),
         },
       });
 

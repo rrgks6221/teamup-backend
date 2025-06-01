@@ -58,6 +58,7 @@ export class ListProjectApplicationsController {
         projectId: projectId,
         limit: dto.limit,
         cursor: dto.cursor,
+        statuses: dto.statuses,
       });
 
       const result = await this.queryBus.execute<

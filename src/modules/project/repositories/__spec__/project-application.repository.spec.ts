@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { faker } from '@faker-js/faker';
-import { ProjectApplicationStatus } from '@prisma/client';
-
 import { ProjectApplicationFactory } from '@module/project/entities/__spec__/project-application.factory';
-import { ProjectApplication } from '@module/project/entities/project-application.entity';
+import {
+  ProjectApplication,
+  ProjectApplicationStatus,
+} from '@module/project/entities/project-application.entity';
 import { ProjectApplicationRepository } from '@module/project/repositories/project-application.repository';
 import {
   PROJECT_APPLICATION_REPOSITORY,
@@ -162,16 +162,25 @@ describe(ProjectApplicationRepository.name, () => {
       });
 
       describe('프로젝트 상태로 필터링 하는 경우', () => {
-        let status: any;
+        let statuses: Set<ProjectApplicationStatus>;
 
         beforeEach(async () => {
-          status = faker.helpers.enumValue(ProjectApplicationStatus);
+          statuses = new Set([
+            ProjectApplicationStatus.approved,
+            ProjectApplicationStatus.canceled,
+          ]);
 
           projectApplications = await Promise.all(
             [
-              ProjectApplicationFactory.build({ status }),
-              ProjectApplicationFactory.build({ status }),
-              ProjectApplicationFactory.build({ status }),
+              ProjectApplicationFactory.build({
+                status: ProjectApplicationStatus.approved,
+              }),
+              ProjectApplicationFactory.build({
+                status: ProjectApplicationStatus.canceled,
+              }),
+              ProjectApplicationFactory.build({
+                status: ProjectApplicationStatus.checked,
+              }),
             ].map((project) => repository.insert(project)),
           );
         });
@@ -179,13 +188,13 @@ describe(ProjectApplicationRepository.name, () => {
         it('프로젝트 지원서 상태와 일치하는 프로젝트 지원서만 반환해야한다.', async () => {
           const result = await repository.findAllCursorPaginated({
             filter: {
-              status,
+              statuses: statuses,
             },
           });
 
           expect(result.data.length).not.toBeEmpty();
           expect(result.data).toSatisfyAll<ProjectApplication>(
-            (projectApplication) => projectApplication.status === status,
+            (projectApplication) => statuses.has(projectApplication.status),
           );
         });
       });
