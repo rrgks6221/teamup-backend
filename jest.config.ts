@@ -1,5 +1,6 @@
 /* eslint-disable */
 export default {
+  maxWorkers: 2,
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: 'src',
   testRegex: '.*\\.spec\\.ts$',
