@@ -1,73 +1,121 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# 🏗️ Teamup Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Teamup은 개발자/디자이너들이 사이드 프로젝트 팀원을 모집하고 협업할 수 있도록 돕는 플랫폼입니다.  
+이 레포는 **Teamup의 백엔드 API**를 제공하는 NestJS 기반 서버로, **DDD + CQRS + EDA**를 기반으로 도메인 중심의 유즈케이스 설계와 이벤트 흐름을 관리합니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📦 Tech Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Language**: TypeScript (Node.js)
+- **Framework**: NestJS
+- **Architecture**: DDD + CQRS + EDA(Event Driven Architecture)
+- **Database**: PostgreSQL (Prisma ORM)
+- **API Docs**: Swagger (`/swagger`)
+- **Infra (예정)**: AWS 기반 배포 (Lambda, RDS 등)
 
-## Installation
+---
+
+## 🧱 Architecture
+
+- **도메인 계층 분리**
+
+  - `modules/feature/` 아래에 도메인 별로 구조화: `use-cases`, `entities`, `repositories`, `events` 등
+  - 공통 기능은 `shared`, `common`에 유틸리티/데코레이터/밸리데이터로 분리
+
+- **CQRS 적용**
+
+  - Command/Query 책임 분리: 도메인 확장 시 Side-effect 분리를 용이하게 처리
+
+- **이벤트 기반 설계**
+
+  - 도메인 이벤트 → `event-store`에 저장 (Event Sourcing 실험적 도입)
+  - 예: 계정 생성/삭제, 지원 승인 시 구성원 자동 등록 등
+
+- **자동 스캐폴딩 스크립트**
+  - 반복되는 유즈케이스/도메인 구조 생성을 자동화하여 개발 생산성 향상
+
+---
+
+## ⚙️ Scripts
+
+- `scripts/generate-usecase-preset.script.ts`: 유즈케이스 스캐폴딩 자동화
+- `scripts/generate-domain.script.ts`: 도메인 구조 자동 생성기
+
+---
+
+## 🚀 Getting Started
+
+Swagger 문서: <http://localhost:3000/swagger>
 
 ```bash
+# 1. 의존성 설치
 $ npm install
-```
 
-## Running the app
+# 2. 환경 변수 설정
+$ cp .env.example .env
 
-```bash
-# development
-$ npm run start
+# 3. 로컬 인프라 실행 (PostgreSQL 등)
+$ docker-compose up -d
 
-# watch mode
+# 4. Prisma 마이그레이션 및 Client 생성
+$ npx prisma migrate dev
+$ npx prisma generate
+
+# 5. 로컬 서버 실행
 $ npm run start:dev
 
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+---
+
+## 🧪 Test
 
 ```bash
-# unit tests
+# 유닛 테스트 환경변수 설정
+$ cp .env.sample .env.test
+# 유닛 테스트
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 🗂️ Project Structure
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+```
+├── scripts
+│   ├── generate-domain.script.ts # 도메인 모듈 기본 템플릿 생성
+│   └── generate-usecase-preset.script.ts # 유즈케이스 초기 스캐폴딩
+├── src
+│   ├── common
+│   ├── core
+│   ├── shared
+│   ├── modules
+│   │   ├── feature
+│   │   │   ├── assemblers
+│   │   │   ├── dto
+│   │   │   ├── entities
+│   │   │   ├── errors
+│   │   │   ├── event-handlers
+│   │   │   ├── events
+│   │   │   ├── mappers
+│   │   │   ├── repositories
+│   │   │   ├── use-cases
+│   │   │   └── feature.module.ts
+│   ├── app.module.ts
+│   ├── bootstrap.ts
+│   ├── main.ts
+│   └── swagger.ts
+├── test
+├── prisma
+├── prisma.d.ts
+├── jest.config.ts
+├── nest-cli.json
+├── package-lock.json
+├── package.json
+├── README.md
+├── tsconfig.build.json
+├── tsconfig.json
+└── tsconfig.spec.json
+```
