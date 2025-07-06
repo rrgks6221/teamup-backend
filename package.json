@@ -1,10 +1,17 @@
 {
   "name": "teamup-backend",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
+  "version": "0.1.0",
+  "description": "사이드 프로젝트 모집 플렛폼",
+  "author": "rrgks6221",
+  "private": false,
   "license": "UNLICENSED",
+  "contributors": [
+    "Seok Ho Lee <rrgks@naver.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rrgks6221/teamup-backend"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
