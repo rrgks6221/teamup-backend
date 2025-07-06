@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  quizzes_game_io_backend_postgres:
+    container_name: teamup_backend_postgres
+    image: postgres:16.1
+    user: root
+    volumes:
+      - teamup_backend_data:/data/postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: local
+      POSTGRES_DB: teamup_backend
+      PGDATA: /data/postgres
+      PGPORT: 5432
+    ports:
+      - 5432:5432
+
+volumes:
+  teamup_backend_data:
+    driver: local
