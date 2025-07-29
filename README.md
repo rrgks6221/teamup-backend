@@ -53,7 +53,7 @@ Swagger 문서: <http://localhost:3000/swagger>
 $ npm install
 
 # 2. 환경 변수 설정
-$ cp .env.example .env
+$ cp .env.sample .env
 
 # 3. 로컬 인프라 실행 (PostgreSQL 등)
 $ docker-compose up -d
